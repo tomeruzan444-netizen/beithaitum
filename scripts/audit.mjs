@@ -26,7 +26,7 @@ for (const f of files) {
   if (!title) add('title חסר', url); else if (title.length > 65) add(`title ארוך (>65)`, `${url} (${title.length})`); else if (title.length < 25) add('title קצר (<25)', `${url} (${title.length})`);
   if (!desc) add('description חסר', url); else if (desc.length > 165 || desc.length < 110) add('description מחוץ ל-110-165', `${url} (${desc.length})`);
   if (!canon) add('canonical חסר', url); else if (!canon.endsWith(url)) add('canonical לא תואם', `${url} -> ${canon}`);
-  if (!robots.includes('noindex')) add('robots ללא noindex (דומיין זמני)', url);
+  if (!robots.includes('noindex')) add('robots ללא noindex (האתר חסום)', url);
   const h1 = (html.match(/<h1[\s>]/g) || []).length; if (h1 !== 1) add('H1 != 1', `${url} (${h1})`);
   // JSON-LD
   for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
@@ -45,7 +45,7 @@ for (const f of files) {
   const scripts = [...html.matchAll(/<script(?![^>]*application\/ld\+json)[^>]*>/g)];
   if (scripts.length) { stats.jsPages++; if (url !== '/search/') add('JS בעמוד (מלבד חיפוש)', url); }
   // קישורים חיצוניים
-  for (const m of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) { const u = m[1].replace(/&amp;/g, '&'); if (!u.includes('hostingersite.com')) ext.set(u, [...(ext.get(u) || []), url]); }
+  for (const m of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) { const u = m[1].replace(/&amp;/g, '&'); if (!/hostingersite\.com|itumhouse\.co\.il/.test(u)) ext.set(u, [...(ext.get(u) || []), url]); }
 }
 
 // sitemap

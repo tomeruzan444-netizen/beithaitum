@@ -7,8 +7,10 @@
 export const business = {
   name: 'בית האיטום',
   nameEn: 'Beit HaItum',
-  /** כתובת האתר. כרגע דומיין זמני בהוסטינגר; כשיהיה דומיין אמיתי מחליפים כאן ובמשתנה SITE_URL. */
-  url: import.meta.env.SITE ?? 'https://orangered-goshawk-401694.hostingersite.com',
+  /** כתובת האתר (דומיין אמיתי מ-2026-11-10). מוחלף גם ב-astro.config.mjs / SITE_URL. */
+  url: import.meta.env.SITE ?? 'https://itumhouse.co.il',
+  /** חסימת גוגל עד שהמשתמש יאשר עלייה לאוויר (החלטה 2026-11-10). לפתיחה: false + להסיר את X-Robots-Tag ב-public/.htaccess. */
+  blockIndexing: true,
   phone: '052-3456543',
   /** בפורמט בינלאומי בלי + ובלי מקפים, למשל 972501234567 */
   whatsapp: '972523456543',
@@ -35,8 +37,9 @@ export const waHref = (text = 'שלום, אשמח לקבל הצעת מחיר ל�
     ? `https://wa.me/${business.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
     : '#contact';
 
-/** האתר באוויר על דומיין זמני -> noindex בכל העמודים, robots חוסם. */
-export const isTemporaryDomain = () => /hostingersite\.com|localhost/.test(business.url);
+/** חסום לאינדקס (דגל blockIndexing או דומיין זמני) -> noindex בכל העמודים, robots חוסם. */
+export const isIndexingBlocked = () =>
+  business.blockIndexing || /hostingersite\.com|localhost/.test(business.url);
 
 /** רשימת פרטים חסרים - מוצגת ב-build log */
 export const missingFields = () =>

@@ -30,8 +30,9 @@
 ## פריסה
 - `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ומעלה ב-SSH/rsync להוסטינגר.
 - Secrets נדרשים בריפו: `SSH_HOST`, `SSH_PORT`, `SSH_USERNAME`, `SSH_PRIVATE_KEY`, `SSH_REMOTE_DIR`.
-- **דומיין זמני**: `orangered-goshawk-401694.hostingersite.com` (נוצר 2026-11-10). כל עוד האתר עליו: noindex (meta + X-Robots-Tag ב-.htaccess) ו-robots חוסם.
-- **מעבר לדומיין אמיתי**: לעדכן `SITE_URL`/ברירת המחדל ב-`astro.config.mjs` וב-`business.ts`, ואת `SSH_REMOTE_DIR`.
+- **דומיין**: `itumhouse.co.il` (2026-11-10). בהוסטינגר הוא דומיין חונה (parked) על האתר `orangered-goshawk-401694.hostingersite.com` - אותה תיקיית public_html, ולכן `SSH_REMOTE_DIR` לא השתנה. הדומיין רשום מחוץ להוסטינגר; ה-DNS מכוון אצל הרשם.
+- **חסימת גוגל**: `blockIndexing: true` ב-`business.ts` + `X-Robots-Tag` לכל הדומיינים ב-`public/.htaccess`. לפתיחה (רק באישור המשתמש): `blockIndexing: false`, למחוק את שורת X-Robots-Tag, Search Console.
+- ⏳ אחרי שה-DNS וה-SSL של itumhouse.co.il פעילים: הפניית 301 מהדומיין הזמני ל-itumhouse.co.il ב-.htaccess.
 - אינטגרציית ה-Git הנייטיבית של הוסטינגר חייבת להישאר מנותקת (היא דורסת את public_html בלי build).
 
 ## מצב נוכחי

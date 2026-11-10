@@ -5,7 +5,7 @@ import fontHe from '@fontsource-variable/assistant/files/assistant-hebrew-wght-n
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
-import { business, isFilled, isTemporaryDomain } from '../config/business';
+import { business, isFilled, isIndexingBlocked } from '../config/business';
 
 interface Props {
   title: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 const { title, description, schema = [], noindex = false, cta } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const robots = noindex || isTemporaryDomain() ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const robots = noindex || isIndexingBlocked() ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 const siteUrl = new URL('/', Astro.site).href;
 
 const sameAs = [business.googleBusiness, ...business.social].filter(isFilled);

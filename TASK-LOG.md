@@ -51,3 +51,9 @@
 - לוגו חדש: ערימה איזומטרית של 4 שכבות + טיפה, wordmark ב-Assistant 800 + "שכבה אחרי שכבה". מקור אמת: `scripts/brand/mark.mjs`; יצירה: `node scripts/brand/build.mjs <playwright-core>`. קבצים ב-`public/brand/` (logo.png, logo-white.png, logo-on-light.png, logo-mark.png/svg, icon-192/512, apple-touch-icon, og-default.png). favicon, og:image, ולוגו בסכמה עודכנו.
 - טופס יצירת קשר: `src/pages/contact.php.ts` -> dist/contact.php (PHP mail ל-itumhouse@gmail.com, honeypot, הגבלת קצב), עמוד /thanks/ (noindex, מחוץ ל-sitemap). נבדק חי: GET, honeypot, שגיאה, ושליחה אמיתית (נשלחה הודעת בדיקה).
 - פתוח: אזור שירות, שעות, רישום קבלנים - עדיין placeholder. דומיין + noindex + Search Console.
+
+## 2026-11-10 (17:25) - מעבר לדומיין itumhouse.co.il
+- הדומיין נוסף בהוסטינגר כדומיין חונה על האתר הקיים (אימות בעלות עבר). הדומיין לא רשום בהוסטינגר - את ה-DNS מכוונים אצל הרשם.
+- `SITE_URL` / `business.url` -> https://itumhouse.co.il (canonical, sitemap, סכמה).
+- חסימת גוגל נשארת לפי החלטת המשתמש: דגל `blockIndexing` במקום זיהוי לפי דומיין זמני; X-Robots-Tag על כל הדומיינים.
+- פתוח: DNS אצל הרשם, SSL + הפניית HTTPS בהוסטינגר, הפניית 301 מהדומיין הזמני.
