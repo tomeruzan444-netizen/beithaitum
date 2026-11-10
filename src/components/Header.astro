@@ -11,11 +11,18 @@ const isTarring = path.startsWith('/roof-waterproofing/roof-tarring/');
 const nav = [
   { href: '/roof-waterproofing/', label: 'איטום גגות', on: seg === 'roof-waterproofing' && !isTarring },
   { href: '/roof-waterproofing/roof-tarring/', label: 'זיפות גגות', on: isTarring },
-  { href: '/areas/', label: 'אזורים', on: seg === 'areas' },
   { href: '/#process', label: 'תהליך', on: false },
   { href: '/moisture/', label: 'רטיבות ונזילות', on: seg === 'moisture' },
   { href: '/prices/', label: 'מחירון', on: seg === 'prices' },
 ].filter((n) => n.href.startsWith('/#') || pub.has(n.href));
+// 15 הערים המאוכלסות בישראל (סדר לפי גודל) - מוצגות רק אם לעמוד העיר יש תוכן מפורסם
+const topCities = [
+  ['jerusalem', 'ירושלים'], ['tel-aviv', 'תל אביב'], ['haifa', 'חיפה'], ['rishon-lezion', 'ראשון לציון'],
+  ['petah-tikva', 'פתח תקווה'], ['ashdod', 'אשדוד'], ['netanya', 'נתניה'], ['beer-sheva', 'באר שבע'],
+  ['bnei-brak', 'בני ברק'], ['holon', 'חולון'], ['ramat-gan', 'רמת גן'], ['beit-shemesh', 'בית שמש'],
+  ['rehovot', 'רחובות'], ['ashkelon', 'אשקלון'], ['bat-yam', 'בת ים'],
+].map(([slug, label]) => ({ href: `/areas/${slug}/`, label })).filter((c) => pub.has(c.href));
+const areasOn = seg === 'areas';
 const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture' && seg !== 'roof-waterproofing');
 ---
 <header class="site-header">
@@ -39,7 +46,19 @@ const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture' &&
             </div>
           </li>
         )}
-        {nav.map((n) => <li><a href={n.href} class:list={[{ on: n.on }]}>{n.label}</a></li>)}
+        {nav.slice(0, 2).map((n) => <li><a href={n.href} class:list={[{ on: n.on }]}>{n.label}</a></li>)}
+        {pub.has('/areas/') && (
+          <li class="mega">
+            <a href="/areas/" class:list={[{ on: areasOn }]} aria-haspopup="true">אזורי שירות <span class="car" aria-hidden="true"></span></a>
+            <div class="panel">
+              <div class="wrap">
+                <ul class="cities">{topCities.map((c) => <li><a href={c.href}>איטום גגות ב{c.label}</a></li>)}</ul>
+                <a class="all" href="/areas/">לכל אזורי השירות ←</a>
+              </div>
+            </div>
+          </li>
+        )}
+        {nav.slice(2).map((n) => <li><a href={n.href} class:list={[{ on: n.on }]}>{n.label}</a></li>)}
       </ul>
     </nav>
     <div class="actions">
@@ -58,6 +77,15 @@ const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture' &&
               </ul>
             </details>
           ))}
+          {pub.has('/areas/') && (
+            <details>
+              <summary>אזורי שירות</summary>
+              <ul>
+                {topCities.map((c) => <li><a href={c.href}>איטום גגות ב{c.label}</a></li>)}
+                <li><a href="/areas/">כל אזורי השירות</a></li>
+              </ul>
+            </details>
+          )}
           <ul class="flat">{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/contact/">צור קשר</a></li></ul>
         </nav>
       </details>
@@ -80,6 +108,10 @@ const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture' &&
   .col ul { list-style: none; margin: 0; padding: 0; }
   .col li a { display: block; padding: .28rem 0; font-size: .95rem; color: var(--ink-2); text-decoration: none; }
   .col li a:hover, .ch:hover { color: var(--copper); }
+  .cities { list-style: none; margin: 0; padding: 2rem 0 .6rem; display: grid; grid-template-columns: repeat(5, 1fr); gap: .2rem 2rem; }
+  .cities a { display: block; padding: .3rem 0; font-size: .95rem; color: var(--ink-2); text-decoration: none; }
+  .cities a:hover { color: var(--copper); }
+  .panel .all { margin-bottom: 1.8rem; }
   .all { display: inline-block; margin-top: .4rem; font-size: .88rem; font-weight: 700; color: var(--copper-ink); text-decoration: none; }
   .actions { display: flex; align-items: center; gap: .9rem; margin-inline-start: auto; }
   .srch-btn { display: grid; place-items: center; width: 38px; height: 38px; color: var(--ink); }
