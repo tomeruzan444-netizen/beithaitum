@@ -1,0 +1,108 @@
+keyword,secondary,silo,path,type,intent,angle,not_about,links,status
+איטום גגות,חברת איטום גגות; איטום גג; מחיר איטום גג,roof-waterproofing,/roof-waterproofing/,hub,commercial,פילר: איך בוחרים שיטת איטום לפי סוג הגג ומצבו; תהליך עבודה; עלויות; מתי לאטום,לא נכנס לעומק של שיטה או סוג גג בודד,/methods/; /roof-waterproofing/flat-roof/; /prices/,planned
+איטום גג שטוח,,roof-waterproofing,/roof-waterproofing/flat-roof/,service,commercial,שיפועים; ניקוז; מים עומדים; נקזים ומחסומים; בדיקת הצפה,לא עוסק בסדקי בטון ובהכנת תשתית (concrete-roof),/roof-waterproofing/concrete-roof/; /methods/bitumen-membranes/; /gutters/drain-pipe/,planned
+איטום גג בטון,,roof-waterproofing,/roof-waterproofing/concrete-roof/,service,commercial,סדקים ותזוזות תרמיות; תפרי התפשטות; הכנת תשתית בטון; לחות כלואה,לא עוסק בשיפועים וניקוז (flat-roof),/roof-waterproofing/flat-roof/; /methods/injection/; /methods/joints/,planned
+איטום גג רעפים,,roof-waterproofing,/roof-waterproofing/tiled-roof/,service,commercial,השכבה התת-רעפית; רעפים שבורים; רכסים וארובות; עם פירוק או בלי,לא עוסק בבניית גג רעפים חדש (roofing/tiled-roofs),/roofing/tiled-roofs/; /roofing/roof-window/; /methods/bitumen-membranes/,planned
+איטום גג איסכורית,איטום גגות מברזל; איטום גג פח,roof-waterproofing,/roof-waterproofing/corrugated-roof/,service,commercial,ברגים וחפיפות; חלודה; ציפוי במריחה לפח; החלפת לוחות,לא פנלים מבודדים (light-roof) ולא בנייה חדשה (roofing/corrugated-roof),/roof-waterproofing/light-roof/; /methods/liquid-applied/; /roofing/corrugated-roof/,planned
+איטום גג קל,,roof-waterproofing,/roof-waterproofing/light-roof/,service,commercial,גגות פנל מבודד (סנדוויץ'); תפרים ופלשינגים; עיבוי ובידוד,לא פח גלי חד-שכבתי (corrugated-roof) ולא מבנה קל שלם (structures/light-construction),/roof-waterproofing/corrugated-roof/; /roofing/insulated-panel-roof/; /structures/light-construction/,planned
+איטום גג אסבסט,,roof-waterproofing,/roof-waterproofing/asbestos-roof/,service,commercial,רגולציה ובטיחות; ציפוי כובל מול פירוק והחלפה; מה אסור לעשות,לא מפרט עבודת פירוק אסבסט מעבר להפניה לגורם מורשה,/roof-waterproofing/corrugated-roof/; /roofing/insulated-panel-roof/,planned
+איטום גג זכוכית,,roof-waterproofing,/roof-waterproofing/glass-roof/,service,commercial,אטמים וסיליקון; פרופילי אלומיניום; חממות וחלונות גג קבועים,לא סנטף ופוליקרבונט (santaf-roof),/roof-waterproofing/santaf-roof/; /walls/windows/,planned
+איטום גגות עץ,,roof-waterproofing,/roof-waterproofing/wooden-roof/,service,commercial,גגות עץ סגורים; אוורור; יריעות נושמות; הגנה מרקב,לא פרגולה פתוחה (pergola),/roof-waterproofing/pergola/; /roof-waterproofing/tiled-roof/,planned
+איטום גגות שינגלס,,roof-waterproofing,/roof-waterproofing/shingle-roof/,service,commercial,תיקון והחלפת שינגלס; שכבת בסיס; קצוות ומפגשים,לא רעפים,/roof-waterproofing/tiled-roof/; /roof-waterproofing/wooden-roof/,planned
+איטום גג הפוך,,roof-waterproofing,/roof-waterproofing/inverted-roof/,service,informational,איטום מתחת לבידוד; יתרונות ומגבלות; איתור כשל בגג קיים,לא גג מרוצף רגיל (paved-roof),/roof-waterproofing/paved-roof/; /roof-waterproofing/flat-roof/,planned
+איטום גגות מרוצפים,,roof-waterproofing,/roof-waterproofing/paved-roof/,service,commercial,גג עם ריצוף: בדיקת הצפה; פירוק מול איטום שקוף ופוגות,לא מרפסות (balconies),/balconies/tiled-surfaces/; /roof-waterproofing/inverted-roof/,planned
+איטום סנטף,,roof-waterproofing,/roof-waterproofing/santaf-roof/,service,commercial,פוליקרבונט בפרגולות וגגונים; ברגים ואטמים; התפשטות תרמית,לא גג זכוכית,/roof-waterproofing/pergola/; /gutters/pergola-gutter/,planned
+איטום פרגולה,,roof-waterproofing,/roof-waterproofing/pergola/,service,commercial,מה אפשר לאטום בפרגולת עץ ואלומיניום; חיבור לקיר; כיסויים,לא מרזב לפרגולה (gutters/pergola-gutter),/roof-waterproofing/santaf-roof/; /gutters/pergola-gutter/,planned
+זיפות גגות,,roof-waterproofing,/roof-waterproofing/roof-tarring/,service,commercial,זיפות מסורתי מול יריעות; מתי עוד מתאים; תחזוקה,לא זפת קר כחומר (methods/cold-tar),/methods/cold-tar/; /methods/bitumen-membranes/,planned
+סיוד גגות,,roof-waterproofing,/roof-waterproofing/roof-whitewash/,service,commercial,סיד וצבע לבן מחזיר קרינה; הגנה על יריעות; תדירות,לא איטום אקרילי כשיטת איטום,/methods/acrylic/; /methods/bitumen-membrane-painting/,planned
+חידוש איטום גג,,roof-waterproofing,/roof-waterproofing/renewal/,service,commercial,חידוש מלא של מערכת קיימת: מעל הישן או הסרה; סימנים שהגיע הזמן,לא תיקון נקודתי (repair),/roof-waterproofing/repair/; /methods/bitumen-membrane-removal/,planned
+תיקון איטום גג,,roof-waterproofing,/roof-waterproofing/repair/,service,commercial,תיקון נקודתי בשכבת האיטום: טלאי; הלחמה; מעברים,לא תיקון מבני (roofing/repair) ולא חידוש מלא (renewal),/roof-waterproofing/renewal/; /roofing/repair/; /methods/bitumen-membrane-repair/,planned
+שיטות איטום,חומרי איטום,methods,/methods/,hub,informational,השוואת כל השיטות והחומרים; איך בוחרים לפי משטח,לא עמוד שירות,/roof-waterproofing/; /methods/liquid-applied/,planned
+איטום גגות במריחה,מריחה; איטום במריחה,methods,/methods/liquid-applied/,service,commercial,ממברנה נוזלית: סוגי חומרים; עובי ושכבות; זמני ייבוש; מתי עדיף על יריעות,לא העמקה בפוליאוריטן כחומר (polyurethane),/methods/polyurethane/; /methods/acrylic/; /methods/bitumen-membranes/,planned
+איטום אקרילי,,methods,/methods/acrylic/,service,commercial,ציפוי אקרילי: החזר קרינה; אורך חיים לפי יצרן; מגבלות במים עומדים,לא סיוד,/methods/liquid-applied/; /roof-waterproofing/roof-whitewash/,planned
+יריעות ביטומניות,איטום ביריעות ביטומניות,methods,/methods/bitumen-membranes/,service,commercial,סוגי יריעות (SBS/APP); הלחמה; חפיפות; הגנה,לא תיקון/צביעה/הסרה (עמודי בת),/methods/bitumen-membrane-repair/; /methods/bitumen-membrane-painting/; /roof-waterproofing/flat-roof/,planned
+תיקון יריעות ביטומניות,,methods,/methods/bitumen-membrane-repair/,service,commercial,בועות; תפרים פתוחים; סדקים ביריעה; הלחמת טלאי,לא תיקון איטום גג כללי,/methods/bitumen-membranes/; /roof-waterproofing/repair/,planned
+צביעת יריעות ביטומניות,,methods,/methods/bitumen-membrane-painting/,service,commercial,צבע מחזיר קרינה מתאים ליריעות; הכנה; תדירות,לא סיוד גגות,/methods/bitumen-membranes/; /roof-waterproofing/roof-whitewash/,planned
+הסרת יריעות ביטומניות ישנות,,methods,/methods/bitumen-membrane-removal/,service,commercial,מתי חייבים להסיר; איך מסירים; פינוי פסולת,לא חידוש איטום כללי,/roof-waterproofing/renewal/; /methods/bitumen-membranes/,planned
+איטום בהתזה,,methods,/methods/spray/,service,commercial,שיטת ההתזה בכלל: פוליאוריאה; קצף פוליאוריטן; יתרונות במשטחים גדולים,לא קירות חיצוניים בהתזה (walls/exterior-spray),/methods/polyurethane/; /walls/exterior-spray/,planned
+איטום בפוליאוריטן,,methods,/methods/polyurethane/,service,commercial,החומר: חד/דו-רכיבי; קצף מול ממברנה; UV,לא שיטת המריחה הכללית,/methods/liquid-applied/; /methods/spray/,planned
+איטום גג בחומר פולימרי,,methods,/methods/polymer/,service,commercial,חומרים פולימריים וצמנטיים-פולימריים; גמישות; שימושים,לא אקרילי,/methods/acrylic/; /methods/crystalline/,planned
+איטום בהזרקה,,methods,/methods/injection/,service,commercial,הזרקת פוליאוריטן ואפוקסי לסדקים; מרתפים; מגבלות,לא איטום צמנטי,/structures/basement/; /walls/exterior-cracks/,planned
+איטום קריסטלי,,methods,/methods/crystalline/,service,commercial,מנגנון החדירה; בטון חדש וקיים; מאגרים ומרתפים,לא איטום שלילי ככלל,/methods/negative-side/; /structures/water-tanks/,planned
+איטום שלילי,,methods,/methods/negative-side/,service,informational,איטום מהצד הפנימי: מתי מתאים; מגבלות; חומרים,לא מרתף כשירות שלם,/structures/basement/; /methods/crystalline/,planned
+איטום בסנפלינג,,methods,/methods/rappelling/,service,commercial,עבודה בגובה בלי פיגום; בטיחות; עלות מול פיגום,לא שיטת חומר,/walls/exterior/; /walls/exterior-cracks/,planned
+זפת קר,,methods,/methods/cold-tar/,service,informational,החומר: הרכב; שימושים; מגבלות; מול זפת חם,לא שירות זיפות גגות,/roof-waterproofing/roof-tarring/; /methods/bitumen-membranes/,planned
+בטקל,בטקל לאיטום,methods,/methods/betakal/,service,informational,חומר צמנטי גמיש: שימוש בחדרים רטובים ובמרפסות; יישום,לא חומרים פולימריים כלליים,/interior/shower/; /balconies/,planned
+רולקה,,methods,/methods/rolka/,service,informational,מה זה רולקה; למה צריך; ביצוע נכון,לא איטום תפרים,/roof-waterproofing/flat-roof/; /methods/joints/,planned
+איטום תפרים,,methods,/methods/joints/,service,commercial,תפרי התפשטות ומישקים; מסטיקים; פרופילים,לא רולקה,/methods/rolka/; /roof-waterproofing/concrete-roof/,planned
+איטום קירות,,walls,/walls/,hub,commercial,סקירה: חיצוני מול פנימי; מקורות חדירת מים בקיר; בחירת פתרון,לא עמוד שירות,/walls/exterior/; /moisture/wall-damp/,planned
+איטום קירות חיצוניים,,walls,/walls/exterior/,service,commercial,כל השיטות לקיר חוץ; אבחון; עלות,לא שיטת ההתזה לעומק (exterior-spray),/walls/exterior-spray/; /walls/exterior-cracks/; /moisture/wall-damp/,planned
+איטום קירות חיצוניים בהתזה,,walls,/walls/exterior-spray/,service,commercial,התזה על קיר חוץ: חומרים; גוונים; עבודה בגובה,לא התזה כשיטה כללית (methods/spray),/methods/spray/; /walls/exterior/,planned
+איטום ותיקון סדקים בקיר חיצוני,,walls,/walls/exterior-cracks/,service,commercial,סוגי סדקים; מתי מבני; מילוי ואיטום,לא איטום קיר מלא,/walls/exterior/; /methods/injection/,planned
+איטום קיר שפריץ,,walls,/walls/shpritz/,service,commercial,טיח שפריץ: נקבוביות; שקיפות מול צבע אוטם,לא טיח חלק,/walls/plaster/; /walls/exterior/,planned
+איטום טיח,,walls,/walls/plaster/,service,commercial,טיח אוטם; תוספים; טיח פנים מול חוץ,לא שפריץ,/walls/shpritz/; /walls/interior/,planned
+איטום קירות פנימיים,,walls,/walls/interior/,service,commercial,קיר פנים רטוב: מקורות; מתי לאטום מבפנים,לא חדרים רטובים (interior),/moisture/wall-damp/; /methods/negative-side/,planned
+איטום קירות גבס,,walls,/walls/drywall/,service,commercial,גבס ירוק; חדרים רטובים; פינות ומפגשים,לא קירות בלוקים,/walls/interior/; /interior/shower-walls/,planned
+איטום חלונות,,walls,/walls/windows/,service,commercial,חדירה סביב מסגרת; סיליקון; אדן,לא תריסים,/walls/shutters/; /walls/exterior/,planned
+איטום תריסים,,walls,/walls/shutters/,service,commercial,ארגז תריס; מסילות; רטיבות מעל חלון,לא חלון עצמו,/walls/windows/; /walls/doors/,planned
+איטום דלת,,walls,/walls/doors/,service,commercial,סף דלת חוץ; מרפסת; אטמים,לא חלונות,/walls/windows/; /balconies/,planned
+איטום קורות,,walls,/walls/beams/,service,commercial,קורות בטון ועץ חשופות; סדקי קורה; ברזל חשוף,לא קיר מלא,/walls/exterior-cracks/; /roof-waterproofing/wooden-roof/,planned
+איטום חדרים רטובים,,interior,/interior/,hub,commercial,סקירה: מקלחת; רצפה; תקרה; תקן והשכבות,לא עמוד שירות,/interior/shower/; /moisture/,planned
+איטום מקלחת,,interior,/interior/shower/,service,commercial,מערכת מלאה: רצפה; ניקוז; מפגשים; שיפוץ מול תיקון,לא קירות בלבד (shower-walls),/interior/shower-walls/; /methods/betakal/; /moisture/leak-detection/,planned
+איטום קירות מקלחת,,interior,/interior/shower-walls/,service,commercial,קירות בלבד: גובה האיטום; רובה וסיליקון,לא רצפה וניקוז,/interior/shower/; /walls/drywall/,planned
+איטום כיור,,interior,/interior/sink/,service,commercial,כיור מטבח ואמבטיה; סיליקון; חיבור לשיש,לא שיש,/interior/countertop/; /interior/shower/,planned
+איטום שיש,,interior,/interior/countertop/,service,commercial,אבן טבעית מול קיסר; סילר; כתמים,לא כיור,/interior/sink/; /interior/floor/,planned
+איטום רצפה,,interior,/interior/floor/,service,commercial,רצפות פנים; לפני ריצוף; חדרים רטובים,לא בטון חשוף (concrete-floor),/interior/concrete-floor/; /interior/floor-cracks/,planned
+איטום רצפת בטון,,interior,/interior/concrete-floor/,service,commercial,בטון חשוף ומוחלק; אפוקסי; חניות ומחסנים,לא רצפה מרוצפת,/interior/floor/; /structures/parking/,planned
+איטום חריצים ברצפה,,interior,/interior/floor-cracks/,service,commercial,פוגות ומרווחים; מישקי התפשטות ברצפה,לא סדקים מבניים בקיר,/interior/floor/; /methods/joints/,planned
+איטום תקרה,,interior,/interior/ceiling/,service,commercial,איטום תקרה מלמטה מול מקור מלמעלה; מתי זה פתרון,לא רטיבות בתקרה כאבחון (moisture/ceiling-damp),/moisture/ceiling-damp/; /roof-waterproofing/,planned
+איטום מרפסת,,balconies,/balconies/,hub,commercial,מרפסות: שיטות; ניקוז; עם/בלי פירוק ריצוף,לא גגות,/balconies/tiled-balcony/; /balconies/tiled-surfaces/,planned
+איטום מרפסת מרוצפת,,balconies,/balconies/tiled-balcony/,service,commercial,איטום בלי פירוק ריצוף: שקוף; פוגות,לא פירוק ואיטום מחדש כשיטה כללית,/balconies/; /balconies/tiled-surfaces/,planned
+איטום משטחים מרוצפים,,balconies,/balconies/tiled-surfaces/,service,commercial,השיטה למשטחים מרוצפים: חומרים שקופים; פוגות; חצרות,לא גגות מרוצפים (roof-waterproofing/paved-roof),/balconies/tiled-balcony/; /roof-waterproofing/paved-roof/,planned
+איטום אדניות,,balconies,/balconies/planters/,service,commercial,אדניות בנויות; שורשים; ניקוז,לא מרפסת,/balconies/; /structures/water-tanks/,planned
+איטום מבנים,,structures,/structures/,hub,commercial,סקירה של כל סוגי המבנים והחללים,לא בית פרטי (house) ולא בניין משותף (building),/structures/building/; /structures/house/,planned
+איטום בניין,,structures,/structures/building/,service,commercial,בתים משותפים וועד בית: גג משותף; חלוקת עלויות; חוק המקרקעין,לא בית פרטי,/structures/house/; /roof-waterproofing/,planned
+איטום בית,,structures,/structures/house/,service,commercial,צמודי קרקע ובעלי דירות: מעטפת מלאה; סדר עדיפויות,לא בניין משותף,/structures/building/; /walls/exterior/,planned
+איטום בניה קלה,,structures,/structures/light-construction/,service,commercial,מבנים יבילים וקלים: קירות; גג; חיבורים,לא גג קל בלבד,/roof-waterproofing/light-roof/; /structures/containers/,planned
+איטום מרתף,,structures,/structures/basement/,service,commercial,מרתף: איטום חיצוני מול פנימי; ניקוז; לחץ מים,לא שיטה בודדת,/methods/negative-side/; /methods/injection/; /structures/english-courtyard/,planned
+איטום מקלט,,structures,/structures/shelter/,service,commercial,מקלטים וממ"דים: דרישות; רטיבות; פתחים,לא מרתף,/structures/basement/; /methods/crystalline/,planned
+איטום חניון תת קרקעי,,structures,/structures/underground-parking/,service,commercial,חניונים: תקרות; רמפות; תפרים; עבודה בבניין מאוכלס,לא חניה פתוחה,/structures/parking/; /methods/joints/,planned
+איטום חניה,,structures,/structures/parking/,service,commercial,חניה פתוחה או מקורה: משטחים; אפוקסי; תנועה,לא חניון תת קרקעי,/structures/underground-parking/; /interior/concrete-floor/,planned
+איטום חצר אנגלית,,structures,/structures/english-courtyard/,service,commercial,חצר אנגלית: ניקוז; קירות תומכים; חלונות מרתף,לא מרתף שלם,/structures/basement/; /gutters/drain-pipe/,planned
+איטום פיר מעלית,,structures,/structures/elevator-pit/,service,commercial,בור מעלית: מי תהום; איטום שלילי; דרישות בטיחות,לא מרתף,/methods/negative-side/; /methods/crystalline/,planned
+איטום בריכות,,structures,/structures/pools/,service,commercial,בריכות בטון: חומרים; מעברים; חידוש,לא מאגרי מים,/structures/water-tanks/; /methods/crystalline/,planned
+איטום מאגרי מים,,structures,/structures/water-tanks/,service,commercial,מאגרים ומיכלים: מגע במי שתייה; אישורים לחומרים,לא בריכות,/structures/pools/; /methods/crystalline/,planned
+איטום מחסן,,structures,/structures/storage-shed/,service,commercial,מחסנים בגינה ובבניין; גג ורצפה,לא מכולה,/structures/containers/; /roof-waterproofing/corrugated-roof/,planned
+איטום מכולות,,structures,/structures/containers/,service,commercial,מכולות פח: חלודה; גג; פתחים,לא מחסן בנוי,/structures/storage-shed/; /structures/light-construction/,planned
+איטום מעברים,איטום מעברי אש,structures,/structures/penetrations/,service,commercial,מעברים בין קומות וחללים: כבלים; תעלות; מעברי אש,לא צנרת חודרת לגג/קיר מפני מים (pipe-penetrations) - לבדוק SERP,/structures/pipe-penetrations/; /methods/joints/,planned
+איטום צנרת חודרת,,structures,/structures/pipe-penetrations/,service,commercial,צינורות שחודרים גג; קיר ורצפה: צווארונים; מסטיק,לא מעברי אש,/structures/penetrations/; /roof-waterproofing/repair/,planned
+רטיבות בבית,,moisture,/moisture/,hub,informational,אבחון לפי מיקום ומנגנון: מפה של סוגי הרטיבות,לא עמוד פתרון,/moisture/wall-damp/; /moisture/ceiling-damp/,planned
+רטיבות בקיר,,moisture,/moisture/wall-damp/,problem,informational,אבחון רטיבות בקיר: חיצונית; צנרת; עיבוי; עולה,לא קפילארית לעומק,/moisture/rising-damp/; /walls/exterior/; /moisture/wall-mold/,planned
+רטיבות בתקרה,,moisture,/moisture/ceiling-damp/,problem,informational,גג מול צנרת מהדירה שמעל; מה עושים מול שכנים,לא איטום תקרה כשירות,/roof-waterproofing/flat-roof/; /moisture/leak-detection/; /interior/ceiling/,planned
+רטיבות בחדר שינה,,moisture,/moisture/bedroom-damp/,problem,informational,עיבוי מול חדירה; אוורור; בריאות,לא רטיבות בקיר כללית,/moisture/wall-mold/; /moisture/wall-damp/,planned
+רטיבות מעל פנלים,,moisture,/moisture/above-skirting/,problem,informational,כתמים בגובה נמוך: צנרת; ריצוף; מקלחת סמוכה,לא קפילארית מהקרקע,/moisture/rising-damp/; /moisture/leak-detection/,planned
+רטיבות קפילארית,,moisture,/moisture/rising-damp/,problem,informational,מנגנון עליית מים מהקרקע; חסם כימי; טיח מסנן,לא רטיבות מצנרת,/moisture/above-skirting/; /methods/injection/,planned
+טיפול בעובש בקיר,,moisture,/moisture/wall-mold/,problem,informational,ניקוי בטוח; למה חוזר; טיפול במקור,לא אבחון רטיבות כללי,/moisture/bedroom-damp/; /moisture/wall-damp/,planned
+איתור נזילות,,moisture,/moisture/leak-detection/,service,commercial,שיטות: מצלמה תרמית; לחות; גז עוקב; מה מקבלים בדוח,לא בדיקת איטום מבנה מלאה,/moisture/inspection/; /moisture/ceiling-damp/,planned
+בדיקת איטום מבנים,,moisture,/moisture/inspection/,service,commercial,בדיקה הנדסית של מעטפת: בדק בית; בדיקת הצפה; דוח,לא איתור נזילה נקודתית,/moisture/leak-detection/; /moisture/consultant/,planned
+יועץ איטום,,moisture,/moisture/consultant/,service,commercial,מתי צריך יועץ; מפרט; פיקוח; מול קבלן,לא בדיקה חד פעמית,/moisture/inspection/; /structures/building/,planned
+מרזבים,,gutters,/gutters/,hub,commercial,סקירה: התקנה; תיקון; ניקוי; חומרים,לא עמוד שירות,/gutters/installation/; /gutters/cleaning/,planned
+התקנת מרזבים,,gutters,/gutters/installation/,service,commercial,חומרים; חישוב קוטר ושיפוע; חיבור למערכת,לא מרזב פרגולה,/gutters/pergola-gutter/; /gutters/sealing/,planned
+התקנת מרזב לפרגולה,,gutters,/gutters/pergola-gutter/,service,commercial,מרזב לפרגולת סנטף ואלומיניום,לא מרזבי בית,/roof-waterproofing/pergola/; /gutters/installation/,planned
+ניקוי מרזבים,,gutters,/gutters/cleaning/,service,commercial,תדירות; לפני החורף; סימני סתימה,לא תיקון,/gutters/sealing/; /gutters/drain-pipe/,planned
+איטום מרזבים,,gutters,/gutters/sealing/,service,commercial,חיבורים ופינות דולפים; חומרים,לא החלפת מרזב,/gutters/exterior-repair/; /gutters/cleaning/,planned
+תיקון מרזב חיצוני,תיקון מרזבים,gutters,/gutters/exterior-repair/,service,commercial,מרזב חיצוני: תושבות; חלודה; החלפת קטע,לא מרזב פנימי,/gutters/interior-repair/; /gutters/sealing/,planned
+תיקון מרזב פנימי,,gutters,/gutters/interior-repair/,service,commercial,מרזב בתוך הקיר: איתור; פתיחה; החלפה,לא מרזב חיצוני,/gutters/exterior-repair/; /moisture/leak-detection/,planned
+איטום צינור ניקוז,,gutters,/gutters/drain-pipe/,service,commercial,צינור ניקוז גג ומרפסת: מחסום; חיבור לאיטום,לא מרזב אופקי,/roof-waterproofing/flat-roof/; /gutters/interior-repair/,planned
+בניית גגות,,roofing,/roofing/,hub,commercial,סקירה: סוגי גגות לבנייה; היתרים; תיקונים,לא איטום,/roofing/tiled-roofs/; /roof-waterproofing/,planned
+בניית גגות רעפים,,roofing,/roofing/tiled-roofs/,service,commercial,קונסטרוקציה; סוגי רעפים; היתר,לא איטום גג רעפים קיים,/roof-waterproofing/tiled-roof/; /roofing/roof-window/,planned
+בניית גג איסכורית,,roofing,/roofing/corrugated-roof/,service,commercial,קונסטרוקציה; עובי פח; שיפוע,לא איטום גג איסכורית קיים,/roof-waterproofing/corrugated-roof/; /roofing/insulated-panel-roof/,planned
+התקנת גג פנל מבודד,,roofing,/roofing/insulated-panel-roof/,service,commercial,פנל סנדוויץ': עוביים; בידוד; התקנה,לא איטום גג קל קיים,/roof-waterproofing/light-roof/; /roofing/corrugated-roof/,planned
+חלון לגג רעפים,,roofing,/roofing/roof-window/,service,commercial,התקנת חלון גג; פלשינג; איטום סביב החלון,לא בניית גג שלם,/roofing/tiled-roofs/; /roof-waterproofing/tiled-roof/,planned
+תיקון גגות,,roofing,/roofing/repair/,service,commercial,תיקון מבני: קונסטרוקציה; רעפים; פח; נזקי סערה,לא תיקון שכבת איטום (roof-waterproofing/repair),/roof-waterproofing/repair/; /roofing/roofer/,planned
+גגן,,roofing,/roofing/roofer/,service,commercial,בעל המקצוע: מה גגן עושה; איך בוחרים; שאלות לשאול,לא השירות של בניית גגות,/roofing/; /roofing/repair/,planned
+אזורי שירות,,areas,/areas/,hub,navigation,מפת אזורים וערים,,/areas/center/,planned
+מחירון איטום,,reference,/prices/,reference,commercial,טבלה מרכזת מ-prices.ts,,/roof-waterproofing/,planned
+מילון מונחי איטום,,reference,/glossary/,reference,informational,הגדרות עם עוגנים,,/methods/,planned
+אודות בית האיטום,,reference,/about/,reference,navigation,מי הצוות ואיך עובדים - בלי נתונים מומצאים,,/,planned
+צור קשר,,reference,/contact/,reference,navigation,פרטי קשר וטופס,,/,planned

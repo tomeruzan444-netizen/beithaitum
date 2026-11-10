@@ -1,0 +1,51 @@
+---
+// סיידבר אוטומטי: אחים מהסילו, פתרונות קשורים, Hub, כרטיס פנייה.
+// בדסקטופ דביק בצד; בנייד זורם אחרי המאמר ("עוד באתר") - אותו HTML, נשאר זחיל.
+import { siblings, crossRelated, hubOf, urlOf, type Page } from '../lib/pages';
+import { siloById } from '../data/silos';
+import Icon from './Icon.astro';
+import { telHref, waHref } from '../config/business';
+interface Props { page: Page }
+const { page } = Astro.props;
+const sib = await siblings(page);
+const cross = await crossRelated(page);
+const hub = await hubOf(page.data.silo);
+const silo = siloById(page.data.silo);
+---
+<aside class="side" aria-label="עוד באתר">
+  <p class="side-h">עוד באתר</p>
+  {sib.length > 0 && (
+    <nav aria-label={`עוד ב${silo?.name}`}>
+      <p class="grp">{silo?.name}</p>
+      <ul>{sib.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
+    </nav>
+  )}
+  {cross.length > 0 && (
+    <nav aria-label="פתרונות קשורים">
+      <p class="grp">פתרונות קשורים</p>
+      <ul>{cross.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
+    </nav>
+  )}
+  {hub && page.data.type !== 'hub' && (
+    <a class="hub" href={urlOf(hub)}>כל הנושאים ב{silo?.name} <Icon name="arrow" /></a>
+  )}
+  <div class="card">
+    <p class="ct">מתלבטים מה מתאים לכם?</p>
+    <p class="cx">ספרו לנו מה אתם רואים, ונגיד לכם מה כדאי לבדוק.</p>
+    <a class="btn btn--primary" href={telHref()}><Icon name="phone" />שיחה</a>
+    <a class="btn" href={waHref()}><Icon name="chat" />וואטסאפ</a>
+  </div>
+</aside>
+<style>
+  .side { font-size: 1rem; }
+  .side-h { font: 600 .8rem/1 var(--f-body); letter-spacing: .08em; color: var(--ink-2); margin: 0 0 1rem; padding-bottom: .7rem; border-bottom: 2px solid var(--bitumen); }
+  .grp { font: 700 1.05rem/1.3 var(--f-head); margin: 1.2rem 0 .4rem; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li a { display: block; padding: .45rem 0; border-bottom: 1px solid var(--line-2); color: var(--bitumen); text-decoration: none; }
+  li a:hover { color: var(--copper-ink); }
+  .hub { display: inline-flex; align-items: center; gap: .4rem; margin-top: 1.1rem; font-weight: 600; }
+  .hub :global(svg) { width: 1rem; height: 1rem; }
+  .card { margin-top: 1.6rem; padding: 1.2rem; background: #fff; border: 1px solid var(--line); display: grid; gap: .55rem; }
+  .ct { font: 700 1.1rem/1.3 var(--f-head); margin: 0; }
+  .cx { margin: 0 0 .3rem; color: var(--ink-2); font-size: .95rem; }
+</style>

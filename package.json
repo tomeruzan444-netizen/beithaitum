@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

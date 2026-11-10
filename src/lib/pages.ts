@@ -1,0 +1,83 @@
+/**
+ * מנוע הקישורים הפנימיים. הכול מחושב מה-frontmatter - שום קישור לא מוקלד ידנית בתבניות.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { silos } from '../data/silos';
+
+export type Page = CollectionEntry<'pages'>;
+
+export const urlOf = (p: Page) => (p.id ? `/${p.id}/` : '/');
+
+let cache: Page[] | null = null;
+export async function allPages(): Promise<Page[]> {
+  if (!cache) cache = (await getCollection('pages')).filter((p) => !p.data.draft);
+  return cache;
+}
+
+export async function pageByUrl(url: string) {
+  return (await allPages()).find((p) => urlOf(p) === url);
+}
+
+/** נתיב קיים ומפורסם? (לקישור מותנה מדף הבית ומעמודים אחרים) */
+export async function publishedSet() {
+  return new Set((await allPages()).map(urlOf));
+}
+
+export async function hubOf(silo: string) {
+  return (await allPages()).find((p) => p.data.silo === silo && p.data.type === 'hub');
+}
+
+export async function childrenOf(silo: string) {
+  return (await allPages())
+    .filter((p) => p.data.silo === silo && p.data.type !== 'hub')
+    .sort((a, b) => a.data.order - b.data.order || a.data.keyword.localeCompare(b.data.keyword, 'he'));
+}
+
+const tags = (p: Page) => new Set([...p.data.methods, ...p.data.surfaces, ...p.data.problems]);
+function overlap(a: Page, b: Page) {
+  const ta = tags(a);
+  let n = 0;
+  for (const t of tags(b)) if (ta.has(t)) n++;
+  // קישור מפורש ב-related שווה יותר מתגית משותפת
+  if (a.data.related.includes(urlOf(b))) n += 3;
+  if (b.data.related.includes(urlOf(a))) n += 1;
+  return n;
+}
+
+/** אחים מאותו סילו, ממוינים לפי חפיפה */
+export async function siblings(p: Page, max = 6) {
+  return (await childrenOf(p.data.silo))
+    .filter((x) => x.id !== p.id)
+    .map((x) => ({ x, s: overlap(p, x) }))
+    .sort((a, b) => b.s - a.s || a.x.data.order - b.x.data.order)
+    .slice(0, max)
+    .map((o) => o.x);
+}
+
+/** פתרונות קשורים מסילואים אחרים (רק עם חפיפה אמיתית) */
+export async function crossRelated(p: Page, max = 4) {
+  return (await allPages())
+    .filter((x) => x.data.silo !== p.data.silo && x.data.type !== 'reference' && x.data.type !== 'city')
+    .map((x) => ({ x, s: overlap(p, x) }))
+    .filter((o) => o.s > 0)
+    .sort((a, b) => b.s - a.s)
+    .slice(0, max)
+    .map((o) => o.x);
+}
+
+/** תפריט: לכל סילו עם Hub מפורסם - עד 7 עמודים */
+export async function menu() {
+  const out = [];
+  for (const s of silos) {
+    const hub = await hubOf(s.id);
+    if (!hub) continue;
+    const kids = (await childrenOf(s.id)).filter((k) => k.data.type !== 'city');
+    out.push({ silo: s, hub, items: kids.slice(0, 7), total: kids.length });
+  }
+  return out;
+}
+
+/** קישורים פנימיים בגוף markdown */
+export function bodyLinks(body: string) {
+  return [...body.matchAll(/\]\((\/[^)\s#]*)(#[^)]*)?\)/g)].map((m) => m[1]);
+}

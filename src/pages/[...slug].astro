@@ -1,0 +1,179 @@
+---
+/**
+ * ראוטר יחיד לכל עמודי התוכן (src/content/pages/**). התבנית נבחרת לפי type.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PriceTable from '../components/PriceTable.astro';
+import Faq from '../components/Faq.astro';
+import Cta from '../components/Cta.astro';
+import Sidebar from '../components/Sidebar.astro';
+import RoofSection from '../components/RoofSection.astro';
+import { allPages, urlOf, hubOf, childrenOf, type Page } from '../lib/pages';
+import { validateAll } from '../lib/validate';
+import { siloById } from '../data/silos';
+import { business } from '../config/business';
+
+export async function getStaticPaths() {
+  await validateAll();
+  const pages = await allPages();
+  return pages.filter((p) => p.id).map((p) => ({ params: { slug: p.id }, props: { page: p } }));
+}
+
+const { page } = Astro.props as { page: Page };
+const d = page.data;
+const url = urlOf(page);
+const siteUrl = new URL('/', Astro.site).href;
+const abs = (u: string) => new URL(u, Astro.site).href;
+const silo = siloById(d.silo);
+const hub = d.type !== 'hub' && d.type !== 'reference' ? await hubOf(d.silo) : undefined;
+const kids = d.type === 'hub' ? await childrenOf(d.silo) : [];
+const allP = await allPages();
+
+// פירורי לחם
+const crumbs = [{ name: business.name, url: '/' }];
+if (hub) crumbs.push({ name: hub.data.keyword, url: urlOf(hub) });
+crumbs.push({ name: d.keyword, url });
+
+// HTML מרונדר + CTA באמצע (לפני ה-H2 שבאמצע, רק בעמודים עם 4+ H2)
+const html = page.rendered?.html ?? '';
+const h2s = [...html.matchAll(/<h2[\s>]/g)].map((m) => m.index!);
+const headings = (page.rendered?.metadata?.headings as { depth: number; slug: string; text: string }[] | undefined ?? []).filter((h) => h.depth === 2);
+const isArticle = d.type === 'service' || d.type === 'problem' || d.type === 'city' || d.type === 'region';
+// מחלקים לפי H2: פתיחה (תשובה ישירה) קודם, אחריה תוכן עניינים; חתך לפני ה-H2 השני; CTA באמצע
+const cuts = [0, ...h2s, html.length];
+const segs = cuts.slice(0, -1).map((c, i) => html.slice(c, cuts[i + 1])).filter((x, i) => i === 0 || x);
+const midSeg = isArticle && h2s.length >= 4 ? Math.ceil(h2s.length / 2) + 1 : -1;
+
+const updatedHe = new Date(d.updated).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// ערים מרכזיות לבלוק "עובדים גם ב..."
+const cities = d.featuredCities ? allP.filter((p) => p.data.type === 'city').sort((a, b) => a.data.order - b.data.order).slice(0, 12) : [];
+// מחירון מרכזי
+const priceIndex = page.id === 'prices' ? allP.filter((p) => p.data.prices.some((r) => r.verified) && p.id !== 'prices') : [];
+
+// JSON-LD
+const schema: Record<string, unknown>[] = [
+  { '@type': 'BreadcrumbList', itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.url) })) },
+];
+if (d.faq.length) schema.push({ '@type': 'FAQPage', mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+if (d.type === 'service' || d.type === 'city') {
+  schema.push({
+    '@type': 'Service', name: d.keyword, serviceType: d.keyword, url: abs(url), description: d.metaDescription,
+    provider: { '@id': `${siteUrl}#org` }, dateModified: d.updated,
+    ...(d.type === 'city' && { areaServed: { '@type': 'City', name: d.keyword.replace(/^איטום גגות ב/, '') } }),
+  });
+}
+if (d.type === 'problem' || d.type === 'hub' || d.type === 'region') {
+  schema.push({
+    '@type': 'Article', headline: d.title, description: d.metaDescription, url: abs(url), inLanguage: 'he-IL',
+    dateModified: d.updated, author: { '@id': `${siteUrl}#org` }, publisher: { '@id': `${siteUrl}#org` },
+  });
+}
+const hasAbout = allP.some((p) => p.id === 'about');
+---
+<BaseLayout title={d.metaTitle} description={d.metaDescription} schema={schema}>
+  <div class={`page page--${d.type}`}>
+    <header class="page-head grid-bg">
+      <div class="wrap">
+        <Breadcrumbs items={crumbs} />
+        <h1>{d.title}</h1>
+        <p class="byline">
+          נכתב ונבדק על ידי {hasAbout ? <a href="/about/">צוות {business.name}</a> : `צוות ${business.name}`}
+          <span aria-hidden="true"> · </span>
+          עודכן <time datetime={d.updated}>{updatedHe}</time>
+        </p>
+      </div>
+    </header>
+
+    <div class={`wrap body ${isArticle ? 'body--side' : ''}`}>
+      <article class="prose">
+        <Fragment set:html={segs[0]} />
+        {headings.length >= 4 && (
+          <details class="toc">
+            <summary>תוכן העניינים</summary>
+            <ol>{headings.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+          </details>
+        )}
+        {segs.slice(1).map((seg, i) => (
+          <>
+            {i === 1 && d.diagram === 'flat-roof' && <div class="fig"><RoofSection /></div>}
+            {i + 1 === midSeg && <Cta title="רוצים שנבדוק את זה אצלכם?" text="ספרו לנו בקצרה מה המצב, ונכוון אתכם לפתרון שמתאים לכם." />}
+            <Fragment set:html={seg} />
+          </>
+        ))}
+
+        {d.type === 'hub' && kids.length > 0 && (
+          <section class="cards" aria-labelledby="kids-h">
+            <h2 id="kids-h">כל הנושאים ב{silo?.name}</h2>
+            <ul>
+              {kids.map((k) => (
+                <li><a href={urlOf(k)}><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {priceIndex.length > 0 && (
+          <section aria-labelledby="pi-h">
+            <h2 id="pi-h">טווחי מחירים לפי שירות</h2>
+            <div class="spec-scroll">
+              <table class="spec">
+                <thead><tr><th scope="col">שירות</th><th scope="col">עבודה</th><th scope="col">יחידה</th><th scope="col">טווח</th></tr></thead>
+                <tbody>
+                  {priceIndex.flatMap((p) => p.data.prices.filter((r) => r.verified).map((r, i) => (
+                    <tr>{i === 0 ? <th scope="row"><a href={urlOf(p)}>{p.data.keyword}</a></th> : <th scope="row" class="cont"></th>}<td>{r.item}</td><td>{r.unit}</td><td class="num">{r.min.toLocaleString('he-IL')}-{r.max.toLocaleString('he-IL')} ₪</td></tr>
+                  )))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        <PriceTable page={page} />
+        {isArticle && <Cta title={`צריכים ${d.keyword}?`} text="נשמח לשמוע מה קורה אצלכם ולתאם בדיקה." />}
+        <Faq items={d.faq} heading={`שאלות נפוצות על ${d.keyword}`} />
+
+        {cities.length > 0 && (
+          <section class="cities" aria-labelledby="cities-h">
+            <h2 id="cities-h">אנחנו עובדים גם ב...</h2>
+            <ul>{cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul>
+          </section>
+        )}
+      </article>
+      {isArticle && <Sidebar page={page} />}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head { border-bottom: 1px solid var(--line); padding-block: 1.6rem 2.2rem; }
+  .page-head h1 { margin-top: 1.2rem; max-width: 22ch; font-size: clamp(2rem, 4.6vw, 3.2rem); }
+  .byline { margin: 0; font-size: .92rem; color: var(--ink-2); }
+  .body { display: grid; gap: clamp(2rem, 5vw, 4.5rem); padding-block: 2.5rem var(--space); }
+  .body--side { grid-template-columns: minmax(0, 1fr) 290px; align-items: start; }
+  .body--side :global(.side) { position: sticky; top: 100px; }
+  .toc { border: 1px solid var(--line); background: #fff; padding: .2rem 1.2rem; margin-bottom: 2rem; }
+  .toc summary { cursor: pointer; font-weight: 600; padding: .8rem 0; }
+  .toc ol { margin: 0 0 1rem; padding-inline-start: 1.3rem; font-size: 1rem; }
+  .toc li { margin-block: .25rem; }
+  .fig { margin-block: 1rem 2.5rem; padding: 1.2rem; border: 1px solid var(--line); background: var(--stone); }
+  .cards ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--bitumen); display: grid; grid-template-columns: 1fr 1fr; }
+  .cards li { border-bottom: 1px solid var(--line); }
+  .cards li:nth-child(even) { border-inline-start: 1px solid var(--line); }
+  .cards a { display: block; padding: 1.1rem 1.2rem; text-decoration: none; color: var(--bitumen); height: 100%; }
+  .cards a:hover { background: var(--stone-2); }
+  .cards .k { display: block; font: 700 1.15rem/1.3 var(--f-head); margin-bottom: .3rem; }
+  .cards a:hover .k { color: var(--copper-ink); }
+  .cards .s { display: block; font-size: .98rem; color: var(--ink-2); line-height: 1.55; }
+  .cities ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .cities a { display: inline-block; border: 1px solid var(--line); padding: .35rem .8rem; text-decoration: none; font-size: .95rem; }
+  .cont { border-bottom-color: transparent; }
+  .num { white-space: nowrap; }
+  @media (max-width: 960px) {
+    .body--side { grid-template-columns: 1fr; }
+    .body--side :global(.side) { position: static; border-top: 6px solid var(--copper); padding-top: 1.5rem; }
+    .cards ul { grid-template-columns: 1fr; }
+    .cards li:nth-child(even) { border-inline-start: 0; }
+  }
+</style>

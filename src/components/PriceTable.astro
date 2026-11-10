@@ -1,0 +1,39 @@
+---
+import type { Page } from '../lib/pages';
+interface Props { page: Page }
+const { page } = Astro.props;
+const rows = page.data.prices.filter((r) => r.verified);
+const fmt = (n: number) => n.toLocaleString('he-IL');
+const sources = [...new Map(rows.map((r) => [r.source, r])).values()];
+const checked = rows.map((r) => r.checked).sort().at(-1);
+---
+{rows.length > 0 && (
+  <section class="prices" aria-labelledby="prices-h">
+    <h2 id="prices-h">כמה עולה {page.data.keyword}?</h2>
+    <div class="spec-scroll">
+      <table class="spec">
+        <caption>טווחי מחירים · {page.data.vat} · נבדק {checked}</caption>
+        <thead><tr><th scope="col">עבודה</th><th scope="col">יחידה</th><th scope="col">טווח מחיר</th><th scope="col">מה משפיע</th></tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <th scope="row">{r.item}{r.desc && <span class="d">{r.desc}</span>}</th>
+              <td>{r.unit}</td>
+              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪</td>
+              <td>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">המחירים להערכה בלבד, {page.data.vat}. המחיר הסופי נקבע לאחר בדיקה בשטח.
+      {sources.length > 0 && <> מקורות: {sources.map((s, i) => <>{i > 0 && ', '}{s.sourceUrl ? <a href={s.sourceUrl} rel="nofollow noopener" target="_blank">{s.source}</a> : s.source}</>)}.</>}
+    </p>
+  </section>
+)}
+<style>
+  .prices { margin-block: 3rem; }
+  .d { display: block; font: 400 .88rem/1.4 var(--f-body); color: var(--ink-2); margin-top: .2rem; white-space: normal; }
+  .num { white-space: nowrap; font-weight: 600; direction: rtl; }
+  .fine { font-size: .9rem; color: var(--ink-2); margin-top: .9rem; }
+</style>

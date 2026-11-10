@@ -3,6 +3,9 @@ import Logo from './Logo.astro';
 import { business, isFilled, telHref } from '../config/business';
 const show = (v: string) => (isFilled(v) ? v : null);
 const year = new Date().getFullYear();
+import { menu, allPages, urlOf } from '../lib/pages';
+const hubs = await menu();
+const refs = (await allPages()).filter((p) => p.data.type === 'reference' && p.id !== 'contact');
 ---
 <footer class="site-footer">
   <div class="layers-sep" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -23,10 +26,11 @@ const year = new Date().getFullYear();
     <div>
       <h2>באתר</h2>
       <ul>
-        <li><a href="/#problems">אבחון לפי בעיה</a></li>
-        <li><a href="/#methods">שיטות איטום</a></li>
-        <li><a href="/#process">תהליך העבודה</a></li>
-        <li><a href="/#faq">שאלות נפוצות</a></li>
+        {hubs.length > 0
+          ? hubs.map((h) => <li><a href={urlOf(h.hub)}>{h.silo.name}</a></li>)
+          : <><li><a href="/#problems">אבחון לפי בעיה</a></li><li><a href="/#methods">שיטות איטום</a></li></>}
+        {refs.map((r) => <li><a href={urlOf(r)}>{r.data.keyword}</a></li>)}
+        <li><a href="/sitemap/">מפת האתר</a></li>
       </ul>
     </div>
   </div>

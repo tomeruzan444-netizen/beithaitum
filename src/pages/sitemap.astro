@@ -1,0 +1,40 @@
+---
+// מפת אתר HTML - כל העמודים לפי סילו. רשת ביטחון לזחילה.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { allPages, urlOf, hubOf, childrenOf } from '../lib/pages';
+import { silos } from '../data/silos';
+const groups = [];
+for (const s of silos) {
+  const hub = await hubOf(s.id);
+  const kids = await childrenOf(s.id);
+  if (hub || kids.length) groups.push({ s, hub, kids });
+}
+const refs = (await allPages()).filter((p) => p.data.type === 'reference');
+---
+<BaseLayout title="מפת האתר | בית האיטום" description="כל העמודים באתר בית האיטום לפי נושא: איטום גגות, קירות, מרפסות, מבנים, רטיבות ומרזבים.">
+  <div class="wrap sm">
+    <Breadcrumbs items={[{ name: 'בית האיטום', url: '/' }, { name: 'מפת האתר', url: '/sitemap/' }]} />
+    <h1>מפת האתר</h1>
+    <div class="grid">
+      {groups.map((g) => (
+        <section>
+          <h2>{g.hub ? <a href={urlOf(g.hub)}>{g.s.name}</a> : g.s.name}</h2>
+          <ul>{g.kids.map((k) => <li><a href={urlOf(k)}>{k.data.keyword}</a></li>)}</ul>
+        </section>
+      ))}
+      {refs.length > 0 && (
+        <section><h2>מידע נוסף</h2><ul>{refs.map((r) => <li><a href={urlOf(r)}>{r.data.keyword}</a></li>)}</ul></section>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+<style>
+  .sm { padding-block: 2rem var(--space); }
+  .sm h1 { margin-top: 1.2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem 3rem; }
+  h2 { font-size: 1.25rem; border-bottom: 2px solid var(--copper); padding-bottom: .4rem; }
+  h2 a { color: var(--bitumen); text-decoration: none; }
+  ul { list-style: none; padding: 0; margin: 0; font-size: 1rem; }
+  li { padding-block: .25rem; }
+</style>
