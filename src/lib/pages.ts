@@ -3,6 +3,7 @@
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { silos } from '../data/silos';
+import { cityBySlug, km } from '../data/cities';
 
 export type Page = CollectionEntry<'pages'>;
 
@@ -80,4 +81,28 @@ export async function menu() {
 /** קישורים פנימיים בגוף markdown */
 export function bodyLinks(body: string) {
   return [...body.matchAll(/\]\((\/[^)\s#]*)(#[^)]*)?\)/g)].map((m) => m[1]);
+}
+
+/** ערים סמוכות שיש להן עמוד מפורסם, לפי מרחק */
+export async function nearbyCities(p: Page, max = 5) {
+  const me = p.data.city ? cityBySlug(p.data.city) : undefined;
+  if (!me) return [];
+  return (await allPages())
+    .filter((x) => x.data.type === 'city' && x.data.city && x.data.city !== me.slug)
+    .map((x) => ({ x, d: km(me, cityBySlug(x.data.city!)!) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, max)
+    .map((o) => o.x);
+}
+
+export async function regionPage(slug?: string) {
+  if (!slug) return undefined;
+  return (await allPages()).find((x) => x.data.type === 'region' && x.data.region === slug);
+}
+
+/** ערים מפורסמות באזור */
+export async function citiesInRegion(slug: string) {
+  return (await allPages())
+    .filter((x) => x.data.type === 'city' && x.data.city && cityBySlug(x.data.city)?.region === slug)
+    .sort((a, b) => a.data.order - b.data.order || a.data.keyword.localeCompare(b.data.keyword, 'he'));
 }

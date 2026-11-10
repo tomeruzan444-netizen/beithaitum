@@ -1,14 +1,20 @@
 ---
 // סיידבר אוטומטי: אחים מהסילו, פתרונות קשורים, Hub, כרטיס פנייה.
 // בדסקטופ דביק בצד; בנייד זורם אחרי המאמר ("עוד באתר") - אותו HTML, נשאר זחיל.
-import { siblings, crossRelated, hubOf, urlOf, type Page } from '../lib/pages';
+import { siblings, crossRelated, hubOf, urlOf, nearbyCities, regionPage, pageByUrl, type Page } from '../lib/pages';
+import { cityBySlug } from '../data/cities';
 import { siloById } from '../data/silos';
 import Icon from './Icon.astro';
 import { telHref, waHref } from '../config/business';
 interface Props { page: Page }
 const { page } = Astro.props;
-const sib = await siblings(page);
-const cross = await crossRelated(page);
+const isPlace = page.data.type === 'city' || page.data.type === 'region';
+const sib = isPlace ? await nearbyCities(page) : await siblings(page);
+const cross = isPlace
+  ? (await Promise.all(page.data.related.map(pageByUrl))).filter((x): x is Page => !!x).slice(0, 4)
+  : await crossRelated(page);
+const region = page.data.type === 'city' ? await regionPage(cityBySlug(page.data.city ?? '')?.region) : undefined;
+const roofHub = isPlace ? await hubOf('roof-waterproofing') : undefined;
 const hub = await hubOf(page.data.silo);
 const silo = siloById(page.data.silo);
 ---
@@ -16,14 +22,22 @@ const silo = siloById(page.data.silo);
   <p class="side-h">עוד באתר</p>
   {sib.length > 0 && (
     <nav aria-label={`עוד ב${silo?.name}`}>
-      <p class="grp">{silo?.name}</p>
+      <p class="grp">{isPlace ? 'ערים סמוכות' : silo?.name}</p>
       <ul>{sib.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
     </nav>
   )}
   {cross.length > 0 && (
     <nav aria-label="פתרונות קשורים">
-      <p class="grp">פתרונות קשורים</p>
+      <p class="grp">{isPlace ? 'שירותים מבוקשים' : 'פתרונות קשורים'}</p>
       <ul>{cross.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
+    </nav>
+  )}
+  {(region || roofHub) && (
+    <nav aria-label="עוד">
+      <ul>
+        {region && <li><a href={urlOf(region)}>{region.data.keyword}</a></li>}
+        {roofHub && <li><a href={urlOf(roofHub)}>{roofHub.data.keyword}</a></li>}
+      </ul>
     </nav>
   )}
   {hub && page.data.type !== 'hub' && (

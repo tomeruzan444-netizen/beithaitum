@@ -19,7 +19,7 @@ const checked = rows.map((r) => r.checked).sort().at(-1);
             <tr>
               <th scope="row">{r.item}{r.desc && <span class="d">{r.desc}</span>}</th>
               <td>{r.unit}</td>
-              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪</td>
+              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪{r.vat && r.vat !== page.data.vat && <span class="d">{r.vat}</span>}</td>
               <td>{r.note}</td>
             </tr>
           ))}

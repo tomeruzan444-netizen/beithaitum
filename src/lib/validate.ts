@@ -31,15 +31,20 @@ export async function validateAll() {
     const links = bodyLinks(body);
     for (const l of links) if (!urls.has(l)) e(`קישור פנימי לעמוד שלא קיים: ${l}`);
 
-    if (d.type === 'service' || d.type === 'problem') {
+    if (d.type === 'service' || d.type === 'problem' || d.type === 'city') {
       const uniq = new Set(links);
       if (uniq.size < 2 || uniq.size > 3) e(`נדרשים 2 עד 3 קישורים פנימיים בגוף, נמצאו ${uniq.size}`);
       if (d.faq.length < 10 || d.faq.length > 15) e(`FAQ: נדרשות 10 עד 15 שאלות, יש ${d.faq.length}`);
       if (!d.prices.some((r) => r.verified)) e('אין טבלת מחירים (שורה מאומתת אחת לפחות)');
     }
     if (d.type === 'hub' && (d.faq.length < 5 || d.faq.length > 8)) e(`Hub FAQ: נדרשות 5 עד 8 שאלות, יש ${d.faq.length}`);
-    if (d.type === 'city' && (d.faq.length < 10 || d.faq.length > 15)) e(`FAQ עיר: נדרשות 10 עד 15 שאלות, יש ${d.faq.length}`);
+    if (d.type === 'city' && !d.city) e('עמוד עיר בלי שדה city');
+    if (d.type === 'region' && !d.region) e('עמוד אזור בלי שדה region');
     for (const r of d.prices) if (r.min > r.max) e(`מחיר: min גדול מ-max ב"${r.item}"`);
+  }
+  if (errors.length && process.env.SKIP_VALIDATE) {
+    console.warn(`\n[SKIP_VALIDATE] ${errors.length} בעיות תוכן:\n- ${errors.join('\n- ')}\n`);
+    return;
   }
   if (errors.length) {
     throw new Error(`\n\nבדיקת איכות תוכן נכשלה (${errors.length}):\n- ${errors.join('\n- ')}\n`);

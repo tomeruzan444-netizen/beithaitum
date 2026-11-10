@@ -9,7 +9,9 @@ import Faq from '../components/Faq.astro';
 import Cta from '../components/Cta.astro';
 import Sidebar from '../components/Sidebar.astro';
 import RoofSection from '../components/RoofSection.astro';
-import { allPages, urlOf, hubOf, childrenOf, type Page } from '../lib/pages';
+import ContactCard from '../components/ContactCard.astro';
+import { allPages, urlOf, hubOf, childrenOf, regionPage, citiesInRegion, type Page } from '../lib/pages';
+import { cityBySlug, regions } from '../data/cities';
 import { validateAll } from '../lib/validate';
 import { siloById } from '../data/silos';
 import { business } from '../config/business';
@@ -27,12 +29,21 @@ const siteUrl = new URL('/', Astro.site).href;
 const abs = (u: string) => new URL(u, Astro.site).href;
 const silo = siloById(d.silo);
 const hub = d.type !== 'hub' && d.type !== 'reference' ? await hubOf(d.silo) : undefined;
-const kids = d.type === 'hub' ? await childrenOf(d.silo) : [];
+const kids = d.type === 'hub' && d.silo !== 'areas' ? await childrenOf(d.silo) : d.type === 'region' ? await citiesInRegion(d.region ?? '') : [];
+// /areas/: קבוצות לפי אזור
+const areaGroups = d.type === 'hub' && d.silo === 'areas'
+  ? await Promise.all(regions.map(async (r) => ({ r, page: await regionPage(r.slug), cities: await citiesInRegion(r.slug) })))
+  : [];
+const areaLoose = d.type === 'hub' && d.silo === 'areas'
+  ? allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city ?? '')?.region)
+  : [];
 const allP = await allPages();
 
 // פירורי לחם
 const crumbs = [{ name: business.name, url: '/' }];
 if (hub) crumbs.push({ name: hub.data.keyword, url: urlOf(hub) });
+const myRegion = d.type === 'city' ? await regionPage(cityBySlug(d.city ?? '')?.region) : undefined;
+if (myRegion) crumbs.push({ name: myRegion.data.keyword, url: urlOf(myRegion) });
 crumbs.push({ name: d.keyword, url });
 
 // HTML מרונדר + CTA באמצע (לפני ה-H2 שבאמצע, רק בעמודים עם 4+ H2)
@@ -89,6 +100,7 @@ const hasAbout = allP.some((p) => p.id === 'about');
     <div class={`wrap body ${isArticle ? 'body--side' : ''}`}>
       <article class="prose">
         <Fragment set:html={segs[0]} />
+        {page.id === 'contact' && <ContactCard />}
         {headings.length >= 4 && (
           <details class="toc">
             <summary>תוכן העניינים</summary>
@@ -103,9 +115,21 @@ const hasAbout = allP.some((p) => p.id === 'about');
           </>
         ))}
 
-        {d.type === 'hub' && kids.length > 0 && (
+        {areaGroups.some((g) => g.page || g.cities.length) && (
+          <section class="areas-idx" aria-labelledby="ar-h">
+            <h2 id="ar-h">אזורים וערים</h2>
+            {areaGroups.filter((g) => g.page || g.cities.length).map((g) => (
+              <div class="ar">
+                <h3>{g.page ? <a href={urlOf(g.page)}>{g.page.data.keyword}</a> : g.r.name}</h3>
+                <ul>{g.cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul>
+              </div>
+            ))}
+            {areaLoose.length > 0 && <div class="ar"><h3>ערים נוספות</h3><ul>{areaLoose.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul></div>}
+          </section>
+        )}
+        {(d.type === 'hub' || d.type === 'region') && kids.length > 0 && (
           <section class="cards" aria-labelledby="kids-h">
-            <h2 id="kids-h">כל הנושאים ב{silo?.name}</h2>
+            <h2 id="kids-h">{d.type === 'region' ? `ערים ב${d.keyword.replace(/^איטום גגות ב/, '')}` : `כל הנושאים ב${silo?.name}`}</h2>
             <ul>
               {kids.map((k) => (
                 <li><a href={urlOf(k)}><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
@@ -166,6 +190,9 @@ const hasAbout = allP.some((p) => p.id === 'about');
   .cards .k { display: block; font: 700 1.15rem/1.3 var(--f-head); margin-bottom: .3rem; }
   .cards a:hover .k { color: var(--copper-ink); }
   .cards .s { display: block; font-size: .98rem; color: var(--ink-2); line-height: 1.55; }
+  .areas-idx .ar { border-top: 1px solid var(--line); padding-block: 1rem; }
+  .areas-idx h3 { margin: 0 0 .5rem; }
+  .areas-idx ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: 1rem; }
   .cities ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
   .cities a { display: inline-block; border: 1px solid var(--line); padding: .35rem .8rem; text-decoration: none; font-size: .95rem; }
   .cont { border-bottom-color: transparent; }

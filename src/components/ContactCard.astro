@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+import { business, isFilled, telHref, waHref } from '../config/business';
+const rows = [
+  ['טלפון', business.phone],
+  ['אימייל', business.email],
+  ['שעות פעילות', business.hours],
+  ['אזור שירות', business.area],
+] as const;
+---
+<div class="contact-card">
+  <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : 'חיוג'}</a>
+  <a class="btn" href={waHref()}><Icon name="chat" />שליחת הודעה בוואטסאפ</a>
+  <dl>
+    {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{isFilled(v) ? v : <span class="ph">{v}</span>}</dd></div>)}
+  </dl>
+</div>
+<style>
+  .contact-card { display: grid; gap: .8rem; border: 1px solid var(--line); background: #fff; padding: 1.6rem; margin-block: 2rem; max-width: 520px; }
+  dl { margin: .6rem 0 0; display: grid; gap: .5rem; font-size: 1rem; }
+  dl div { display: flex; justify-content: space-between; gap: 1rem; border-block-start: 1px solid var(--line-2); padding-top: .5rem; }
+  dt { color: var(--ink-2); }
+  dd { margin: 0; font-weight: 600; }
+</style>
