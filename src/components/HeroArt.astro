@@ -45,7 +45,7 @@ const wall = box(0, 60, 0, 220, 40, 170);
 const wWin = quad(P(150, 100, 120), 40, 46);
 const stain = P(110, 100, 50);
 ---
-<svg viewBox="-230 -170 470 380" role="img" aria-label={title} class="hero-art">
+<svg viewBox="-230 -170 470 380" width="470" height="380" role="img" aria-label={title} class="hero-art">
   <title>{title}</title>
   {variant === 'roof' && (
     <g>
@@ -83,12 +83,12 @@ const stain = P(110, 100, 50);
           <g>
             <line x1={l.lp[0]} y1={l.lp[1]} x2={l.lp[0] - 36} y2={l.lp[1]} stroke={C.line} stroke-width=".8" />
             <text x={l.lp[0] - 42} y={l.lp[1] - 2} text-anchor="start" font-size="14" font-weight="800" fill={C.dark}>{l.label}</text>
-            <text x={l.lp[0] - 42} y={l.lp[1] + 13} text-anchor="start" font-size="11" fill="#7A8088">{l.sub}</text>
+            <text x={l.lp[0] - 42} y={l.lp[1] + 13} text-anchor="start" font-size="11" fill="#5C626A">{l.sub}</text>
           </g>
         ))}
         <line x1={homeP[0]} y1={homeP[1]} x2={homeP[0] - 36} y2={homeP[1]} stroke={C.copper} stroke-width=".8" />
         <text x={homeP[0] - 42} y={homeP[1] - 2} text-anchor="start" font-size="14" font-weight="800" fill={C.copper}>הבית שלכם</text>
-        <text x={homeP[0] - 42} y={homeP[1] + 13} text-anchor="start" font-size="11" fill="#7A8088">יבש</text>
+        <text x={homeP[0] - 42} y={homeP[1] + 13} text-anchor="start" font-size="11" fill="#5C626A">יבש</text>
       </g>
     </g>
   )}
@@ -123,5 +123,5 @@ const stain = P(110, 100, 50);
   )}
 </svg>
 <style>
-  .hero-art { width: 100%; height: auto; display: block; }
+  .hero-art { width: 100%; height: auto; aspect-ratio: 470 / 380; display: block; }
 </style>

@@ -2,13 +2,17 @@
    בית האיטום - design tokens ובסיס. קונספט: "שכבה אחרי שכבה".
    פונט יחיד: Assistant. CSS לוגי בלבד (inline/block) ל-RTL.
    ============================================================ */
+/* פונט חלופי מכויל למידות של Assistant - מונע קפיצת תוכן (CLS) עד שהפונט נטען. נמדד מול Arial. */
+@font-face { font-family: 'Assistant Fallback'; src: local('Arial'); font-weight: 100 650; size-adjust: 93.5%; }
+@font-face { font-family: 'Assistant Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'); font-weight: 651 900; size-adjust: 106.4%; }
+
 :root {
   --paper: #F8F7F2;       /* רקע גוף */
   --mist: #E4E8EF;        /* הירו, כותרת עליונה */
   --sand: #F3E9DD;        /* קופסאות "לפני שמחליטים" */
   --ink: #15181D;         /* טקסט ומשטחים כהים */
   --ink-2: #4A5058;       /* טקסט משני */
-  --ink-3: #7A8088;       /* תוויות */
+  --ink-3: #5C626A;       /* תוויות */
   --copper: #A65A2E;      /* הדגשה */
   --copper-ink: #8F4B24;  /* נחושת לטקסט קטן (AA) */
   --peach: #E39A6B;       /* כפתורי פנייה על כהה */
@@ -18,7 +22,7 @@
   --on-dark: #F2F0EA;
   --on-dark-2: #A9ADB3;
 
-  --f: 'Assistant Variable', 'Assistant', 'Segoe UI', Arial, sans-serif;
+  --f: 'Assistant Variable', 'Assistant Fallback', 'Assistant', Arial, sans-serif;
   --fs-body: 1.125rem;
   --lh: 1.75;
   --measure: 68ch;
@@ -76,7 +80,7 @@ img, svg { max-width: 100%; height: auto; }
 
 /* ---------- תווית קטנה: "01 · סימנים" ---------- */
 .kicker { display: flex; align-items: center; gap: .5rem; font: 600 .82rem/1 var(--f); color: var(--ink-3); margin: 0 0 .8rem; letter-spacing: .02em; }
-.kicker b { color: var(--copper); font-weight: 700; }
+.kicker b { color: var(--copper-ink); font-weight: 700; }
 .kicker .bars { display: inline-flex; gap: 3px; }
 .kicker .bars i { display: block; width: 14px; height: 3px; background: var(--ink); }
 .kicker .bars i:nth-child(2) { background: var(--copper); }
@@ -105,7 +109,7 @@ img, svg { max-width: 100%; height: auto; }
 /* ---------- גוף מאמר ---------- */
 .prose { max-width: 760px; min-width: 0; counter-reset: sec; }
 .prose > h2 { margin-top: 3.2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); scroll-margin-top: 90px; }
-.prose > h2::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); display: block; font: 700 .85rem/1 var(--f); color: var(--copper); margin-bottom: .7rem; letter-spacing: .03em; }
+.prose > h2::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); display: block; font: 700 .85rem/1 var(--f); color: var(--copper-ink); margin-bottom: .7rem; letter-spacing: .03em; }
 .prose h3 { margin-top: 1.8rem; scroll-margin-top: 90px; }
 .prose p, .prose li { max-width: var(--measure); }
 .prose ul, .prose ol { padding-inline-start: 1.3rem; margin: 0 0 1.2em; }

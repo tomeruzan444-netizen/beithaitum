@@ -119,8 +119,8 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
   <section class="hero">
     <div class="wrap hero-in">
       <div class="ht">
-        <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> בית האיטום · חברת איטום</p>
-        <h1>בין הגשם לבין הסלון שלכם יש <span class="c">ארבע שכבות.</span></h1>
+        <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> חברת איטום · שכבה אחרי שכבה</p>
+        <h1><span class="h1b">בית האיטום</span> בין הגשם לבין הסלון שלכם יש <span class="c">ארבע שכבות.</span></h1>
         <p class="lead">כשאחת מהן נסדקת, מתנתקת או נשחקת, המים מוצאים דרך. אנחנו בודקים את כולן, מאתרים את המקור ומתקנים רק את מה שצריך, כדי שהגג יעבוד שוב כמערכת אחת.</p>
         <div class="cta-row">
           <a class="btn btn--primary" href="#roof-check">בדקו את הגג שלכם ↓</a>
@@ -274,22 +274,23 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
 
 <style>
   .hero { background: var(--mist); clip-path: polygon(0 0, 100% 0, 100% 100%, 12% calc(100% - 50px), 0 calc(100% - 26px)); padding-bottom: clamp(3.5rem, 8vw, 6rem); }
-  .hero-in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding-top: clamp(1.5rem, 4vw, 3rem); }
+  .hero-in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: start; padding-top: clamp(1.5rem, 4vw, 3rem); }
   .ht h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); margin: .4rem 0 1.2rem; max-width: 11ch; }
+  .h1b { display: block; font-size: .36em; letter-spacing: -.005em; color: var(--ink); margin-bottom: .45em; padding-bottom: .35em; border-bottom: 3px solid var(--copper); width: fit-content; }
   .lead { font-size: clamp(1.08rem, 1.5vw, 1.22rem); color: var(--ink-2); max-width: 46ch; line-height: 1.6; }
   .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.8rem; }
   .call { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: .3em; }
-  .ha { max-width: 560px; width: 100%; justify-self: center; }
+  .ha { max-width: 560px; width: 100%; justify-self: center; padding-top: 1rem; }
 
   .sec { padding-block: var(--space); }
   .sub { color: var(--ink-2); font-size: 1.08rem; max-width: 60ch; }
   .sh { max-width: 64ch; margin-bottom: 2.4rem; }
-  .more { display: inline-block; margin-top: 1.6rem; font-weight: 700; color: var(--copper); }
+  .more { display: inline-block; margin-top: 1.6rem; font-weight: 700; color: var(--copper-ink); }
 
   .check-in { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
   .points { list-style: none; margin: 1.6rem 0 0; padding: 0; border-top: 1px solid var(--line); }
   .points li { display: flex; gap: 1.2rem; padding: .9rem 0; border-bottom: 1px solid var(--line); font-weight: 600; }
-  .points b { color: var(--copper); font-size: .85rem; padding-top: .2rem; }
+  .points b { color: var(--copper-ink); font-size: .85rem; padding-top: .2rem; }
   .pick { background: #fff; border: 1.5px solid var(--ink); border-top: 6px solid var(--ink); padding: 1.5rem; box-shadow: 8px 8px 0 var(--mist); }
   .pk { font-size: .82rem; color: var(--ink-3); margin: 0; }
   .pq { font: 800 1.5rem/1.2 var(--f); margin: .3rem 0 1rem; }
@@ -315,19 +316,19 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
   .dark .more { color: var(--peach); }
 
   .copper { background: var(--copper); color: #fff; }
-  .copper .kicker { color: rgba(255,255,255,.75); }
+  .copper .kicker { color: #fff; }
   .copper .kicker .bars i { background: #fff; }
   .copper .kicker .bars i:nth-child(2) { background: var(--ink); }
   .steps { list-style: none; margin: 2.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem; }
   .steps li { border-top: 2px solid rgba(255,255,255,.55); padding-top: 1rem; }
   .sn { display: block; font: 800 3rem/1 var(--f); margin-bottom: .6rem; }
   .steps h3 { margin: 0 0 .4rem; }
-  .steps p { margin: 0; color: rgba(255,255,255,.85); font-size: 1rem; }
+  .steps p { margin: 0; color: #fff; font-size: 1rem; }
 
   .problems { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--ink); }
   .problems li { padding: 1.6rem 0 1.8rem; padding-inline-end: 1.6rem; border-bottom: 1px solid var(--line); }
   .problems li:nth-child(even) { padding-inline: 1.6rem 0; border-inline-start: 1px solid var(--line); }
-  .pn { font: 700 .82rem/1 var(--f); color: var(--copper); }
+  .pn { font: 700 .82rem/1 var(--f); color: var(--copper-ink); }
   .problems h3 { margin: .5rem 0 .9rem; font-size: 1.3rem; font-weight: 800; }
   .problems h3 a { color: var(--ink); }
   .problems h3 a:hover { color: var(--copper); }
@@ -337,20 +338,20 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
   .problems dd { margin: 0; }
 
   .mist { background: var(--mist); }
-  .areas { background: #D9D3C7; }
+  .areas { background: #E2DCD0; }
   .ah { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1rem; border-bottom: 2px solid var(--ink); margin-bottom: 1.6rem; }
   .ah h2 { margin-bottom: .6rem; }
-  .ah .more { margin: 0; }
+  .ah .more { margin: 0; color: var(--ink); }
   .acols { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.6rem 2rem; }
-  .ar { font: 700 .82rem/1 var(--f); color: var(--ink-3); margin: 0 0 .7rem; }
-  .ar a { color: var(--ink-3); }
+  .ar { font: 700 .85rem/1 var(--f); color: var(--ink); margin: 0 0 .7rem; }
+  .ar a { color: var(--ink); }
   .acols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
   .acols ul a { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: .25em; }
 
   .sand { background: var(--sand); }
   .faq-wrap { display: grid; grid-template-columns: .9fr 1.4fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
   .gbox { margin-top: 2rem; border-top: 2px solid var(--ink); padding-top: 1rem; }
-  .gk { font: 700 .82rem/1 var(--f); color: var(--copper); margin: 0 0 .6rem; }
+  .gk { font: 700 .82rem/1 var(--f); color: var(--copper-ink); margin: 0 0 .6rem; }
   .gbox ul { list-style: none; margin: 0; padding: 0; }
   .gbox a { display: block; padding: .6rem 0; border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 700; text-decoration: none; }
   .gbox a:hover { color: var(--copper); }
@@ -361,7 +362,7 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
 
   @media (max-width: 960px) {
     .hero-in, .check-in, .faq-wrap { grid-template-columns: 1fr; }
-    .ha { max-width: 420px; }
+    .ha { max-width: 340px; order: -1; padding-top: 0; }
     .lcards { grid-template-columns: 1fr 1fr; }
     .steps { grid-template-columns: 1fr 1fr; }
   }

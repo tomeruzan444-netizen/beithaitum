@@ -4,7 +4,7 @@ interface Props { dark?: boolean }
 const { dark = false } = Astro.props;
 const fg = dark ? '#F2F0EA' : '#15181D';
 ---
-<a href="/" class="logo" aria-label="בית האיטום - לדף הבית">
+<a href="/" class="logo">
   <svg viewBox="0 0 44 36" width="42" height="34" aria-hidden="true">
     <polygon points="22,2 42,12 22,22 2,12" fill="#ECE8DF" stroke={fg} stroke-width="1.2" />
     <polygon points="2,12 22,22 22,26 2,16" fill="#23272E" />
@@ -16,7 +16,7 @@ const fg = dark ? '#F2F0EA' : '#15181D';
   </svg>
   <span class="t">
     <span class="n" style={`color:${fg}`}>בית האיטום</span>
-    <span class="s" style={`color:${dark ? '#A9ADB3' : '#7A8088'}`}>שכבה אחרי שכבה</span>
+    <span class="s" style={`color:${dark ? '#A9ADB3' : '#5C626A'}`}>שכבה אחרי שכבה</span>
   </span>
 </a>
 <style>
