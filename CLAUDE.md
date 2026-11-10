@@ -29,6 +29,7 @@
 
 ## פריסה
 - `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ומעלה ב-SSH/rsync להוסטינגר.
+- ⚠️ (2026-11-10) ה-Secrets לא מוגדרים בריפו - כל ריצות ה-Actions נכשלות בשלב ה-rsync. עד שיוגדרו, העלאה רק מהמחשב המקומי. ענן Claude לא יכול להעלות ישירות (חסימת רשת).
 - Secrets נדרשים בריפו: `SSH_HOST`, `SSH_PORT`, `SSH_USERNAME`, `SSH_PRIVATE_KEY`, `SSH_REMOTE_DIR`.
 - **דומיין**: `itumhouse.co.il` (2026-11-10). בהוסטינגר הוא דומיין חונה (parked) על האתר `orangered-goshawk-401694.hostingersite.com` - אותה תיקיית public_html, ולכן `SSH_REMOTE_DIR` לא השתנה. הדומיין רשום מחוץ להוסטינגר; ה-DNS מכוון אצל הרשם.
 - **חסימת גוגל**: `blockIndexing: true` ב-`business.ts` + `X-Robots-Tag` לכל הדומיינים ב-`public/.htaccess`. לפתיחה (רק באישור המשתמש): `blockIndexing: false`, למחוק את שורת X-Robots-Tag, Search Console.
