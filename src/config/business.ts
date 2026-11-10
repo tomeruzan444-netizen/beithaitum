@@ -11,9 +11,9 @@ export const business = {
   url: import.meta.env.SITE ?? 'https://itumhouse.co.il',
   /** חסימת גוגל עד שהמשתמש יאשר עלייה לאוויר (החלטה 2026-11-10). לפתיחה: false + להסיר את X-Robots-Tag ב-public/.htaccess. */
   blockIndexing: true,
-  phone: '052-3456543',
+  phone: '052-4586433',
   /** בפורמט בינלאומי בלי + ובלי מקפים, למשל 972501234567 */
-  whatsapp: '972523456543',
+  whatsapp: '972524586433',
   email: 'itumhouse@gmail.com',
   area: '[כתובת / אזור שירות]',
   hours: '[שעות]',
