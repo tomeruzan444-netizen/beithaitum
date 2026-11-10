@@ -31,7 +31,7 @@
 - `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ודוחף את `dist` לענף `live`. הוסטינגר מושך את `live` אוטומטית (Git auto-deploy, 2026-11-10). אין צורך ב-SSH secrets.
 - **דומיין**: `itumhouse.co.il` (2026-11-10). בהוסטינגר הוא דומיין חונה (parked) על האתר `orangered-goshawk-401694.hostingersite.com` - אותה תיקיית public_html. הדומיין רשום מחוץ להוסטינגר; ה-DNS מכוון אצל הרשם.
 - **חסימת גוגל**: `blockIndexing: true` ב-`business.ts` + `X-Robots-Tag` לכל הדומיינים ב-`public/.htaccess`. לפתיחה (רק באישור המשתמש): `blockIndexing: false`, למחוק את שורת X-Robots-Tag, Search Console.
-- ⏳ אחרי שה-DNS וה-SSL של itumhouse.co.il פעילים: הפניית 301 מהדומיין הזמני ל-itumhouse.co.il ב-.htaccess.
+- DNS אצל box.co.il: רשומות A ל-@ ול-www -> 82.29.187.1 (2026-11-10). SSL לדומיין החונה הותקן אוטומטית בהוסטינגר. הדומיין הזמני מפנה ב-301 ל-itumhouse.co.il (.htaccess).
 - אינטגרציית ה-Git של הוסטינגר מחוברת **רק לענף `live`**. לעולם לא ל-`main` (קוד מקור בלי build דורס את public_html).
 
 ## מצב נוכחי

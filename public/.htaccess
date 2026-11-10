@@ -6,6 +6,9 @@ Options -Indexes
   RewriteEngine On
   # חסימת גישה לתיקיית .git (הוסטינגר מושך את ענף live ב-git)
   RewriteRule (^|/)\.git(/|$) - [F,L]
+  # הדומיין הזמני של הוסטינגר -> הדומיין הראשי (301)
+  RewriteCond %{HTTP_HOST} hostingersite\.com$ [NC]
+  RewriteRule ^ https://itumhouse.co.il%{REQUEST_URI} [L,R=301]
   # HTTPS בלבד
   RewriteCond %{HTTPS} off
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
