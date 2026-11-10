@@ -32,7 +32,7 @@ keyword,secondary,silo,path,type,intent,angle,not_about,links,status
 איטום שלילי,,methods,/methods/negative-side/,service,informational,איטום מהצד הפנימי: מתי מתאים; מגבלות; חומרים,לא מרתף כשירות שלם,/structures/basement/; /methods/crystalline/,planned
 איטום בסנפלינג,,methods,/methods/rappelling/,service,commercial,עבודה בגובה בלי פיגום; בטיחות; עלות מול פיגום,לא שיטת חומר,/walls/exterior/; /walls/exterior-cracks/,planned
 זפת קר,,methods,/methods/cold-tar/,service,informational,החומר: הרכב; שימושים; מגבלות; מול זפת חם,לא שירות זיפות גגות,/roof-waterproofing/roof-tarring/; /methods/bitumen-membranes/,planned
-בטקל,בטקל לאיטום,methods,/methods/betakal/,service,informational,חומר צמנטי גמיש: שימוש בחדרים רטובים ובמרפסות; יישום,לא חומרים פולימריים כלליים,/interior/shower/; /balconies/,planned
+בטקל,בטקל לאיטום,methods,/methods/betakal/,service,informational,בטון קל לשיפועים בגג שטוח: הרכב; ייבוש; איטום מעליו (בטקל אינו חומר איטום),לא חומרים צמנטיים לאיטום (polymer),/interior/shower/; /balconies/,planned
 רולקה,,methods,/methods/rolka/,service,informational,מה זה רולקה; למה צריך; ביצוע נכון,לא איטום תפרים,/roof-waterproofing/flat-roof/; /methods/joints/,planned
 איטום תפרים,,methods,/methods/joints/,service,commercial,תפרי התפשטות ומישקים; מסטיקים; פרופילים,לא רולקה,/methods/rolka/; /roof-waterproofing/concrete-roof/,planned
 איטום קירות,,walls,/walls/,hub,commercial,סקירה: חיצוני מול פנימי; מקורות חדירת מים בקיר; בחירת פתרון,לא עמוד שירות,/walls/exterior/; /moisture/wall-damp/,planned

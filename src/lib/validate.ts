@@ -40,6 +40,11 @@ export async function validateAll() {
     if (d.type === 'hub' && (d.faq.length < 5 || d.faq.length > 8)) e(`Hub FAQ: נדרשות 5 עד 8 שאלות, יש ${d.faq.length}`);
     if (d.type === 'city' && !d.city) e('עמוד עיר בלי שדה city');
     if (d.type === 'region' && !d.region) e('עמוד אזור בלי שדה region');
+    // אורך: לפחות 1,000 מילים בגוף (בלי frontmatter ובלי FAQ) בכל עמוד תוכן - דרישת המשתמש 2026-11-10
+    if (d.type !== 'reference') {
+      const words = wordCount(body);
+      if (words < 1000) e(`אורך: ${words} מילים בגוף, נדרש לפחות 1,000`);
+    }
     for (const r of d.prices) if (r.min > r.max) e(`מחיר: min גדול מ-max ב"${r.item}"`);
   }
   if (errors.length && process.env.SKIP_VALIDATE) {
@@ -49,6 +54,14 @@ export async function validateAll() {
   if (errors.length) {
     throw new Error(`\n\nבדיקת איכות תוכן נכשלה (${errors.length}):\n- ${errors.join('\n- ')}\n`);
   }
+}
+
+export function wordCount(md: string) {
+  return md
+    .replace(/\]\([^)]*\)/g, ']') // URL של קישורים לא נספר
+    .replace(/[#*|>`\[\]_-]+/g, ' ')
+    .split(/\s+/)
+    .filter((w) => /[֐-׿A-Za-z0-9]/.test(w)).length;
 }
 
 export const hasPrices = (p: Page) => p.data.prices.some((r) => r.verified);

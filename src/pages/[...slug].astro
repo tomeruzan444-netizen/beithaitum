@@ -28,6 +28,7 @@ const url = urlOf(page);
 const siteUrl = new URL('/', Astro.site).href;
 const abs = (u: string) => new URL(u, Astro.site).href;
 const silo = siloById(d.silo);
+const allP = await allPages();
 const hub = d.type !== 'hub' && d.type !== 'reference' ? await hubOf(d.silo) : undefined;
 const kids = d.type === 'hub' && d.silo !== 'areas' ? await childrenOf(d.silo) : d.type === 'region' ? await citiesInRegion(d.region ?? '') : [];
 // /areas/: קבוצות לפי אזור
@@ -37,7 +38,6 @@ const areaGroups = d.type === 'hub' && d.silo === 'areas'
 const areaLoose = d.type === 'hub' && d.silo === 'areas'
   ? allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city ?? '')?.region)
   : [];
-const allP = await allPages();
 
 // פירורי לחם
 const crumbs = [{ name: business.name, url: '/' }];
@@ -98,9 +98,10 @@ const hasAbout = allP.some((p) => p.id === 'about');
     </header>
 
     <div class={`wrap body ${isArticle ? 'body--side' : ''}`}>
-      <article class="prose">
+      <article class="prose" data-pagefind-body>
         <Fragment set:html={segs[0]} />
         {page.id === 'contact' && <ContactCard />}
+        <PriceTable page={page} />
         {headings.length >= 4 && (
           <details class="toc">
             <summary>תוכן העניינים</summary>
@@ -154,7 +155,6 @@ const hasAbout = allP.some((p) => p.id === 'about');
           </section>
         )}
 
-        <PriceTable page={page} />
         {isArticle && <Cta title={`צריכים ${d.keyword}?`} text="נשמח לשמוע מה קורה אצלכם ולתאם בדיקה." />}
         <Faq items={d.faq} heading={`שאלות נפוצות על ${d.keyword}`} />
 

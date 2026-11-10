@@ -45,6 +45,7 @@ const flat = groups.length ? extra : fallback;
       </ul>
     </nav>
     <div class="actions">
+      <a class="srch-btn" href="/search/" aria-label="חיפוש באתר"><Icon name="search" /></a>
       <a class="call" href={telHref()}>
         <Icon name="phone" />
         {isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : <span>חיוג</span>}
@@ -86,6 +87,9 @@ const flat = groups.length ? extra : fallback;
   .col li a:hover, .ch:hover { color: var(--copper-ink); }
   .all { display: inline-block; margin-top: .4rem; font-size: .88rem; font-weight: 600; }
   .actions { display: flex; align-items: center; gap: .8rem; }
+  .srch-btn { display: grid; place-items: center; width: 40px; height: 40px; color: var(--bitumen); }
+  .srch-btn :global(svg) { width: 22px; height: 22px; }
+  .srch-btn:hover { color: var(--copper-ink); }
   .call { display: inline-flex; align-items: center; gap: .4rem; color: var(--bitumen); text-decoration: none; font-weight: 600; font-size: 1rem; }
   .call :global(svg) { width: 1.2rem; height: 1.2rem; color: var(--copper); }
   .quote { min-height: 42px; padding-block: .5em; font-size: .95rem; }

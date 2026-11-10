@@ -32,7 +32,8 @@ const checked = rows.map((r) => r.checked).sort().at(-1);
   </section>
 )}
 <style>
-  .prices { margin-block: 3rem; }
+  .prices { margin-block: 2rem 2.5rem; padding: 1.4rem 1.4rem .6rem; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--copper); }
+  .prices h2 { margin-top: 0; padding-top: 0; border-top: 0; font-size: clamp(1.35rem, 2.6vw, 1.75rem); }
   .d { display: block; font: 400 .88rem/1.4 var(--f-body); color: var(--ink-2); margin-top: .2rem; white-space: normal; }
   .num { white-space: nowrap; font-weight: 600; direction: rtl; }
   .fine { font-size: .9rem; color: var(--ink-2); margin-top: .9rem; }

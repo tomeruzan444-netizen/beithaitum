@@ -10,6 +10,6 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   build: { format: 'directory', inlineStylesheets: 'always' },
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (p) => !p.includes('/search/') })],
   compressHTML: true,
 });

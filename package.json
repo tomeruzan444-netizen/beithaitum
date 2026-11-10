@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/check.mjs",
+    "build": "astro build && pagefind --site dist --glob \"**/*.html\" --exclude-selectors \"header,footer,nav,aside,.mbar\" --quiet && node scripts/check.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "node scripts/check.mjs"
@@ -15,5 +15,8 @@
     "@fontsource/frank-ruhl-libre": "^5.3.0",
     "@fontsource/ibm-plex-sans-hebrew": "^5.3.0",
     "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "pagefind": "^1.6.0"
   }
 }
