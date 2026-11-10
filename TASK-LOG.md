@@ -57,3 +57,8 @@
 - `SITE_URL` / `business.url` -> https://itumhouse.co.il (canonical, sitemap, סכמה).
 - חסימת גוגל נשארת לפי החלטת המשתמש: דגל `blockIndexing` במקום זיהוי לפי דומיין זמני; X-Robots-Tag על כל הדומיינים.
 - פתוח: DNS אצל הרשם, SSL + הפניית HTTPS בהוסטינגר, הפניית 301 מהדומיין הזמני.
+
+## 2026-11-10 (17:35) - פריסה בלי SSH: ענף live
+- התגלה שכל ריצות ה-Actions נכשלו (אין SSH secrets בריפו). הפריסה הוחלפה: Actions בונה ודוחף את dist לענף `live`; הוסטינגר מחובר ל-`live` ב-Git auto-deploy (נבדק: is_enabled, branch live). פריסה ראשונה בוצעה.
+- `.htaccess`: חסימת גישה ל-`.git`.
+- עכשיו כל push ל-main (גם מהטלפון) עולה לאתר החי בלי מחשב.
