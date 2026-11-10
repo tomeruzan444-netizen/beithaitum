@@ -6,16 +6,18 @@ const fg = dark ? '#F2F0EA' : '#15181D';
 import { markSvgInner, MARK_VIEWBOX } from '../../scripts/brand/mark.mjs';
 ---
 <a href="/" class="logo">
-  <svg viewBox={MARK_VIEWBOX} width="34" height="42" aria-hidden="true" set:html={markSvgInner({ onDark: dark })} />
+  <svg viewBox={MARK_VIEWBOX} width="40" height="40" aria-hidden="true" set:html={markSvgInner({ onDark: dark })} />
+  <span class="bar" style={`color:${fg}`} aria-hidden="true"></span>
   <span class="t">
     <span class="n" style={`color:${fg}`}>בית האיטום</span>
     <span class="s" style={`color:${dark ? '#A9ADB3' : '#5C626A'}`}>שכבה אחרי שכבה</span>
   </span>
 </a>
 <style>
-  .logo { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; }
-  .logo svg { height: 44px; width: auto; flex: none; }
+  .logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; }
+  .logo svg { height: 40px; width: 40px; flex: none; }
+  .logo .bar { width: 1px; height: 30px; background: currentColor; opacity: .2; }
   .t { display: flex; flex-direction: column; line-height: 1; }
-  .n { font: 800 1.45rem/1 var(--f); letter-spacing: -.02em; }
+  .n { font: 700 1.42rem/1 var(--f); letter-spacing: -.015em; }
   .s { font: 500 .72rem/1 var(--f); margin-top: .3rem; letter-spacing: .04em; }
 </style>
