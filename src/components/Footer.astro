@@ -44,7 +44,7 @@ const show = (v: string) => (isFilled(v) ? v : null);
       <ul>
         <li>{show(business.phone) ? <a href={telHref()} dir="ltr">{business.phone}</a> : <span class="ph">[מספר טלפון]</span>}</li>
         <li>{show(business.email) ? <a href={`mailto:${business.email}`}>{business.email}</a> : <span class="ph">[כתובת מייל]</span>}</li>
-        {show(business.hours) && <li>{business.hours}</li>}
+        {show(business.hours) && <li>פעילות: {business.hours}</li>}
       </ul>
       <ul class="more">{more.map((p) => <li><a href={urlOf(p)}>{p.data.keyword}</a></li>)}<li><a href="/sitemap/">מפת האתר</a></li></ul>
     </div>

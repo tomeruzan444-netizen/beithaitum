@@ -16,7 +16,7 @@ export const business = {
   whatsapp: '972524586433',
   email: 'itumhouse@gmail.com',
   area: '[כתובת / אזור שירות]',
-  hours: '[שעות]',
+  hours: "ימים א'-ה'",
   contractorLicense: '[מספר רישום]',
   yearsExperience: '[מספר שנים]',
   warranty: '[תנאי אחריות]',
