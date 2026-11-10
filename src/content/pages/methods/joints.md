@@ -42,7 +42,7 @@ prices:
     source: 'דפי זהב'
     sourceUrl: 'https://www.d.co.il/priceList-2410/'
     checked: '2026-11'
-  - item: 'מסטיק פוליאוריטני (סיקפלקס 11FC), חומר בלבד'
+  - item: 'מסטיק פוליאוריטני, חומר בלבד'
     desc: 'שפופרת 600 מ"ל'
     unit: 'ליחידה'
     min: 40

@@ -28,7 +28,7 @@ prices:
     unit: "מ\"ר"
     min: 100
     max: 300
-    note: "סנטף שקט יותר בדגם BH מתחיל בכ-300 ש\"ח למ\"ר"
+    note: "לוח שקט יותר מתחיל בכ-300 ש\"ח למ\"ר"
     source: "מידרג"
     sourceUrl: "https://www.midrag.co.il/Content/Tip/15770"
     checked: "2026-11"

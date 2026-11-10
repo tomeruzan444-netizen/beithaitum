@@ -43,7 +43,7 @@ prices:
     source: "מידרג"
     sourceUrl: "https://www.midrag.co.il/Content/Price/2313"
     checked: "2026-11"
-  - item: "אלסטוסיל, איטום לקירות ורצפות בחדרים לחים"
+  - item: "חומר צמנטי גמיש, איטום לקירות ורצפות בחדרים לחים"
     desc: "חומר בלבד"
     unit: "לאריזה"
     min: 180
