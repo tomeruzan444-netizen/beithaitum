@@ -28,13 +28,11 @@
 - `npm run dev` / `npm run build` / `npm run preview`
 
 ## פריסה
-- `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ומעלה ב-SSH/rsync להוסטינגר.
-- ⚠️ (2026-11-10) ה-Secrets לא מוגדרים בריפו - כל ריצות ה-Actions נכשלות בשלב ה-rsync. עד שיוגדרו, העלאה רק מהמחשב המקומי. ענן Claude לא יכול להעלות ישירות (חסימת רשת).
-- Secrets נדרשים בריפו: `SSH_HOST`, `SSH_PORT`, `SSH_USERNAME`, `SSH_PRIVATE_KEY`, `SSH_REMOTE_DIR`.
-- **דומיין**: `itumhouse.co.il` (2026-11-10). בהוסטינגר הוא דומיין חונה (parked) על האתר `orangered-goshawk-401694.hostingersite.com` - אותה תיקיית public_html, ולכן `SSH_REMOTE_DIR` לא השתנה. הדומיין רשום מחוץ להוסטינגר; ה-DNS מכוון אצל הרשם.
+- `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ודוחף את `dist` לענף `live`. הוסטינגר מושך את `live` אוטומטית (Git auto-deploy, 2026-11-10). אין צורך ב-SSH secrets.
+- **דומיין**: `itumhouse.co.il` (2026-11-10). בהוסטינגר הוא דומיין חונה (parked) על האתר `orangered-goshawk-401694.hostingersite.com` - אותה תיקיית public_html. הדומיין רשום מחוץ להוסטינגר; ה-DNS מכוון אצל הרשם.
 - **חסימת גוגל**: `blockIndexing: true` ב-`business.ts` + `X-Robots-Tag` לכל הדומיינים ב-`public/.htaccess`. לפתיחה (רק באישור המשתמש): `blockIndexing: false`, למחוק את שורת X-Robots-Tag, Search Console.
 - ⏳ אחרי שה-DNS וה-SSL של itumhouse.co.il פעילים: הפניית 301 מהדומיין הזמני ל-itumhouse.co.il ב-.htaccess.
-- אינטגרציית ה-Git הנייטיבית של הוסטינגר חייבת להישאר מנותקת (היא דורסת את public_html בלי build).
+- אינטגרציית ה-Git של הוסטינגר מחוברת **רק לענף `live`**. לעולם לא ל-`main` (קוד מקור בלי build דורס את public_html).
 
 ## מצב נוכחי
 - המשתמש בחר (2026-11-10) לדלג על שלבי האישור ולהעלות מהר בסיס + דף בית; התכנון (keyword-map, ערים, סילואים) רץ במקביל.

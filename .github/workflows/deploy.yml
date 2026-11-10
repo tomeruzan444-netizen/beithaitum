@@ -1,8 +1,8 @@
 name: Build & Deploy to Hostinger
 
-# כל push לענף main -> בניית Astro -> העלאה להוסטינגר ב-SSH/rsync.
-# חשוב: אינטגרציית ה-Git הנייטיבית של הוסטינגר (hPanel -> Advanced -> Git) חייבת להישאר מנותקת,
-# אחרת היא עושה checkout גולמי של הריפו (בלי build) ל-public_html ומפילה את האתר.
+# כל push לענף main -> בניית Astro -> האתר הבנוי נדחף לענף live.
+# הוסטינגר מושך את ענף live אוטומטית (Git auto-deploy). אין צורך ב-SSH secrets.
+# חשוב: הוסטינגר מחובר רק לענף live (קבצים בנויים). לעולם לא לענף main (קוד מקור, בלי build).
 on:
   push:
     branches: [main]
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -40,14 +40,12 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Deploy to Hostinger via SSH (rsync)
-        uses: easingthemes/ssh-deploy@v5.1.2
+      - name: Publish built site to branch "live"
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-          SOURCE: "dist/"
-          TARGET: ${{ secrets.SSH_REMOTE_DIR }}
-          ARGS: "-avzr --delete"
-          EXCLUDE: ".git*"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: live
+          publish_dir: ./dist
+          force_orphan: true
+          enable_jekyll: true
+          commit_message: "Build from ${{ github.sha }}"
