@@ -1,26 +1,20 @@
 ---
-// סימן: קופסה איזומטרית בשכבות. טקסט: בית האיטום + "שכבה אחרי שכבה".
+// סימן: ערימה איזומטרית של 4 שכבות עם טיפה (scripts/brand/mark.mjs - מקור אמת אחד גם ל-PNG). טקסט: בית האיטום + "שכבה אחרי שכבה".
 interface Props { dark?: boolean }
 const { dark = false } = Astro.props;
 const fg = dark ? '#F2F0EA' : '#15181D';
+import { markSvgInner, MARK_VIEWBOX } from '../../scripts/brand/mark.mjs';
 ---
 <a href="/" class="logo">
-  <svg viewBox="0 0 44 36" width="42" height="34" aria-hidden="true">
-    <polygon points="22,2 42,12 22,22 2,12" fill="#ECE8DF" stroke={fg} stroke-width="1.2" />
-    <polygon points="2,12 22,22 22,26 2,16" fill="#23272E" />
-    <polygon points="22,22 42,12 42,16 22,26" fill="#15181D" />
-    <polygon points="2,16 22,26 22,29 2,19" fill="#A65A2E" />
-    <polygon points="22,26 42,16 42,19 22,29" fill="#8F4B24" />
-    <polygon points="2,19 22,29 22,34 2,24" fill="#BDB5A6" />
-    <polygon points="22,29 42,19 42,24 22,34" fill="#A39A8A" />
-  </svg>
+  <svg viewBox={MARK_VIEWBOX} width="34" height="42" aria-hidden="true" set:html={markSvgInner({ onDark: dark })} />
   <span class="t">
     <span class="n" style={`color:${fg}`}>בית האיטום</span>
     <span class="s" style={`color:${dark ? '#A9ADB3' : '#5C626A'}`}>שכבה אחרי שכבה</span>
   </span>
 </a>
 <style>
-  .logo { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; }
+  .logo { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; }
+  .logo svg { height: 44px; width: auto; flex: none; }
   .t { display: flex; flex-direction: column; line-height: 1; }
   .n { font: 800 1.45rem/1 var(--f); letter-spacing: -.02em; }
   .s { font: 500 .72rem/1 var(--f); margin-top: .3rem; letter-spacing: .04em; }

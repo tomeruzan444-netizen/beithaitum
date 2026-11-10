@@ -24,6 +24,8 @@ const toUrl = (f) => {
   return '/' + rel;
 };
 
+// עמודים שמגיעים אליהם רק מתהליך (תודה אחרי טופס) - לא נבדקים כיתומים
+const FLOW_ONLY = new Set(['/thanks/']);
 const files = walk(DIST).filter((f) => !f.endsWith('404.html'));
 const pages = new Map();
 for (const f of files) {
@@ -57,7 +59,7 @@ for (const [u, p] of pages) {
 // יתומים + עומק
 const incoming = new Map([...pages.keys()].map((u) => [u, 0]));
 for (const [u, p] of pages) for (const l of p.links) if (l !== u && incoming.has(l)) incoming.set(l, incoming.get(l) + 1);
-for (const [u, n] of incoming) if (u !== '/' && n === 0) errors.push(`עמוד יתום (אין אליו קישור): ${u}`);
+for (const [u, n] of incoming) if (u !== '/' && !FLOW_ONLY.has(u) && n === 0) errors.push(`עמוד יתום (אין אליו קישור): ${u}`);
 const depth = new Map([['/', 0]]);
 const q = ['/'];
 while (q.length) {
@@ -65,6 +67,7 @@ while (q.length) {
   for (const l of pages.get(u)?.links ?? []) if (pages.has(l) && !depth.has(l)) { depth.set(l, depth.get(u) + 1); q.push(l); }
 }
 for (const u of pages.keys()) {
+  if (FLOW_ONLY.has(u)) continue;
   if (!depth.has(u)) errors.push(`לא נגיש מדף הבית: ${u}`);
   else if (depth.get(u) > 3) errors.push(`עומק ${depth.get(u)} קליקים: ${u}`);
 }

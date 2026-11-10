@@ -28,7 +28,8 @@ const org: Record<string, unknown> = {
   name: business.name,
   alternateName: business.nameEn,
   url: siteUrl,
-  logo: new URL('/favicon.svg', Astro.site).href,
+  logo: new URL('/brand/logo-mark.png', Astro.site).href,
+  image: new URL('/brand/og-default.png', Astro.site).href,
   ...(isFilled(business.phone) && { telephone: business.phone }),
   ...(isFilled(business.email) && { email: business.email }),
   ...(sameAs.length && { sameAs }),
@@ -53,6 +54,8 @@ const graph = {
   <meta name="robots" content={robots} />
   <link rel="canonical" href={canonical} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/brand/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
   <link rel="preload" href={fontHe} as="font" type="font/woff2" crossorigin />
   <meta name="theme-color" content="#E4E8EF" />
   <meta property="og:type" content="website" />
@@ -61,7 +64,11 @@ const graph = {
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL('/brand/og-default.png', Astro.site).href} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content={new URL('/brand/og-default.png', Astro.site).href} />
   <link rel="sitemap" href="/sitemap-index.xml" />
   <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 </head>

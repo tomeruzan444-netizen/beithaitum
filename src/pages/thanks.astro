@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business, telHref, waHref } from '../config/business';
+---
+<BaseLayout title="תודה, קיבלנו את הפנייה | בית האיטום" description="הפנייה שלכם התקבלה אצל צוות בית האיטום. נחזור אליכם בהקדם." noindex>
+  <section class="ty">
+    <div class="wrap">
+      <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> הפנייה התקבלה</p>
+      <h1>תודה, <span class="c">קיבלנו.</span></h1>
+      <p class="lead">נחזור אליכם בהקדם. אם זה דחוף, או שיש לכם תמונה של הכתם או של הגג, אפשר לשלוח אותה עכשיו בוואטסאפ.</p>
+      <div class="b">
+        <a class="btn btn--primary" href={waHref('שלום, השארתי פרטים באתר ואני שולח תמונה')}><Icon name="chat" />שליחת תמונה בוואטסאפ</a>
+        <a class="btn" href={telHref()}><Icon name="phone" /><span dir="ltr">{business.phone}</span></a>
+        <a class="btn" href="/">לדף הבית</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .ty { background: var(--mist); padding-block: clamp(3.5rem, 10vw, 7rem); }
+  .ty h1 { margin: .4rem 0 1rem; }
+  .lead { max-width: 52ch; color: var(--ink-2); font-size: 1.15rem; }
+  .b { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.6rem; }
+</style>

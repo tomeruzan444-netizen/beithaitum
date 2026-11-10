@@ -9,10 +9,10 @@ export const business = {
   nameEn: 'Beit HaItum',
   /** כתובת האתר. כרגע דומיין זמני בהוסטינגר; כשיהיה דומיין אמיתי מחליפים כאן ובמשתנה SITE_URL. */
   url: import.meta.env.SITE ?? 'https://orangered-goshawk-401694.hostingersite.com',
-  phone: '[טלפון]',
+  phone: '052-3456543',
   /** בפורמט בינלאומי בלי + ובלי מקפים, למשל 972501234567 */
-  whatsapp: '[מספר וואטסאפ]',
-  email: '[אימייל]',
+  whatsapp: '972523456543',
+  email: 'itumhouse@gmail.com',
   area: '[כתובת / אזור שירות]',
   hours: '[שעות]',
   contractorLicense: '[מספר רישום]',

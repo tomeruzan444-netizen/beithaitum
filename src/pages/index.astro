@@ -4,6 +4,7 @@ import HeroArt from '../components/HeroArt.astro';
 import Iso from '../components/Iso.astro';
 import type { IsoName } from '../components/Iso.astro';
 import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
 import { business, isFilled, telHref, waHref } from '../config/business';
 import { publishedSet, allPages, urlOf, regionPage, citiesInRegion, type Page } from '../lib/pages';
 import { regions, cityBySlug } from '../data/cities';
@@ -263,11 +264,12 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
       <div>
         <h2>בואו נבדוק מה קורה אצלכם</h2>
         <p class="sub">ספרו לנו מה אתם רואים, איפה ומתי זה מופיע. תמונה של הכתם או של הגג בוואטסאפ עוזרת לנו להבין מה לבדוק עוד לפני שמגיעים.</p>
+        <div class="cbtns">
+          <a class="btn btn--primary" href={telHref()}><Icon name="phone" /><span dir="ltr">{business.phone}</span></a>
+          <a class="btn" href={waHref()}><Icon name="chat" />שליחת תמונה בוואטסאפ</a>
+        </div>
       </div>
-      <div class="cbtns">
-        <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : '[מספר טלפון]'}</a>
-        <a class="btn" href={waHref()}><Icon name="chat" />שליחת תמונה בוואטסאפ</a>
-      </div>
+      <LeadForm title="השאירו פרטים ונחזור אליכם" />
     </div>
   </section>
 </BaseLayout>
@@ -357,7 +359,9 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
   .gbox a:hover { color: var(--copper); }
 
   .contact { border-top: 1px solid var(--line); }
-  .contact-in { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; }
+  .contact-in { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: clamp(2rem, 5vw, 4rem); }
+  .cbtns { margin-top: 1.4rem; }
+  @media (max-width: 860px) { .contact-in { grid-template-columns: 1fr; } }
   .cbtns { display: flex; flex-wrap: wrap; gap: .7rem; }
 
   @media (max-width: 960px) {

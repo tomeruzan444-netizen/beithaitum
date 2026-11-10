@@ -1,0 +1,47 @@
+---
+// טופס פנייה - HTML בלבד, עובד בלי JavaScript. שולח ל-/contact.php (PHP בהוסטינגר).
+interface Props { title?: string; dark?: boolean }
+const { title = 'השאירו פרטים ונחזור אליכם', dark = false } = Astro.props;
+const page = Astro.url.pathname;
+---
+<form class:list={['lead', { 'lead--dark': dark }]} action="/contact.php" method="post" id="form">
+  <p class="lt">{title}</p>
+  <p class="err" hidden>לא הצלחנו לשלוח. בדקו את השם ומספר הטלפון ונסו שוב, או התקשרו אלינו.</p>
+  <label>
+    <span>שם</span>
+    <input name="name" type="text" required autocomplete="name" maxlength="80" />
+  </label>
+  <label>
+    <span>טלפון</span>
+    <input name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9\-\s\+]{9,16}" maxlength="16" dir="ltr" />
+  </label>
+  <label class="full">
+    <span>מה קורה אצלכם? <small>(לא חובה)</small></span>
+    <textarea name="message" rows="3" maxlength="2000"></textarea>
+  </label>
+  <label class="hp" aria-hidden="true">אתר<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+  <input type="hidden" name="page" value={page} />
+  <button class="btn btn--primary" type="submit">שליחה</button>
+  <p class="fine">הפרטים משמשים רק כדי לחזור אליכם. <a href="/privacy/">מדיניות פרטיות</a></p>
+</form>
+<script is:inline>
+  // הצגת הודעת שגיאה אם חזרנו עם ?error (שיפור הדרגתי בלבד)
+  if (/[?&]error=/.test(location.search)) document.querySelectorAll('.lead .err').forEach((e) => (e.hidden = false));
+</script>
+<style>
+  .lead { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1rem; background: #fff; border: 1.5px solid var(--ink); border-top: 6px solid var(--ink); padding: 1.4rem; }
+  .lead--dark { background: var(--ink); color: var(--on-dark); border-color: var(--ink); border-top-color: var(--peach); }
+  .lt { grid-column: 1 / -1; font: 800 1.3rem/1.2 var(--f); margin: 0 0 .2rem; }
+  .err { grid-column: 1 / -1; margin: 0; padding: .6rem .8rem; background: #FBE9E1; color: #7A2E10; font-size: .95rem; }
+  label { display: grid; gap: .3rem; font-size: .92rem; font-weight: 600; }
+  label.full { grid-column: 1 / -1; }
+  small { font-weight: 400; color: var(--ink-3); }
+  .lead--dark small { color: var(--on-dark-2); }
+  input, textarea { font: inherit; font-weight: 400; padding: .65rem .8rem; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--paper); color: var(--ink); min-height: 46px; width: 100%; }
+  input:focus, textarea:focus { border-color: var(--copper); outline: none; box-shadow: 0 0 0 3px rgba(166,90,46,.18); }
+  .hp { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .lead .btn { grid-column: 1 / -1; justify-self: start; min-width: 160px; }
+  .fine { grid-column: 1 / -1; margin: 0; font-size: .82rem; color: var(--ink-3); }
+  .lead--dark .fine, .lead--dark .fine a { color: var(--on-dark-2); }
+  @media (max-width: 520px) { .lead { grid-template-columns: 1fr; } }
+</style>
