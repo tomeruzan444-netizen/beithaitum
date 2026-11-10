@@ -19,9 +19,9 @@ const checked = rows.map((r) => r.checked).sort().at(-1);
           {rows.map((r) => (
             <tr>
               <th scope="row">{r.item}{r.desc && <span class="d">{r.desc}</span>}</th>
-              <td>{r.unit}</td>
-              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪{r.vat && r.vat !== page.data.vat && <span class="d">{vatLabel(r.vat)}</span>}</td>
-              <td>{r.note}</td>
+              <td data-label="יחידה">{r.unit}</td>
+              <td class="num" data-label="טווח מחיר">{fmt(r.min)}-{fmt(r.max)} ₪{r.vat && r.vat !== page.data.vat && <span class="d">{vatLabel(r.vat)}</span>}</td>
+              <td data-label="מה משפיע">{r.note}</td>
             </tr>
           ))}
         </tbody>

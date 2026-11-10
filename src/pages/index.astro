@@ -217,7 +217,7 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
         <table class="spec">
           <thead><tr><th scope="col">שיטה</th><th scope="col">איך זה עובד</th><th scope="col">מתאים במיוחד ל</th><th scope="col">שימו לב</th></tr></thead>
           <tbody>
-            {methods.map(([a, h, b, c, d]) => <tr><th scope="row">{L(h) ? <a href={h}>{a}</a> : a}</th><td>{b}</td><td>{c}</td><td>{d}</td></tr>)}
+            {methods.map(([a, h, b, c, d]) => <tr><th scope="row">{L(h) ? <a href={h}>{a}</a> : a}</th><td data-label="איך זה עובד">{b}</td><td data-label="מתאים במיוחד ל">{c}</td><td data-label="שימו לב">{d}</td></tr>)}
           </tbody>
         </table>
       </div>

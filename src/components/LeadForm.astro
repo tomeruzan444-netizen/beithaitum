@@ -39,7 +39,7 @@ const page = Astro.url.pathname;
   .lead--dark small { color: var(--on-dark-2); }
   input, textarea { font: inherit; font-weight: 400; padding: .65rem .8rem; border: 1.5px solid var(--line); border-radius: var(--r); background: var(--paper); color: var(--ink); min-height: 46px; width: 100%; }
   input:focus, textarea:focus { border-color: var(--copper); outline: none; box-shadow: 0 0 0 3px rgba(166,90,46,.18); }
-  .hp { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .lead .btn { grid-column: 1 / -1; justify-self: start; min-width: 160px; }
   .fine { grid-column: 1 / -1; margin: 0; font-size: .82rem; color: var(--ink-3); }
   .lead--dark .fine, .lead--dark .fine a { color: var(--on-dark-2); }

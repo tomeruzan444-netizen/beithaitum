@@ -53,8 +53,8 @@ img, svg { max-width: 100%; height: auto; }
 .c { color: var(--copper); }
 
 .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
-.skip { position: absolute; inset-inline-start: -9999px; top: 0; background: var(--ink); color: var(--paper); padding: .6em 1em; z-index: 100; }
-.skip:focus { inset-inline-start: 1rem; }
+.skip { position: absolute; top: 0; inset-inline-start: 1rem; transform: translateY(-120%); background: var(--ink); color: var(--paper); padding: .6em 1em; z-index: 100; }
+.skip:focus { transform: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .ph { border: 1px dashed currentColor; padding: 0 .35em; border-radius: var(--r); font-size: .92em; white-space: nowrap; opacity: .9; }
 
@@ -93,6 +93,19 @@ img, svg { max-width: 100%; height: auto; }
 .spec thead th { font-weight: 600; font-size: .85rem; color: var(--ink-3); border-block-start: 2px solid var(--ink); border-block-end: 1px solid var(--line); }
 .spec tbody th { font-weight: 700; color: var(--ink); }
 .spec-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* נייד: טבלת מפרט הופכת לכרטיסים - בלי גלילה אופקית */
+@media (max-width: 640px) {
+  .spec thead { display: none; }
+  .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: 100%; }
+  .spec tr { padding-block: .9rem; border-block-end: 1px solid var(--line); }
+  .spec tbody tr:first-child { border-block-start: 2px solid var(--ink); }
+  .spec caption { display: block; width: 100%; }
+  table.spec th, table.spec td { padding: .15rem 0; border: 0; font-size: 1rem; }
+  table.spec tbody th { font-size: 1.05rem; margin-bottom: .2rem; }
+  .spec th.cont { display: none; }
+  .spec td[data-label]::before { content: attr(data-label) ": "; font-weight: 600; color: var(--ink-3); font-size: .9rem; }
+  .spec .num { white-space: normal; }
+}
 
 /* ---------- FAQ (+/-) ---------- */
 .faq { border-top: 2px solid var(--ink); }
@@ -121,4 +134,5 @@ img, svg { max-width: 100%; height: auto; }
 .prose th, .prose td { text-align: start; vertical-align: top; padding: .8rem .9rem; border-bottom: 1px solid var(--line); }
 .prose thead th { font-size: .85rem; color: var(--ink-3); border-top: 2px solid var(--ink); font-weight: 600; }
 .prose tbody td:first-child { font-weight: 700; }
+@media (max-width: 640px) { .prose table { font-size: .9rem; } .prose th, .prose td { padding: .6rem .4rem; overflow-wrap: anywhere; hyphens: auto; } }
 .prose a[href^="http"]::after { content: ' ↗'; font-size: .8em; }

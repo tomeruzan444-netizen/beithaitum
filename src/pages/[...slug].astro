@@ -179,7 +179,7 @@ const ctaFooter: [string, string] = d.type === 'city' ? [`גג דולף ב${plac
                 <thead><tr><th scope="col">שירות</th><th scope="col">עבודה</th><th scope="col">יחידה</th><th scope="col">טווח</th></tr></thead>
                 <tbody>
                   {priceIndex.flatMap((p) => p.data.prices.filter((r) => r.verified).map((r, i) => (
-                    <tr>{i === 0 ? <th scope="row"><a href={urlOf(p)}>{p.data.keyword}</a></th> : <th scope="row" class="cont"></th>}<td>{r.item}</td><td>{r.unit}</td><td class="num">{r.min.toLocaleString('he-IL')}-{r.max.toLocaleString('he-IL')} ₪</td></tr>
+                    <tr>{i === 0 ? <th scope="row"><a href={urlOf(p)}>{p.data.keyword}</a></th> : <th scope="row" class="cont"></th>}<td data-label="עבודה">{r.item}</td><td data-label="יחידה">{r.unit}</td><td class="num" data-label="טווח">{r.min.toLocaleString('he-IL')}-{r.max.toLocaleString('he-IL')} ₪</td></tr>
                   )))}
                 </tbody>
               </table>
