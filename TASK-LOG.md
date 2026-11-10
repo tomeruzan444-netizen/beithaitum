@@ -119,3 +119,6 @@
 - .htaccess: noindex רק לדומיין הזמני (hostingersite) למניעת תוכן כפול.
 - מפת אתר: 150 כתובות (כל העמודים חוץ מ-search ו-thanks), עם lastmod.
 - IndexNow: מפתח ב-public, שלב ב-workflow ששולח את כל הכתובות 120 שניות אחרי הפריסה.
+
+## 2026-11-11 (01:00) - Search Console
+- נוסף meta google-site-verification ב-BaseLayout (קוד מהמשתמש).
