@@ -1,0 +1,58 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { business, isFilled, telHref } from '../config/business';
+// עד שעמודי ה-Hub יעלו, הניווט מוביל לאזורי דף הבית. כשיעלו - מגה-מניו לפי סילו (build-spec סעיף 4).
+const nav = [
+  { href: '/#problems', label: 'לפי בעיה' },
+  { href: '/#roofs', label: 'סוגי גגות' },
+  { href: '/#methods', label: 'שיטות איטום' },
+  { href: '/#process', label: 'איך אנחנו עובדים' },
+  { href: '/#areas', label: 'אזורי שירות' },
+  { href: '/#faq', label: 'שאלות נפוצות' },
+];
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <Logo />
+    <nav class="desk" aria-label="ניווט ראשי">
+      <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+    </nav>
+    <div class="actions">
+      <a class="call" href={telHref()}>
+        <Icon name="phone" />
+        {isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : <span>חיוג</span>}
+      </a>
+      <a class="btn btn--primary quote" href="/#contact">לקבלת הצעת מחיר</a>
+      <details class="mob">
+        <summary aria-label="תפריט"><Icon name="menu" /></summary>
+        <nav aria-label="ניווט ראשי בנייד">
+          <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+  <div class="layers-sep" aria-hidden="true"><span></span><span></span><span></span></div>
+</header>
+<style>
+  .site-header { background: var(--stone); position: sticky; top: 0; z-index: 50; }
+  .bar { display: flex; align-items: center; gap: 1.5rem; min-height: 72px; }
+  .desk { margin-inline-start: auto; }
+  .desk ul { display: flex; gap: 1.4rem; list-style: none; margin: 0; padding: 0; }
+  .desk a { color: var(--bitumen); text-decoration: none; font-size: .98rem; font-weight: 600; padding-block: .4rem; border-block-end: 1.5px solid transparent; }
+  .desk a:hover { border-color: var(--copper); }
+  .actions { display: flex; align-items: center; gap: .8rem; }
+  .call { display: inline-flex; align-items: center; gap: .4rem; color: var(--bitumen); text-decoration: none; font-weight: 600; font-size: 1rem; }
+  .call :global(svg) { width: 1.2rem; height: 1.2rem; color: var(--copper); }
+  .quote { min-height: 42px; padding-block: .5em; font-size: .95rem; }
+  .mob { display: none; position: relative; }
+  .mob summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border: 1.5px solid var(--bitumen); border-radius: var(--r); }
+  .mob summary::-webkit-details-marker { display: none; }
+  .mob summary :global(svg) { width: 22px; }
+  .mob nav { position: absolute; inset-inline-end: 0; top: calc(100% + 10px); background: var(--stone); border: 1px solid var(--line); min-width: 230px; box-shadow: 0 8px 24px rgba(27,34,38,.12); }
+  .mob ul { list-style: none; margin: 0; padding: .4rem 0; }
+  .mob a { display: block; padding: .75rem 1.1rem; color: var(--bitumen); text-decoration: none; font-weight: 600; }
+  .mob a:hover { background: var(--stone-2); }
+  @media (max-width: 1080px) { .desk { display: none; } .actions { margin-inline-start: auto; } .mob { display: block; } }
+  @media (max-width: 640px) { .call, .quote { display: none; } .bar { min-height: 62px; } }
+</style>

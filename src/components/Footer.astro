@@ -1,0 +1,45 @@
+---
+import Logo from './Logo.astro';
+import { business, isFilled, telHref } from '../config/business';
+const show = (v: string) => (isFilled(v) ? v : null);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="layers-sep" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="wrap cols">
+    <div>
+      <Logo dark />
+      <p class="about">{business.teamLine}: איטום גגות, קירות, מרפסות ומבנים, ואבחון רטיבות ונזילות.</p>
+    </div>
+    <div>
+      <h2>יצירת קשר</h2>
+      <ul>
+        <li>טלפון: {show(business.phone) ? <a href={telHref()} dir="ltr">{business.phone}</a> : <span class="ph">{business.phone}</span>}</li>
+        <li>אימייל: {show(business.email) ? <a href={`mailto:${business.email}`}>{business.email}</a> : <span class="ph">{business.email}</span>}</li>
+        <li>שעות: {show(business.hours) ?? <span class="ph">{business.hours}</span>}</li>
+        <li>אזור שירות: {show(business.area) ?? <span class="ph">{business.area}</span>}</li>
+      </ul>
+    </div>
+    <div>
+      <h2>באתר</h2>
+      <ul>
+        <li><a href="/#problems">אבחון לפי בעיה</a></li>
+        <li><a href="/#methods">שיטות איטום</a></li>
+        <li><a href="/#process">תהליך העבודה</a></li>
+        <li><a href="/#faq">שאלות נפוצות</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">© {year} {business.name}. כל הזכויות שמורות.</div>
+</footer>
+<style>
+  .site-footer { background: var(--concrete); color: var(--on-dark-2); }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; padding-block: 3.5rem 2.5rem; }
+  .about { margin-top: 1rem; max-width: 38ch; font-size: 1rem; }
+  h2 { font-size: 1.05rem; color: var(--on-dark); margin-bottom: .9rem; font-family: var(--f-body); font-weight: 600; letter-spacing: .04em; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: 1rem; }
+  a { color: var(--on-dark); }
+  .ph { color: #E9A27F; border-color: #E9A27F; }
+  .legal { border-block-start: 1px solid rgba(237,233,224,.12); padding-block: 1.2rem; font-size: .9rem; }
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; gap: 2rem; } }
+</style>

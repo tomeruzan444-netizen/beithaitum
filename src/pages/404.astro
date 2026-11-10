@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="העמוד לא נמצא | בית האיטום" description="העמוד שחיפשתם לא נמצא באתר בית האיטום." noindex>
+  <section class="nf grid-bg">
+    <div class="wrap">
+      <p class="tag"><b>404</b> העמוד לא נמצא</p>
+      <h1>הכתובת הזו לא מובילה לשום מקום</h1>
+      <p>יכול להיות שהעמוד הועבר, או שנפלה טעות בכתובת. אפשר לחזור לדף הבית ולהמשיך משם.</p>
+      <a class="btn btn--primary" href="/">לדף הבית</a>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .nf { padding-block: clamp(4rem, 12vw, 9rem); }
+  .nf p { max-width: 52ch; color: var(--ink-2); }
+</style>

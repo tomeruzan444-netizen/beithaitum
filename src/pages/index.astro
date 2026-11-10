@@ -1,0 +1,328 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RoofSection from '../components/RoofSection.astro';
+import Icon from '../components/Icon.astro';
+import { business, isFilled, telHref, waHref } from '../config/business';
+
+const title = 'בית האיטום | חברת איטום לגגות, קירות ומרפסות';
+const description =
+  'בית האיטום, חברת איטום שמתחילה באבחון מקור המים: איטום גגות, קירות, מרפסות ומרתפים, השוואת שיטות איטום ותשובות לשאלות נפוצות. לקבלת הצעת מחיר.';
+
+const problems = [
+  {
+    t: 'נזילה מהגג אחרי גשם',
+    see: 'טפטוף או כתם שמתרחב בתקרה, בעיקר בחורף ובקומה העליונה.',
+    cause: 'יריעה שנסדקה או התנתקה, חיבור לא אטום ליד מעקה, ארובה או דוד שמש, נקז סתום שמשאיר מים עומדים על הגג.',
+    check: 'מצב שכבת האיטום, נקודות החיבור והמעברים, השיפועים והנקזים.',
+  },
+  {
+    t: 'רטיבות בקיר חיצוני',
+    see: 'כתמים, צבע שמתנפח או טיח שמתקלף בצד הפנימי של קיר חוץ.',
+    cause: 'סדקים בטיח החיצוני, חדירת מים סביב חלונות ותריסים, קיר שחשוף לגשם שהרוח דוחפת אליו.',
+    check: 'סדקים במעטפת, החיבור בין המסגרות לקיר ומצב הציפוי החיצוני.',
+  },
+  {
+    t: 'רטיבות בתחתית הקיר',
+    see: 'כתמים ומלחים לבנים בגובה נמוך, פנלים שמתנתקים מהקיר.',
+    cause: 'צנרת שדולפת ברצפה, רטיבות שעולה מהקרקע אל הקיר, או מים שעוברים ממקלחת או ממרפסת סמוכה.',
+    check: 'את מקור המים לפני הכול. טיפול בקיר בלי לעצור את המקור רק מסתיר את הבעיה.',
+  },
+  {
+    t: 'מרפסת שמדלפת לשכנים',
+    see: 'כתמים בתקרה של הדירה שמתחת למרפסת, רובה שמתפוררת בין האריחים.',
+    cause: 'שכבת איטום שנפגעה מתחת לריצוף, ניקוז שלא עובד, או חיבור לא אטום בין הרצפה לקיר.',
+    check: 'שיפוע הריצוף, מחסום הניקוז, הרובה והאיטום בפינות ובסף הדלת.',
+  },
+  {
+    t: 'רטיבות סביב המקלחת',
+    see: 'כתם בקיר הצמוד למקלחת או בתקרה של הקומה שמתחת.',
+    cause: 'רובה וסיליקון שנשחקו, איטום פגום מתחת לאריחים, או נזילה מהצנרת שבקיר.',
+    check: 'האם הרטיבות מופיעה רק אחרי שימוש במקלחת, ומה מצב האיטום מתחת לריצוף.',
+  },
+  {
+    t: 'מרתף או ממ"ד לחים',
+    see: 'לחות באוויר, ריח של עובש, כתמים על קירות שנמצאים מתחת לפני הקרקע.',
+    cause: 'מים מהקרקע שלוחצים על הקירות, איטום חיצוני שלא בוצע או נפגע, סדקים ומעברי צנרת.',
+    check: 'מאיפה הלחות מגיעה, האם יש גישה לצד החיצוני של הקיר, והאם נדרש איטום מבפנים.',
+  },
+];
+
+const roofs = [
+  ['גג בטון שטוח', 'מים שעומדים על הגג כשהשיפועים לא מדויקים, וסדקים שנפתחים עם תזוזות התקרה בין קיץ לחורף.', 'יריעות ביטומניות, איטום במריחה (פוליאוריטן או אקרילי), או שילוב של שתי השיטות.'],
+  ['גג רעפים', 'הרעפים מסיטים את רוב המים, אבל את האיטום עצמו עושה השכבה שמתחתם.', 'החלפת רעפים שבורים, יריעה תת-רעפית, איטום חיבורים, ארובות וחלונות גג.'],
+  ['גג איסכורית או פנל מבודד', 'החולשה נמצאת בברגים, בחפיפות בין הלוחות ובחלודה שמתפתחת בפח.', 'איטום ברגים וחפיפות, ציפוי במריחה שמתאים לפח, החלפת לוחות פגומים.'],
+  ['גג מרוצף', 'שכבת האיטום מוסתרת מתחת לריצוף, כך שקשה לראות איפה היא נכשלה.', 'בדיקת הצפה לאיתור הכשל, איטום פוגות ורובה, ובמקרים קשים פירוק ואיטום מחדש.'],
+];
+
+const methods = [
+  ['יריעות ביטומניות', 'יריעות מביטומן משופר שמולחמות לגג בלהבה, בחפיפה בין יריעה ליריעה.', 'גגות בטון שטוחים ושטחים גדולים.', 'צריכות הגנה מקרינת השמש ותשתית יבשה ונקייה בזמן ההלחמה.'],
+  ['איטום במריחה (פוליאוריטן)', 'חומר נוזלי שנמרח בכמה שכבות ומתקשה לממברנה רציפה בלי תפרים.', 'גגות עם הרבה מעברים, מתקנים וחיבורים מורכבים.', 'עובי השכבה וזמני הייבוש לפי הוראות היצרן הם מה שקובע את התוצאה.'],
+  ['איטום אקרילי', 'ציפוי על בסיס מים, לרוב בגוון לבן שמחזיר קרינה.', 'חידוש ותחזוקה של גג קיים, הפחתת חום בקומה העליונה.', 'פחות מתאים לגג שמים עומדים עליו לאורך זמן.'],
+  ['איטום צמנטי וקריסטלי', 'חומר על בסיס צמנט, שחלקו חודר לנקבוביות של הבטון.', 'מרתפים, בריכות, מאגרי מים ואיטום מהצד הפנימי של קיר.', 'גמיש פחות, ולכן לא מתאים למשטח עם סדקים שממשיכים לזוז.'],
+  ['איטום בהזרקה', 'הזרקת חומר לתוך סדק או מישק כדי לחסום את מעבר המים.', 'סדקים בבטון, מרתפים ונזילות נקודתיות.', 'מטפל בנקודה מסוימת, ולא מחליף מערכת איטום שלמה.'],
+];
+
+const steps = [
+  ['שיחה ראשונה', 'מספרים לנו מה רואים, איפה ומתי זה מופיע. לפעמים כבר בשלב הזה אפשר להבין אם הכיוון הוא הגג, הצנרת או הקיר.'],
+  ['בדיקה ואבחון', 'מגיעים לנכס, מחפשים את מקור המים, בודקים את מצב האיטום הקיים ומתעדים את מה שמצאנו.'],
+  ['הצעת מחיר מפורטת', 'שיטה, חומרים, שטח ושלבי עבודה כתובים בהצעה, כך שאפשר להבין על מה משלמים ולהשוות.'],
+  ['הכנת התשתית', 'ניקוי, תיקון סדקים, תיקון שיפועים ופריימר. תשתית שלא הוכנה כמו שצריך היא אחת הסיבות הנפוצות לכשל של איטום.'],
+  ['ביצוע השכבות', 'יישום מערכת האיטום לפי הוראות היצרן, כולל הגבהות על מעקות, רולקות ואיטום סביב צנרת שחודרת לגג.'],
+  ['בדיקה ומסירה', 'בגגות שטוחים ובמרפסות מבצעים בדיקת הצפה לפני המסירה, כשהמבנה מאפשר זאת.'],
+];
+
+const regions = [
+  ['מרכז וגוש דן', 'תל אביב, רמת גן, גבעתיים, חולון, בת ים, פתח תקווה, ראשון לציון'],
+  ['השרון', 'נתניה, הרצליה, רעננה, כפר סבא, הוד השרון, רמת השרון'],
+  ['השפלה', 'רחובות, נס ציונה, מודיעין, יבנה, גדרה, אשדוד'],
+  ['ירושלים והסביבה', 'ירושלים, בית שמש, מעלה אדומים, גבעת זאב, גוש עציון'],
+  ['חיפה והקריות', 'חיפה, קרית אתא, קרית ביאליק, קרית מוצקין, קרית ים, נשר'],
+  ['הצפון', 'עפולה, יקנעם, כרמיאל, נהריה, טבריה, נוף הגליל'],
+  ['הדרום', 'באר שבע, אשקלון, קרית גת, נתיבות, אופקים, דימונה'],
+];
+
+const faq = [
+  ['כמה עולה איטום גג?', 'המחיר נקבע לפי שיטת האיטום, שטח הגג, מצב התשתית והנגישות לגג. גג שצריך רק חידוש של שכבת הציפוי יעלה פחות מגג שבו צריך להסיר יריעות ישנות ולתקן שיפועים. אנחנו נותנים הצעת מחיר אחרי שבדקנו את הגג, כי בלי לראות את התשתית כל מספר הוא ניחוש.'],
+  ['מתי הכי כדאי לאטום גג?', 'בעונה היבשה, בדרך כלל מסוף האביב ועד תחילת הסתיו. רוב חומרי האיטום דורשים תשתית יבשה וטמפרטורה בטווח שהיצרן מגדיר, ולכן בחורף אפשר לעבוד רק בחלונות של כמה ימים יבשים ברצף.'],
+  ['איך יודעים אם הנזילה מהגג או מהצנרת?', 'נזילה שמופיעה רק אחרי גשם מצביעה בדרך כלל על הגג או על מעטפת הבניין. נזילה שמופיעה גם בימים יבשים, או כשמשתמשים במים בדירה שמעל, מצביעה על צנרת. כשאין תשובה ברורה, עושים איתור נזילות לפני שמפרקים משהו.'],
+  ['אפשר לאטום מעל איטום ישן?', 'לפעמים כן. אם השכבה הקיימת צמודה לתשתית, יבשה ומתאימה לחומר החדש, אפשר ליישם מעליה אחרי ניקוי והכנה. אם היא מתקלפת, מנופחת או שכלואים מתחתיה מים, צריך להסיר אותה קודם.'],
+  ['מה ההבדל בין יריעות ביטומניות לאיטום במריחה?', 'יריעות הן גלילים שמולחמים לגג ויוצרים שכבה עבה ואחידה. איטום במריחה הוא חומר נוזלי שמתקשה לממברנה רציפה בלי תפרים, ולכן נוח במיוחד בגג עם הרבה מתקנים ומעברים. בפועל, הבחירה תלויה במצב הגג הקיים יותר מאשר בשאלה איזו שיטה טובה יותר.'],
+  ['כמה זמן לוקחת עבודת איטום גג?', 'גג של בית פרטי או של בניין קטן נאטם בדרך כלל בכמה ימי עבודה, לפי השיטה, השטח ומצב התשתית. בשיטות מריחה צריך להוסיף את זמני הייבוש בין השכבות שהיצרן מגדיר.'],
+  ['צריך לפנות את הגג לפני העבודה?', 'ככל שאפשר, כן. דודי שמש, מעבים של מזגנים ומתקנים אחרים מפריעים ליישום רציף של האיטום, ולפעמים צריך להגביה אותם על רגליות. בבדיקה אנחנו מסמנים מה צריך לפנות ומה אפשר לאטום מסביב.'],
+  ['איטום מהצד הפנימי של הקיר באמת עובד?', 'זה נקרא איטום שלילי, והוא פתרון מקובל במרתפים ובחללים שאין גישה לצד החיצוני שלהם. הוא מונע מהמים להיכנס לחלל, אבל הקיר עצמו נשאר רטוב. כשיש גישה מבחוץ, עדיף בדרך כלל לאטום מהצד החיצוני.'],
+];
+
+const siteUrl = new URL('/', Astro.site).href;
+const schema = [
+  {
+    '@type': 'RoofingContractor',
+    '@id': `${siteUrl}#business`,
+    name: business.name,
+    url: siteUrl,
+    parentOrganization: { '@id': `${siteUrl}#org` },
+    ...(isFilled(business.phone) && { telephone: business.phone }),
+    ...(isFilled(business.email) && { email: business.email }),
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+];
+---
+<BaseLayout title={title} description={description} schema={schema}>
+
+  <!-- פתיחה -->
+  <section class="hero grid-bg">
+    <div class="wrap hero-in">
+      <div class="hero-text">
+        <p class="tag"><b>בית האיטום</b> חברת איטום</p>
+        <h1>חברת איטום שעובדת בשכבות, מהתשתית ועד הציפוי</h1>
+        <p class="lead">נזילה מהתקרה או כתם רטיבות בקיר הם רק הסימן. אנחנו בבית האיטום מתחילים באבחון של מקור המים, ורק אחריו בוחרים שיטה וחומר שמתאימים לגג, לקיר או למרפסת שלכם. כך האיטום עובד כמערכת אחת, ולא כטלאי שמחזיק עד החורף הבא.</p>
+        <div class="cta-row">
+          <a class="btn btn--primary" href="#contact"><Icon name="doc" />לקבלת הצעת מחיר</a>
+          <a class="btn" href={telHref()}><Icon name="phone" />שיחה עם איש איטום</a>
+          <a class="btn" href={waHref()}><Icon name="chat" />וואטסאפ</a>
+        </div>
+        <p class="team">{business.teamLine}, באיטום גגות ובפרויקטי איטום מורכבים.</p>
+      </div>
+      <div class="hero-fig">
+        <RoofSection />
+      </div>
+    </div>
+  </section>
+
+  <!-- לפי בעיה -->
+  <section id="problems" class="sec">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="tag"><b>01</b> אבחון</p>
+        <h2>מה הבעיה שלכם?</h2>
+        <p>רוב הפניות מתחילות בסימן אחד שרואים בבית. כך נראים הסימנים הנפוצים, מה עומד מאחוריהם בדרך כלל, ומה אנחנו בודקים כדי להגיע למקור.</p>
+      </header>
+      <ol class="problems">
+        {problems.map((p, i) => (
+          <li>
+            <span class="pn">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{p.t}</h3>
+            <dl>
+              <div><dt>מה רואים</dt><dd>{p.see}</dd></div>
+              <div><dt>מקורות נפוצים</dt><dd>{p.cause}</dd></div>
+              <div><dt>מה אנחנו בודקים</dt><dd>{p.check}</dd></div>
+            </dl>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- לפי סוג גג -->
+  <section id="roofs" class="sec sec--alt">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="tag"><b>02</b> סוגי גגות</p>
+        <h2>איזה גג יש לכם?</h2>
+        <p>סוג הגג קובע את שיטת האיטום יותר מכל גורם אחר. גג בטון, גג רעפים וגג פח נכשלים בדרכים שונות, ולכן גם מטופלים אחרת.</p>
+      </header>
+      <div class="spec-scroll">
+        <table class="spec">
+          <caption>סוג גג, נקודת התורפה והפתרונות המקובלים</caption>
+          <thead><tr><th scope="col">סוג הגג</th><th scope="col">מה מאפיין אותו</th><th scope="col">פתרונות שמתאימים בדרך כלל</th></tr></thead>
+          <tbody>
+            {roofs.map(([a, b, c]) => <tr><th scope="row">{a}</th><td>{b}</td><td>{c}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- שיטות -->
+  <section id="methods" class="sec">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="tag"><b>03</b> שיטות וחומרים</p>
+        <h2>שיטות האיטום שלנו</h2>
+        <p>אין שיטת איטום אחת שמתאימה לכל מקום. זו ההשוואה שאנחנו עוברים עליה עם לקוחות לפני שבוחרים פתרון.</p>
+      </header>
+      <div class="spec-scroll">
+        <table class="spec">
+          <caption>השוואת שיטות איטום</caption>
+          <thead><tr><th scope="col">שיטה</th><th scope="col">איך זה עובד</th><th scope="col">מתאים במיוחד ל</th><th scope="col">שימו לב</th></tr></thead>
+          <tbody>
+            {methods.map(([a, b, c, d]) => <tr><th scope="row">{a}</th><td>{b}</td><td>{c}</td><td>{d}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- תהליך -->
+  <section id="process" class="sec sec--dark">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="tag"><b>04</b> תהליך העבודה</p>
+        <h2>איך אנחנו עובדים</h2>
+        <p>שישה שלבים, מהשיחה הראשונה ועד המסירה. השלב שהכי משפיע על התוצאה הוא דווקא זה שלא רואים בסוף: הכנת התשתית.</p>
+      </header>
+      <ol class="steps">
+        {steps.map(([t, d], i) => (
+          <li>
+            <span class="sn">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- אזורים -->
+  <section id="areas" class="sec">
+    <div class="wrap areas">
+      <header class="sec-head">
+        <p class="tag"><b>05</b> אזורי שירות</p>
+        <h2>איפה אנחנו עובדים</h2>
+        <p>לכל אזור בארץ אתגרי איטום משלו: מלח ולחות בערי החוף, קרה ולעיתים שלג בירושלים ובגליל העליון, חום וקרינה חזקה בנגב. החומר והשיטה נבחרים גם לפי התנאים האלה.</p>
+      </header>
+      <ul class="regions">
+        {regions.map(([r, c]) => <li><h3>{r}</h3><p>{c}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="sec sec--alt">
+    <div class="wrap faq-wrap">
+      <header class="sec-head">
+        <p class="tag"><b>06</b> שאלות נפוצות</p>
+        <h2>שאלות שאנחנו שומעים לפני כל עבודת איטום</h2>
+      </header>
+      <div class="faq">
+        {faq.map(([q, a]) => <details><summary>{q}</summary><div><p>{a}</p></div></details>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- יצירת קשר -->
+  <section id="contact" class="sec contact">
+    <div class="wrap contact-in">
+      <div>
+        <p class="tag"><b>07</b> יצירת קשר</p>
+        <h2>בואו נבדוק מה קורה אצלכם</h2>
+        <p>ספרו לנו מה אתם רואים, איפה ומתי זה מופיע. תמונה של הכתם או של הגג בוואטסאפ עוזרת לנו להבין מה לבדוק עוד לפני שמגיעים.</p>
+      </div>
+      <div class="contact-card">
+        <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : 'חיוג'}</a>
+        <a class="btn" href={waHref()}><Icon name="chat" />שליחת הודעה בוואטסאפ</a>
+        <dl>
+          <div><dt>טלפון</dt><dd>{isFilled(business.phone) ? business.phone : <span class="ph">{business.phone}</span>}</dd></div>
+          <div><dt>שעות פעילות</dt><dd>{isFilled(business.hours) ? business.hours : <span class="ph">{business.hours}</span>}</dd></div>
+          <div><dt>אזור שירות</dt><dd>{isFilled(business.area) ? business.area : <span class="ph">{business.area}</span>}</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { border-block-end: 1px solid var(--line); }
+  .hero-in { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; padding-block: clamp(2.5rem, 7vw, 6rem); }
+  .lead { font-size: clamp(1.1rem, 1.6vw, 1.25rem); max-width: 54ch; color: var(--ink-2); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-block: 1.8rem 1.4rem; }
+  .team { font-size: .95rem; color: var(--ink-2); border-inline-start: 3px solid var(--copper); padding-inline-start: .9rem; margin: 0; }
+  .hero-fig { background: var(--stone); border: 1px solid var(--line); padding: clamp(1rem, 2.5vw, 1.8rem); }
+
+  .sec { padding-block: var(--space); }
+  .sec--alt { background: var(--stone-2); }
+  .sec--dark { background: var(--concrete); color: var(--on-dark); }
+  .sec--dark .tag { color: var(--on-dark-2); }
+  .sec--dark .tag b { color: #E9A27F; }
+  .sec-head { max-width: 62ch; margin-block-end: clamp(2rem, 4vw, 3rem); }
+  .sec-head p:last-child { color: var(--ink-2); font-size: 1.08rem; margin: 0; }
+  .sec--dark .sec-head p:last-child { color: var(--on-dark-2); }
+
+  .problems { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-block-start: 2px solid var(--bitumen); }
+  .problems li { position: relative; padding: 1.6rem 0 1.8rem; padding-inline-end: 1.6rem; border-block-end: 1px solid var(--line); }
+  .problems li:nth-child(even) { padding-inline: 1.6rem 0; border-inline-start: 1px solid var(--line); }
+  .pn { font: 600 .8rem/1 var(--f-body); color: var(--copper-ink); letter-spacing: .08em; }
+  .problems h3 { margin: .5rem 0 .9rem; }
+  .problems dl { margin: 0; display: grid; gap: .55rem; font-size: 1rem; }
+  .problems dl div { display: grid; grid-template-columns: 8.5rem 1fr; gap: .8rem; }
+  .problems dt { font-weight: 600; color: var(--ink-2); font-size: .88rem; padding-top: .15rem; }
+  .problems dd { margin: 0; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-block-start: 1px solid rgba(237,233,224,.18); }
+  .steps li { padding: 1.6rem 1.4rem 1.8rem; border-block-end: 1px solid rgba(237,233,224,.18); border-inline-start: 1px solid rgba(237,233,224,.18); }
+  .steps li:nth-child(3n + 1) { border-inline-start: 0; padding-inline-start: 0; }
+  .sn { display: inline-block; font: 700 2.4rem/1 var(--f-head); color: transparent; -webkit-text-stroke: 1px #E9A27F; margin-bottom: .8rem; }
+  .steps h3 { color: var(--on-dark); }
+  .steps p { color: var(--on-dark-2); font-size: 1rem; margin: 0; }
+
+  .regions { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0 2rem; }
+  .regions li { border-block-start: 1px solid var(--line); padding-block: 1.1rem; }
+  .regions h3 { font-size: 1.15rem; margin-bottom: .3rem; }
+  .regions p { margin: 0; color: var(--ink-2); font-size: .98rem; }
+
+  .faq-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+
+  .contact { border-block-start: 6px solid var(--copper); }
+  .contact-in { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .contact-card { display: grid; gap: .8rem; border: 1px solid var(--line); background: #fff; padding: 1.6rem; }
+  .contact-card dl { margin: .6rem 0 0; display: grid; gap: .5rem; font-size: 1rem; }
+  .contact-card dl div { display: flex; justify-content: space-between; gap: 1rem; border-block-start: 1px solid var(--line-2); padding-top: .5rem; }
+  .contact-card dt { color: var(--ink-2); }
+  .contact-card dd { margin: 0; font-weight: 600; }
+
+  @media (max-width: 960px) {
+    .hero-in, .faq-wrap, .contact-in { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps li:nth-child(3n + 1) { border-inline-start: 1px solid rgba(237,233,224,.18); padding-inline-start: 1.4rem; }
+    .steps li:nth-child(odd) { border-inline-start: 0; padding-inline-start: 0; }
+  }
+  @media (max-width: 720px) {
+    .problems { grid-template-columns: 1fr; }
+    .problems li, .problems li:nth-child(even) { padding-inline: 0; border-inline-start: 0; }
+    .problems dl div { grid-template-columns: 1fr; gap: .1rem; }
+    .steps { grid-template-columns: 1fr; }
+    .steps li, .steps li:nth-child(odd), .steps li:nth-child(3n + 1) { border-inline-start: 0; padding-inline: 0; }
+  }
+</style>
