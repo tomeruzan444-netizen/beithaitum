@@ -4,7 +4,6 @@ interface Props { page: Page }
 const { page } = Astro.props;
 const rows = page.data.prices.filter((r) => r.verified);
 const fmt = (n: number) => n.toLocaleString('he-IL');
-const sources = [...new Map(rows.map((r) => [r.source, r])).values()];
 const checked = rows.map((r) => r.checked).sort().at(-1);
 ---
 {rows.length > 0 && (
@@ -26,9 +25,7 @@ const checked = rows.map((r) => r.checked).sort().at(-1);
         </tbody>
       </table>
     </div>
-    <p class="fine">המחירים להערכה בלבד, {page.data.vat}. המחיר הסופי נקבע לאחר בדיקה בשטח.
-      {sources.length > 0 && <> מקורות: {sources.map((s, i) => <>{i > 0 && ', '}{s.sourceUrl ? <a href={s.sourceUrl} rel="nofollow noopener" target="_blank">{s.source}</a> : s.source}</>)}.</>}
-    </p>
+    <p class="fine">המחירים להערכה בלבד, {page.data.vat}. המחיר הסופי נקבע לאחר בדיקה בשטח.</p>
   </section>
 )}
 <style>

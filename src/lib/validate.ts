@@ -28,6 +28,14 @@ export async function validateAll() {
     if (/\[[^\]\n]{1,40}\](?!\()/.test(body)) e('נראה כמו placeholder בסוגריים מרובעים בגוף העמוד');
     if (/^#\s/m.test(body)) e('H1 בגוף המאמר - ה-H1 מגיע מ-title בלבד');
 
+    // החלטת המשתמש 2026-11-10: בלי קישורים חיצוניים ובלי שמות מקורות בתוכן
+    const faqText = d.faq.map((f) => f.q + ' ' + f.a).join(' ');
+    if (/\]\(https?:|<a\s[^>]*href="https?:/.test(body) || /https?:\/\//.test(faqText)) e('קישור חיצוני בתוכן (אסור לפי החלטת המשתמש)');
+    const shown = [d.title, d.metaTitle, d.metaDescription, d.summary, ...d.prices.filter((r) => r.verified).flatMap((r) => [r.item, r.desc ?? '', r.note ?? ''])].join(' ');
+    if (/https?:\/\//.test(shown)) e('קישור חיצוני בשדה שמוצג (summary/meta/מחירים)');
+    const src = (body + ' ' + faqText + ' ' + shown).match(SOURCE_NAMES);
+    if (src) e(`שם מקור בתוכן: "${src[0]}"`);
+
     const links = bodyLinks(body);
     for (const l of links) if (!urls.has(l)) e(`קישור פנימי לעמוד שלא קיים: ${l}`);
 
@@ -55,6 +63,9 @@ export async function validateAll() {
     throw new Error(`\n\nבדיקת איכות תוכן נכשלה (${errors.length}):\n- ${errors.join('\n- ')}\n`);
   }
 }
+
+/** שמות מקורות שאסור להזכיר בתוכן (אתרים, ארגונים, יצרנים שצוטטו כמקור) */
+export const SOURCE_NAMES = /מידרג|Midrag|דפי זהב|ויקיפדיה|Wikipedia|ויקיטקסט|Wikisource|השירות המטאורולוגי|הלמ"ס|הלשכה המרכזית לסטטיסטיקה|כל זכות|ynet|nadlancenter|מרכז הנדל"ן|המקצוענים|pro\.co\.il|d\.co\.il|כלכליסט|Calcalist|גלובס|דה מרקר|נבו|EPA|CDC|WHO|ארגון הבריאות העולמי|בנק ישראל|מבקר המדינה|טמבור|Tambour|סיקה|Sika|נירלט|Nirlat|פזקר|Pazkar|IKO|Polyglass|Kingspan|VELUX|ולוקס|Palram|פלרם|Xypex|Alchimica|Soudal|Hilti|Dörken|DuPont|Tyvek|Lysaght|FILA|Protimeter|Sewerin|Fluke|Greenmix|גרינמיקס|Maris|מריס|Dow|Penosil|Shapir|שפיר|Prefa|VMZINC|IIBEC|BRE/;
 
 export function wordCount(md: string) {
   return md
