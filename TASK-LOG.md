@@ -45,3 +45,9 @@
 - אימות טכני (`scripts/audit.mjs`): JSON-LD תקין בכל העמודים, sitemap שלם, JS רק בחיפוש, CSS עד 26.6KB. Lighthouse נייד: עמודי שירות/עיר 100/100/100, דף הבית 99/100/100, CLS 0 (פונט חלופי מכויל size-adjust), LCP 1.2-1.4ש'. שרת: Brotli, HSTS, cache, הפניות 301, noindex.
 - **החלטת משתמש: הוסרו כל שמות המקורות והקישורים החיצוניים מהתוכן** (579 קישורים, ~140 עמודים, ניסוחי "לפי המקור"). המקור נשמר רק בשדות source/sourceUrl של המחירים (לא מוצג). נאכף ב-validate.ts (`SOURCE_NAMES`) + `scripts/sourcecheck.mjs`. ערך מע"מ "לא צוין אם כולל מע"מ".
 - פתוח: 17 שורות מחיר ב-docs/prices-to-check.md; טופס יצירת קשר (דורש אימייל); דומיין אמיתי + הסרת noindex + Search Console.
+
+## 2026-11-10 (17:15) - פרטי קשר, לוגו, טופס
+- פרטים מהמשתמש: טלפון 052-3456543, אימייל itumhouse@gmail.com. וואטסאפ הוגדר לאותו מספר (972523456543) - הנחה, לאשר מול המשתמש.
+- לוגו חדש: ערימה איזומטרית של 4 שכבות + טיפה, wordmark ב-Assistant 800 + "שכבה אחרי שכבה". מקור אמת: `scripts/brand/mark.mjs`; יצירה: `node scripts/brand/build.mjs <playwright-core>`. קבצים ב-`public/brand/` (logo.png, logo-white.png, logo-on-light.png, logo-mark.png/svg, icon-192/512, apple-touch-icon, og-default.png). favicon, og:image, ולוגו בסכמה עודכנו.
+- טופס יצירת קשר: `src/pages/contact.php.ts` -> dist/contact.php (PHP mail ל-itumhouse@gmail.com, honeypot, הגבלת קצב), עמוד /thanks/ (noindex, מחוץ ל-sitemap). נבדק חי: GET, honeypot, שגיאה, ושליחה אמיתית (נשלחה הודעת בדיקה).
+- פתוח: אזור שירות, שעות, רישום קבלנים - עדיין placeholder. דומיין + noindex + Search Console.
