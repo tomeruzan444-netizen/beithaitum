@@ -6,13 +6,13 @@ const rows = [
   ['אימייל', business.email],
   ['שעות פעילות', business.hours],
   ['אזור שירות', business.area],
-] as const;
+].filter(([, v]) => isFilled(v));
 ---
 <div class="contact-card">
   <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : 'חיוג'}</a>
   <a class="btn" href={waHref()}><Icon name="chat" />שליחת הודעה בוואטסאפ</a>
   <dl>
-    {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{isFilled(v) ? v : <span class="ph">{v}</span>}</dd></div>)}
+    {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
   </dl>
 </div>
 <style>

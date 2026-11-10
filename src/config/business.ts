@@ -29,6 +29,10 @@ export const business = {
 export const isFilled = (v: string | undefined | null): v is string =>
   !!v && !v.trim().startsWith('[');
 
+/** טלפון בפורמט בינלאומי לסכמה, למשל +972-52-4586433 */
+export const telIntl = () =>
+  isFilled(business.phone) ? '+972-' + business.phone.replace(/\D/g, '').replace(/^0/, '').replace(/^(\d{2})/, '$1-') : '';
+
 export const telHref = () =>
   isFilled(business.phone) ? `tel:${business.phone.replace(/[^\d+]/g, '')}` : '#contact';
 

@@ -1,11 +1,13 @@
 ---
-import '@fontsource-variable/assistant/index.css';
 import '../styles/global.css';
 import fontHe from '@fontsource-variable/assistant/files/assistant-hebrew-wght-normal.woff2?url';
+import fontLatin from '@fontsource-variable/assistant/files/assistant-latin-wght-normal.woff2?url';
+// font-display: optional - הגופן נטען מראש (preload), ואין קפיצת פריסה כשהוא מתחלף
+const fontCss = `@font-face{font-family:'Assistant Variable';font-style:normal;font-display:optional;font-weight:200 800;src:url(${fontHe}) format('woff2-variations');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}@font-face{font-family:'Assistant Variable';font-style:normal;font-display:optional;font-weight:200 800;src:url(${fontLatin}) format('woff2-variations');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}`;
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
-import { business, isFilled, isIndexingBlocked } from '../config/business';
+import { business, isFilled, isIndexingBlocked, telIntl } from '../config/business';
 
 interface Props {
   title: string;
@@ -30,7 +32,8 @@ const org: Record<string, unknown> = {
   url: siteUrl,
   logo: new URL('/brand/logo-mark.png', Astro.site).href,
   image: new URL('/brand/og-default.png', Astro.site).href,
-  ...(isFilled(business.phone) && { telephone: business.phone }),
+  ...(isFilled(business.phone) && { telephone: telIntl() }),
+  areaServed: { '@type': 'Country', name: 'ישראל' },
   ...(isFilled(business.email) && { email: business.email }),
   ...(sameAs.length && { sameAs }),
 };
@@ -58,8 +61,9 @@ const graph = {
   <link rel="icon" href="/brand/icon-192.png" type="image/png" sizes="192x192" />
   <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
   <link rel="preload" href={fontHe} as="font" type="font/woff2" crossorigin />
+  <style is:inline set:html={fontCss}></style>
   <meta name="theme-color" content="#E4E8EF" />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={Astro.url.pathname === '/' ? 'website' : 'article'} />
   <meta property="og:locale" content="he_IL" />
   <meta property="og:site_name" content={business.name} />
   <meta property="og:title" content={title} />

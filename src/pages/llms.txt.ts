@@ -21,6 +21,13 @@ export const GET: APIRoute = async ({ site }) => {
     }
     lines.push('');
   }
+  const cityPages = (await allPages()).filter((p) => p.data.type === 'city').sort((a, b) => a.data.order - b.data.order);
+  if (cityPages.length) {
+    lines.push('## עמודי ערים', '');
+    for (const p of cityPages) lines.push(`- [${p.data.keyword}](${abs(urlOf(p))}): ${p.data.summary}`);
+    lines.push('');
+  }
+  lines.push('## טקסט מלא', '', `- [כל התוכן באתר בקובץ אחד](${abs('/llms-full.txt')}): הטקסט המלא של כל המדריכים, כולל שאלות ותשובות.`, '');
   const refs = (await allPages()).filter((p) => p.data.type === 'reference');
   if (refs.length) {
     lines.push('## מידע נוסף', '');

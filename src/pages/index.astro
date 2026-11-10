@@ -5,7 +5,7 @@ import Iso from '../components/Iso.astro';
 import type { IsoName } from '../components/Iso.astro';
 import Icon from '../components/Icon.astro';
 import LeadForm from '../components/LeadForm.astro';
-import { business, isFilled, telHref, waHref } from '../config/business';
+import { business, isFilled, telHref, waHref, telIntl } from '../config/business';
 import { publishedSet, allPages, urlOf, regionPage, citiesInRegion, type Page } from '../lib/pages';
 import { regions, cityBySlug } from '../data/cities';
 const pub = await publishedSet();
@@ -82,7 +82,10 @@ const schema = [
     name: business.name,
     url: siteUrl,
     parentOrganization: { '@id': `${siteUrl}#org` },
-    ...(isFilled(business.phone) && { telephone: business.phone }),
+    ...(isFilled(business.phone) && { telephone: telIntl() }),
+    areaServed: { '@type': 'Country', name: 'ישראל' },
+    image: new URL('/brand/og-default.png', Astro.site).href,
+    logo: new URL('/brand/logo-mark.png', Astro.site).href,
     ...(isFilled(business.email) && { email: business.email }),
   },
   {
@@ -277,16 +280,16 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
 <style>
   .hero { background: var(--mist); clip-path: polygon(0 0, 100% 0, 100% 100%, 12% calc(100% - 50px), 0 calc(100% - 26px)); padding-bottom: clamp(3.5rem, 8vw, 6rem); }
   .hero-in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: start; padding-top: clamp(1.5rem, 4vw, 3rem); }
-  .ht h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); margin: .4rem 0 1.2rem; max-width: 11ch; }
+  .ht h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); margin: .4rem 0 1.2rem; max-width: 6.12em; }
   .h1b { display: block; font-size: .36em; letter-spacing: -.005em; color: var(--ink); margin-bottom: .45em; padding-bottom: .35em; border-bottom: 3px solid var(--copper); width: fit-content; }
-  .lead { font-size: clamp(1.08rem, 1.5vw, 1.22rem); color: var(--ink-2); max-width: 46ch; line-height: 1.6; }
+  .lead { font-size: clamp(1.08rem, 1.5vw, 1.22rem); color: var(--ink-2); max-width: 25.58em; line-height: 1.6; }
   .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.8rem; }
   .call { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: .3em; }
   .ha { max-width: 560px; width: 100%; justify-self: center; padding-top: 1rem; }
 
   .sec { padding-block: var(--space); }
-  .sub { color: var(--ink-2); font-size: 1.08rem; max-width: 60ch; }
-  .sh { max-width: 64ch; margin-bottom: 2.4rem; }
+  .sub { color: var(--ink-2); font-size: 1.08rem; max-width: 33.36em; }
+  .sh { max-width: 35.58em; margin-bottom: 2.4rem; }
   .more { display: inline-block; margin-top: 1.6rem; font-weight: 700; color: var(--copper-ink); }
 
   .check-in { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
@@ -306,7 +309,7 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
   .dark .kicker { color: var(--on-dark-2); }
   .dark .kicker .bars i:first-child { background: var(--on-dark); }
   .dh { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2.4rem; }
-  .dh p { color: var(--on-dark-2); max-width: 44ch; margin: 0; }
+  .dh p { color: var(--on-dark-2); max-width: 24.46em; margin: 0; }
   .lcards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(242,240,234,.14); border-inline-start: 1px solid rgba(242,240,234,.14); }
   .lcards li { border-bottom: 1px solid rgba(242,240,234,.14); border-inline-end: 1px solid rgba(242,240,234,.14); }
   .lcards a { display: flex; flex-direction: column; gap: .4rem; padding: 1.6rem 1.4rem 1.8rem; height: 100%; color: var(--on-dark); text-decoration: none; transition: background .15s; }

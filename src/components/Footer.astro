@@ -44,7 +44,7 @@ const show = (v: string) => (isFilled(v) ? v : null);
       <ul>
         <li>{show(business.phone) ? <a href={telHref()} dir="ltr">{business.phone}</a> : <span class="ph">[מספר טלפון]</span>}</li>
         <li>{show(business.email) ? <a href={`mailto:${business.email}`}>{business.email}</a> : <span class="ph">[כתובת מייל]</span>}</li>
-        <li>{show(business.hours) ?? <span class="ph">[שעות פעילות]</span>}</li>
+        {show(business.hours) && <li>{business.hours}</li>}
       </ul>
       <ul class="more">{more.map((p) => <li><a href={urlOf(p)}>{p.data.keyword}</a></li>)}<li><a href="/sitemap/">מפת האתר</a></li></ul>
     </div>
@@ -61,7 +61,7 @@ const show = (v: string) => (isFilled(v) ? v : null);
   .c2 { color: var(--peach); }
   .b { display: flex; flex-wrap: wrap; gap: .7rem; }
   .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2.5rem; padding-block: 3rem 2.5rem; }
-  .brand p { margin-top: 1rem; max-width: 34ch; font-size: 1rem; }
+  .brand p { margin-top: 1rem; max-width: 18.9em; font-size: 1rem; }
   .h { font: 700 .82rem/1 var(--f); color: var(--peach); margin: 0 0 1rem; letter-spacing: .03em; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: .98rem; }
   ul a, .legal a { color: var(--on-dark); text-decoration: none; }
