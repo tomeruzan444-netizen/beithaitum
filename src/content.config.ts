@@ -18,7 +18,7 @@ const priceRow = z.object({
   sourceUrl: z.string().url().optional(),
   checked: z.string(), // YYYY-MM
   verified: z.boolean().default(true), // false = לא מוצג, נכנס לדוח "מחירים לבדיקה"
-  vat: z.enum(['כולל מע"מ', 'לא כולל מע"מ', 'לא צוין במקור אם כולל מע"מ']).optional(), // גובר על vat של העמוד
+  vat: z.enum(['כולל מע"מ', 'לא כולל מע"מ', 'לא צוין אם כולל מע"מ']).optional(), // גובר על vat של העמוד
 });
 
 const pages = defineCollection({
@@ -44,7 +44,7 @@ const pages = defineCollection({
     problems: z.array(z.string()).default([]),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
     prices: z.array(priceRow).default([]),
-    vat: z.enum(['כולל מע"מ', 'לא כולל מע"מ', 'לא צוין במקור אם כולל מע"מ']).default('לא צוין במקור אם כולל מע"מ'),
+    vat: z.enum(['כולל מע"מ', 'לא כולל מע"מ', 'לא צוין אם כולל מע"מ']).default('לא צוין אם כולל מע"מ'),
     diagram: z.string().optional(),
     featuredCities: z.boolean().default(false),
     city: z.string().optional(), // עמוד עיר: slug מ-src/data/cities.ts

@@ -4,6 +4,8 @@ interface Props { page: Page }
 const { page } = Astro.props;
 const rows = page.data.prices.filter((r) => r.verified);
 const fmt = (n: number) => n.toLocaleString('he-IL');
+// תווית תצוגה למע"מ, בלי אזכור של "מקור"
+const vatLabel = (v?: string) => (v === 'לא צוין אם כולל מע"מ' ? 'לא צוין אם כולל מע"מ' : v);
 const checked = rows.map((r) => r.checked).sort().at(-1);
 ---
 {rows.length > 0 && (
@@ -11,21 +13,21 @@ const checked = rows.map((r) => r.checked).sort().at(-1);
     <h2 id="prices-h">כמה עולה {page.data.keyword}?</h2>
     <div class="spec-scroll">
       <table class="spec">
-        <caption>טווחי מחירים · {page.data.vat} · נבדק {checked}</caption>
+        <caption>טווחי מחירים · {vatLabel(page.data.vat)} · נבדק {checked}</caption>
         <thead><tr><th scope="col">עבודה</th><th scope="col">יחידה</th><th scope="col">טווח מחיר</th><th scope="col">מה משפיע</th></tr></thead>
         <tbody>
           {rows.map((r) => (
             <tr>
               <th scope="row">{r.item}{r.desc && <span class="d">{r.desc}</span>}</th>
               <td>{r.unit}</td>
-              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪{r.vat && r.vat !== page.data.vat && <span class="d">{r.vat}</span>}</td>
+              <td class="num">{fmt(r.min)}-{fmt(r.max)} ₪{r.vat && r.vat !== page.data.vat && <span class="d">{vatLabel(r.vat)}</span>}</td>
               <td>{r.note}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <p class="fine">המחירים להערכה בלבד, {page.data.vat}. המחיר הסופי נקבע לאחר בדיקה בשטח.</p>
+    <p class="fine">המחירים להערכה בלבד, {vatLabel(page.data.vat)}. המחיר הסופי נקבע לאחר בדיקה בשטח.</p>
   </section>
 )}
 <style>
