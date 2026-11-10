@@ -62,3 +62,6 @@
 - התגלה שכל ריצות ה-Actions נכשלו (אין SSH secrets בריפו). הפריסה הוחלפה: Actions בונה ודוחף את dist לענף `live`; הוסטינגר מחובר ל-`live` ב-Git auto-deploy (נבדק: is_enabled, branch live). פריסה ראשונה בוצעה.
 - `.htaccess`: חסימת גישה ל-`.git`.
 - עכשיו כל push ל-main (גם מהטלפון) עולה לאתר החי בלי מחשב.
+
+## 2026-11-10 (17:37) - תפריט ראשי
+- נוספו לתפריט הראשי (דסקטופ + נייד), אחרי "שירותים": איטום גגות (/roof-waterproofing/), זיפות גגות (/roof-waterproofing/roof-tarring/). בקשת המשתמש.

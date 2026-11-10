@@ -7,13 +7,16 @@ const groups = (await menu()).filter((g) => g.silo.id !== 'areas');
 const pub = await publishedSet();
 const path = Astro.url.pathname;
 const seg = path.split('/')[1] ?? '';
+const isTarring = path.startsWith('/roof-waterproofing/roof-tarring/');
 const nav = [
+  { href: '/roof-waterproofing/', label: 'איטום גגות', on: seg === 'roof-waterproofing' && !isTarring },
+  { href: '/roof-waterproofing/roof-tarring/', label: 'זיפות גגות', on: isTarring },
   { href: '/areas/', label: 'אזורים', on: seg === 'areas' },
   { href: '/#process', label: 'תהליך', on: false },
   { href: '/moisture/', label: 'רטיבות ונזילות', on: seg === 'moisture' },
   { href: '/prices/', label: 'מחירון', on: seg === 'prices' },
 ].filter((n) => n.href.startsWith('/#') || pub.has(n.href));
-const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture');
+const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture' && seg !== 'roof-waterproofing');
 ---
 <header class="site-header">
   <div class="wrap bar">
