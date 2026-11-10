@@ -30,11 +30,11 @@
 ## פריסה
 - `git push origin main` -> GitHub Actions (`.github/workflows/deploy.yml`) בונה ודוחף את `dist` לענף `live`. הוסטינגר מושך את `live` אוטומטית (Git auto-deploy, 2026-11-10). אין צורך ב-SSH secrets.
 - **דומיין**: `itumhouse.co.il` - אתר ראשי בהוסטינגר (נוצר 2026-11-11, משתמש u260375810), Git auto-deploy מענף `live`, SSL פעיל + הפניית HTTPS. הדומיין רשום ב-box.co.il; ה-DNS מכוון שם. האתר הזמני `orangered-goshawk-401694.hostingersite.com` עדיין קיים עם auto-deploy משלו מאותו ענף (למחוק רק באישור המשתמש).
-- **חסימת גוגל**: `blockIndexing: true` ב-`business.ts` + `X-Robots-Tag` לכל הדומיינים ב-`public/.htaccess`. לפתיחה (רק באישור המשתמש): `blockIndexing: false`, למחוק את שורת X-Robots-Tag, Search Console.
+- **אינדקס פתוח** (החלטת המשתמש 2026-11-11): `blockIndexing: false`. ב-`.htaccess` X-Robots-Tag noindex רק לדומיין הזמני (hostingersite). מפת אתר עם lastmod מ-`updated`. IndexNow: קובץ מפתח ב-`public/<key>.txt`, ו-workflow שולח את כל הכתובות אחרי כל פריסה.
 - DNS אצל box.co.il: רשומות A ל-@ ול-www -> 82.29.187.1 (2026-11-10). בלי הפניה מהדומיין הזמני (החלטת המשתמש).
 - אינטגרציית ה-Git של הוסטינגר מחוברת **רק לענף `live`**. לעולם לא ל-`main` (קוד מקור בלי build דורס את public_html).
 
 ## מצב נוכחי
 - המשתמש בחר (2026-11-10) לדלג על שלבי האישור ולהעלות מהר בסיס + דף בית; התכנון (keyword-map, ערים, סילואים) רץ במקביל.
-- פרטי קשר: טלפון ואימייל הוזנו (2026-11-10). חסרים: אזור שירות, שעות, רישום קבלנים, Google Business. **החלטת המשתמש (2026-11-10): פרטי קשר יימסרו רק בסוף. עד אז האתר נשאר חסום לגוגל.** לא לבקש פרטים בינתיים.
+- פרטי קשר: טלפון ואימייל הוזנו (2026-11-10). חסרים: אזור שירות, שעות, רישום קבלנים, Google Business. האתר פתוח לגוגל מ-2026-11-11. פרטי קשר חסרים יימסרו בהמשך; לא לבקש בינתיים.
 - ⏳ `docs/keyword-map.csv`, `src/data/cities.ts`, תבניות Hub/שירות/עיר, מנוע קישורים וסיידבר, טופס יצירת קשר.

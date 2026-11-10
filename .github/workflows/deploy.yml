@@ -49,3 +49,15 @@ jobs:
           force_orphan: true
           enable_jekyll: true
           commit_message: "Build from ${{ github.sha }}"
+
+      # IndexNow: מודיע ל-Bing (ומשם גם לחיפוש של ChatGPT), Yandex ו-Seznam על כל הכתובות.
+      # ממתינים שהוסטינגר ימשוך את ענף live לפני השליחה.
+      - name: Notify search engines (IndexNow)
+        continue-on-error: true
+        run: |
+          sleep 120
+          KEY=275d740af606b629835571efafeabaa2
+          URLS=$(grep -o '<loc>[^<]*' dist/sitemap-0.xml | sed 's/<loc>//' | python3 -c 'import sys,json;print(json.dumps([l.strip() for l in sys.stdin if l.strip()]))')
+          curl -sS -o /dev/null -w "IndexNow HTTP %{http_code}\n" -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "{\"host\":\"itumhouse.co.il\",\"key\":\"$KEY\",\"keyLocation\":\"https://itumhouse.co.il/$KEY.txt\",\"urlList\":$URLS}"

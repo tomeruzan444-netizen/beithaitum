@@ -10,7 +10,7 @@ export const business = {
   /** כתובת האתר (דומיין אמיתי מ-2026-11-10). מוחלף גם ב-astro.config.mjs / SITE_URL. */
   url: import.meta.env.SITE ?? 'https://itumhouse.co.il',
   /** חסימת גוגל עד שהמשתמש יאשר עלייה לאוויר (החלטה 2026-11-10). לפתיחה: false + להסיר את X-Robots-Tag ב-public/.htaccess. */
-  blockIndexing: true,
+  blockIndexing: false,
   phone: '052-4586433',
   /** בפורמט בינלאומי בלי + ובלי מקפים, למשל 972501234567 */
   whatsapp: '972524586433',

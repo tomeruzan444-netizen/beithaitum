@@ -113,3 +113,9 @@
 
 ## 2026-11-11 (00:55) - H1 = ביטוי מרכזי בלבד
 - לבקשת המשתמש: ב-136 עמודים (service, hub, city, region) ה-title (שממנו נבנה ה-H1) הוא עכשיו הביטוי המרכזי בלבד. metaTitle לא השתנה. עמודי problem ו-reference לא שונו.
+
+## 2026-11-11 (01:00) - פתיחה לאינדקס
+- לבקשת המשתמש: blockIndexing=false. robots.txt פתוח לכל הבוטים כולל בוטי AI + Sitemap. meta robots: index, follow.
+- .htaccess: noindex רק לדומיין הזמני (hostingersite) למניעת תוכן כפול.
+- מפת אתר: 150 כתובות (כל העמודים חוץ מ-search ו-thanks), עם lastmod.
+- IndexNow: מפתח ב-public, שלב ב-workflow ששולח את כל הכתובות 120 שניות אחרי הפריסה.

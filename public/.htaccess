@@ -32,8 +32,10 @@ ErrorDocument 404 /404.html
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
-  # האתר חסום לגוגל עד אישור המשתמש (כל הדומיינים). לפתיחה: למחוק את השורה + blockIndexing: false ב-business.ts
-  Header always set X-Robots-Tag "noindex, nofollow"
+  # האתר פתוח לאינדקס (2026-11-11). הדומיין הזמני של הוסטינגר נשאר חסום כדי שלא ייווצר תוכן כפול.
+  <If "%{HTTP_HOST} =~ /hostingersite\.com$/">
+    Header always set X-Robots-Tag "noindex, nofollow"
+  </If>
 
 </IfModule>
 
