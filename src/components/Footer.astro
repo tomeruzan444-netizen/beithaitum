@@ -1,49 +1,74 @@
 ---
 import Logo from './Logo.astro';
-import { business, isFilled, telHref } from '../config/business';
-const show = (v: string) => (isFilled(v) ? v : null);
-const year = new Date().getFullYear();
+import Icon from './Icon.astro';
+import { business, isFilled, telHref, waHref } from '../config/business';
 import { menu, allPages, urlOf } from '../lib/pages';
-const hubs = await menu();
-const refs = (await allPages()).filter((p) => p.data.type === 'reference' && p.id !== 'contact');
+interface Props { cta?: [string, string] }
+const { cta = ['התחיל לטפטף?', 'דברו איתנו.'] } = Astro.props;
+const groups = await menu();
+const hubs = groups.filter((g) => g.silo.id !== 'areas');
+const areasG = groups.find((g) => g.silo.id === 'areas');
+const all = await allPages();
+const legal = all.filter((p) => ['accessibility', 'privacy'].includes(p.id));
+const more = all.filter((p) => ['about', 'prices', 'glossary', 'contact'].includes(p.id));
+const year = new Date().getFullYear();
+const show = (v: string) => (isFilled(v) ? v : null);
 ---
 <footer class="site-footer">
-  <div class="layers-sep" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="wrap cols">
-    <div>
-      <Logo dark />
-      <p class="about">{business.teamLine}: איטום גגות, קירות, מרפסות ומבנים, ואבחון רטיבות ונזילות.</p>
-    </div>
-    <div>
-      <h2>יצירת קשר</h2>
-      <ul>
-        <li>טלפון: {show(business.phone) ? <a href={telHref()} dir="ltr">{business.phone}</a> : <span class="ph">{business.phone}</span>}</li>
-        <li>אימייל: {show(business.email) ? <a href={`mailto:${business.email}`}>{business.email}</a> : <span class="ph">{business.email}</span>}</li>
-        <li>שעות: {show(business.hours) ?? <span class="ph">{business.hours}</span>}</li>
-        <li>אזור שירות: {show(business.area) ?? <span class="ph">{business.area}</span>}</li>
-      </ul>
-    </div>
-    <div>
-      <h2>באתר</h2>
-      <ul>
-        {hubs.length > 0
-          ? hubs.map((h) => <li><a href={urlOf(h.hub)}>{h.silo.name}</a></li>)
-          : <><li><a href="/#problems">אבחון לפי בעיה</a></li><li><a href="/#methods">שיטות איטום</a></li></>}
-        {refs.map((r) => <li><a href={urlOf(r)}>{r.data.keyword}</a></li>)}
-        <li><a href="/sitemap/">מפת האתר</a></li>
-      </ul>
+  <div class="wrap cta">
+    <p class="big">{cta[0]} <span class="c2">{cta[1]}</span></p>
+    <div class="b">
+      <a class="btn btn--peach" href={telHref()}><Icon name="phone" />{show(business.phone) ? <span dir="ltr">{business.phone}</span> : '[מספר טלפון]'}</a>
+      <a class="btn btn--light" href={waHref()}><Icon name="chat" />תמונה בוואטסאפ</a>
     </div>
   </div>
-  <div class="wrap legal">© {year} {business.name}. כל הזכויות שמורות.</div>
+  <div class="wrap cols">
+    <div class="brand">
+      <Logo dark />
+      <p>{business.teamLine}: איטום גגות, קירות, מרפסות ומבנים, ואבחון רטיבות ונזילות.</p>
+    </div>
+    {hubs.length > 0 && (
+      <nav aria-label="שירותים">
+        <p class="h">שירותים</p>
+        <ul>{hubs.map((h) => <li><a href={urlOf(h.hub)}>{h.silo.name}</a></li>)}</ul>
+      </nav>
+    )}
+    {areasG && (
+      <nav aria-label="אזורים">
+        <p class="h">אזורים</p>
+        <ul><li><a href={urlOf(areasG.hub)}>כל אזורי השירות</a></li>{areasG.items.map((r) => <li><a href={urlOf(r)}>{r.data.keyword}</a></li>)}</ul>
+      </nav>
+    )}
+    <div>
+      <p class="h">קשר</p>
+      <ul>
+        <li>{show(business.phone) ? <a href={telHref()} dir="ltr">{business.phone}</a> : <span class="ph">[מספר טלפון]</span>}</li>
+        <li>{show(business.email) ? <a href={`mailto:${business.email}`}>{business.email}</a> : <span class="ph">[כתובת מייל]</span>}</li>
+        <li>{show(business.hours) ?? <span class="ph">[שעות פעילות]</span>}</li>
+      </ul>
+      <ul class="more">{more.map((p) => <li><a href={urlOf(p)}>{p.data.keyword}</a></li>)}<li><a href="/sitemap/">מפת האתר</a></li></ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© {year} {business.name}</span>
+    <span>{legal.map((p, i) => <>{i > 0 && ' · '}<a href={urlOf(p)}>{p.data.keyword}</a></>)}</span>
+  </div>
 </footer>
 <style>
-  .site-footer { background: var(--concrete); color: var(--on-dark-2); }
-  .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2.5rem; padding-block: 3.5rem 2.5rem; }
-  .about { margin-top: 1rem; max-width: 38ch; font-size: 1rem; }
-  h2 { font-size: 1.05rem; color: var(--on-dark); margin-bottom: .9rem; font-family: var(--f-body); font-weight: 600; letter-spacing: .04em; }
-  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: 1rem; }
-  a { color: var(--on-dark); }
-  .ph { color: #E9A27F; border-color: #E9A27F; }
-  .legal { border-block-start: 1px solid rgba(237,233,224,.12); padding-block: 1.2rem; font-size: .9rem; }
-  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .site-footer { background: var(--ink); color: var(--on-dark-2); margin-top: 0; }
+  .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: clamp(2.5rem, 6vw, 4.5rem) 2.5rem; border-bottom: 1px solid rgba(242,240,234,.1); }
+  .big { margin: 0; font: 800 clamp(2rem, 5vw, 3.6rem)/1.05 var(--f); color: var(--on-dark); letter-spacing: -.025em; }
+  .c2 { color: var(--peach); }
+  .b { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2.5rem; padding-block: 3rem 2.5rem; }
+  .brand p { margin-top: 1rem; max-width: 34ch; font-size: 1rem; }
+  .h { font: 700 .82rem/1 var(--f); color: var(--peach); margin: 0 0 1rem; letter-spacing: .03em; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: .98rem; }
+  a { color: var(--on-dark); text-decoration: none; }
+  a:hover { color: var(--peach); }
+  .more { margin-top: 1.2rem; }
+  .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(242,240,234,.1); padding-block: 1.2rem; font-size: .88rem; }
+  .legal a { text-decoration: underline; text-underline-offset: .2em; color: var(--on-dark-2); }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .cols { grid-template-columns: 1fr; } }
 </style>

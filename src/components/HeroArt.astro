@@ -1,0 +1,127 @@
+---
+// איורי הירו איזומטריים: roof (גג עם תוויות), layers (שכבות מפורקות + בית), city (בניינים), wall (קיר עם רטיבות).
+import { box, P, C } from '../lib/iso';
+interface Props { variant: 'roof' | 'layers' | 'city' | 'wall'; title?: string }
+const { variant, title = 'איור' } = Astro.props;
+type Pt = [number, number];
+const xy = (p: Pt) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+const quad = (p: Pt, w: number, h: number) => `${xy(p)} ${xy([p[0] + w * 0.866, p[1] + w * 0.5])} ${xy([p[0] + w * 0.866, p[1] + w * 0.5 - h])} ${xy([p[0], p[1] - h])}`;
+const rain = (x0: number, y0: number, n: number, gap: number) =>
+  Array.from({ length: n }, (_, i) => `M${x0 + i * gap} ${y0 + (i % 2) * 12}l-7 22`).join(' ');
+
+// roof
+const slab = box(0, 0, 0, 230, 170, 46);
+const puddle = P(120, 85, 46);
+const crack = [P(40, 30, 46), P(52, 44, 46), P(46, 52, 46), P(60, 68, 46)].map(xy).join(' ');
+const crackP = P(52, 44, 46);
+const drain = P(200, 150, 46);
+const edge = P(0, 85, 46);
+
+// layers
+const layers = [
+  { z: 206, h: 6, top: C.white, side: '#DCD6CA', label: 'שכבת גמר', sub: 'מחזירה קרינה' },
+  { z: 168, h: 8, top: C.dark, side: C.dark2, label: 'יריעת איטום', sub: 'עוצרת את המים' },
+  { z: 134, h: 5, top: C.copperL, side: C.copper, label: 'פריימר', sub: 'מדביק לבטון' },
+  { z: 84, h: 22, top: C.top, side: C.left, label: 'בטון ושיפועים', sub: 'מובילים לניקוז' },
+].map((l) => ({ ...l, b: box(10, 10, l.z, 150, 110, l.h), lp: P(10, 120, l.z + l.h / 2) }));
+const house = box(10, 10, -20, 150, 110, 80);
+const hWin = quad(P(40, 120, 30), 34, 30);
+const hDoor = quad(P(110, 120, -20), 22, 48);
+const homeP = P(10, 120, 20);
+
+// city
+const blds = [
+  { x: 0, w: 46, h: 120, top: C.copper }, { x: 56, w: 50, h: 170, top: C.copper }, { x: 116, w: 44, h: 105, top: C.dark },
+  { x: 170, w: 50, h: 150, top: C.copper }, { x: 230, w: 40, h: 95, top: C.dark },
+].map((b) => {
+  const wins: string[] = [];
+  for (let r = 1; r < b.h / 30; r++) for (let c = 0; c < 2; c++) wins.push(quad(P(b.x + 8 + c * 18, 40, b.h - r * 30), 9, 11));
+  return { ...b, q: box(b.x, 0, 0, b.w, 40, b.h), wins };
+});
+const ground = `${xy(P(-20, 50, 0))} ${xy(P(300, 50, 0))}`;
+
+// wall
+const wall = box(0, 60, 0, 220, 40, 170);
+const wWin = quad(P(150, 100, 120), 40, 46);
+const stain = P(110, 100, 50);
+---
+<svg viewBox="-230 -170 470 380" role="img" aria-label={title} class="hero-art">
+  <title>{title}</title>
+  {variant === 'roof' && (
+    <g>
+      <path d={rain(-60, -150, 5, 42)} stroke={C.line} stroke-opacity=".45" stroke-width="1.6" fill="none" />
+      <polygon points={slab.left} fill={C.left} />
+      <polygon points={slab.right} fill={C.right} />
+      <polygon points={slab.top} fill={C.top} />
+      <ellipse cx={puddle[0]} cy={puddle[1]} rx="52" ry="16" fill={C.water} />
+      <polyline points={crack} fill="none" stroke={C.dark} stroke-width="2.4" />
+      <circle cx={drain[0]} cy={drain[1]} r="7" fill={C.dark} />
+      <circle cx={drain[0]} cy={drain[1]} r="3" fill={C.copper} />
+      <g font-family="Assistant Variable, Assistant, sans-serif" font-size="13" font-weight="700" fill={C.dark}>
+        <line x1={crackP[0]} y1={crackP[1]} x2={crackP[0] - 20} y2="-140" stroke={C.copper} stroke-width="1" />
+        <text x={crackP[0] - 20} y="-146" text-anchor="middle">סדק בשכבה</text>
+        <line x1={drain[0]} y1={drain[1]} x2={drain[0] + 40} y2="-90" stroke={C.copper} stroke-width="1" />
+        <text x={drain[0] + 40} y="-96" text-anchor="middle">ניקוז סתום</text>
+        <line x1={puddle[0]} y1={puddle[1]} x2={puddle[0]} y2="190" stroke={C.copper} stroke-width="1" />
+        <text x={puddle[0]} y="204" text-anchor="middle">מים עומדים</text>
+        <circle cx={edge[0]} cy={edge[1]} r="3.5" fill={C.copper} />
+        <line x1={edge[0]} y1={edge[1]} x2="-200" y2="110" stroke={C.copper} stroke-width="1" />
+        <text x="-200" y="126" text-anchor="middle">חיבור למעקה</text>
+      </g>
+    </g>
+  )}
+  {variant === 'layers' && (
+    <g transform="translate(50 45)">
+      <path d={rain(-40, -200, 4, 36)} stroke={C.line} stroke-opacity=".4" stroke-width="1.6" fill="none" />
+      <polygon points={house.left} fill="#F1E3CF" />
+      <polygon points={house.right} fill="#E2CDAF" />
+      <polygon points={hWin} fill={C.peach} />
+      <polygon points={hDoor} fill={C.copper} />
+      {layers.map((l) => <g><polygon points={l.b.left} fill={l.side} /><polygon points={l.b.right} fill={l.side} opacity=".85" /><polygon points={l.b.top} fill={l.top} /></g>)}
+      <g font-family="Assistant Variable, Assistant, sans-serif">
+        {layers.map((l) => (
+          <g>
+            <line x1={l.lp[0]} y1={l.lp[1]} x2={l.lp[0] - 36} y2={l.lp[1]} stroke={C.line} stroke-width=".8" />
+            <text x={l.lp[0] - 42} y={l.lp[1] - 2} text-anchor="start" font-size="14" font-weight="800" fill={C.dark}>{l.label}</text>
+            <text x={l.lp[0] - 42} y={l.lp[1] + 13} text-anchor="start" font-size="11" fill="#7A8088">{l.sub}</text>
+          </g>
+        ))}
+        <line x1={homeP[0]} y1={homeP[1]} x2={homeP[0] - 36} y2={homeP[1]} stroke={C.copper} stroke-width=".8" />
+        <text x={homeP[0] - 42} y={homeP[1] - 2} text-anchor="start" font-size="14" font-weight="800" fill={C.copper}>הבית שלכם</text>
+        <text x={homeP[0] - 42} y={homeP[1] + 13} text-anchor="start" font-size="11" fill="#7A8088">יבש</text>
+      </g>
+    </g>
+  )}
+  {variant === 'city' && (
+    <g transform="translate(-70 40)">
+      <path d={rain(-60, -200, 5, 55)} stroke={C.line} stroke-opacity=".4" stroke-width="1.6" fill="none" />
+      {blds.map((b) => (
+        <g>
+          <polygon points={b.q.left} fill="#DCD4C6" />
+          <polygon points={b.q.right} fill={C.left} />
+          <polygon points={b.q.top} fill={b.top} />
+          {b.wins.map((w) => <polygon points={w} fill="#F8F2E4" />)}
+        </g>
+      ))}
+      <polyline points={ground} stroke={C.line} stroke-width="1.5" fill="none" />
+    </g>
+  )}
+  {variant === 'wall' && (
+    <g transform="translate(-30 60)">
+      <path d={rain(-120, -220, 5, 40)} stroke={C.line} stroke-opacity=".4" stroke-width="1.6" fill="none" />
+      <polygon points={wall.left} fill="#ECE3D3" />
+      <polygon points={wall.right} fill={C.left} />
+      <polygon points={wall.top} fill={C.copper} />
+      <polygon points={wWin} fill={C.water} opacity=".55" />
+      <ellipse cx={stain[0]} cy={stain[1]} rx="38" ry="26" fill="#8C9AA6" opacity=".35" />
+      <path d={`M${stain[0] - 4} ${stain[1] + 30} q-4 7 0 11 q4 -4 0 -11z`} fill={C.water} />
+      <g font-family="Assistant Variable, Assistant, sans-serif" font-size="13" font-weight="700" fill={C.dark}>
+        <line x1={stain[0]} y1={stain[1]} x2={stain[0] - 90} y2={stain[1] + 60} stroke={C.copper} stroke-width="1" />
+        <text x={stain[0] - 90} y={stain[1] + 76} text-anchor="middle">כתם רטיבות</text>
+      </g>
+    </g>
+  )}
+</svg>
+<style>
+  .hero-art { width: 100%; height: auto; display: block; }
+</style>

@@ -1,65 +1,127 @@
 ---
-// סיידבר אוטומטי: אחים מהסילו, פתרונות קשורים, Hub, כרטיס פנייה.
-// בדסקטופ דביק בצד; בנייד זורם אחרי המאמר ("עוד באתר") - אותו HTML, נשאר זחיל.
-import { siblings, crossRelated, hubOf, urlOf, nearbyCities, regionPage, pageByUrl, type Page } from '../lib/pages';
-import { cityBySlug } from '../data/cities';
-import { siloById } from '../data/silos';
+/**
+ * סיידבר דינמי (מפרט "הסיידבר הדינמי"):
+ * 1. כרטיס פנייה  2. בעמוד הזה  3. שירותים קרובים לפי ניקוד  4. ערים  5. מדריכים.
+ * מעל 1100px: עמודה צדדית דביקה. 768-1100: בלוקים בגריד של 2 אחרי התוכן. מתחת ל-768: אחרי התוכן + כפתור צף "קשור לעמוד".
+ */
+import Iso from './Iso.astro';
 import Icon from './Icon.astro';
-import { telHref, waHref } from '../config/business';
-interface Props { page: Page }
-const { page } = Astro.props;
-const isPlace = page.data.type === 'city' || page.data.type === 'region';
-const sib = isPlace ? await nearbyCities(page) : await siblings(page);
-const cross = isPlace
-  ? (await Promise.all(page.data.related.map(pageByUrl))).filter((x): x is Page => !!x).slice(0, 4)
-  : await crossRelated(page);
-const region = page.data.type === 'city' ? await regionPage(cityBySlug(page.data.city ?? '')?.region) : undefined;
-const roofHub = isPlace ? await hubOf('roof-waterproofing') : undefined;
-const hub = await hubOf(page.data.silo);
-const silo = siloById(page.data.silo);
+import { siblings, crossRelated, urlOf, nearbyCities, regionPage, pageByUrl, guidesFor, topCities, iconFor, hubOf, type Page } from '../lib/pages';
+import { cityBySlug, km } from '../data/cities';
+import { siloById } from '../data/silos';
+import { business, isFilled, telHref, waHref } from '../config/business';
+interface Props { page: Page; headings: { slug: string; text: string }[] }
+const { page, headings } = Astro.props;
+const d = page.data;
+const isCity = d.type === 'city';
+const isPlace = isCity || d.type === 'region';
+const cityName = isCity ? d.keyword.replace(/^איטום גגות ב/, '') : '';
+
+// שירותים
+let services: Page[] = [];
+if (isPlace) services = (await Promise.all(d.related.map(pageByUrl))).filter((x): x is Page => !!x).slice(0, 4);
+else if (d.type !== 'hub') {
+  const sib = await siblings(page, 4), cross = await crossRelated(page, 4);
+  services = [...sib.slice(0, 2), ...cross.slice(0, 2), ...sib.slice(2)].slice(0, 4);
+} else services = await crossRelated(page, 4);
+
+// ערים
+const me = isCity ? cityBySlug(d.city ?? '') : undefined;
+const near = isCity ? await nearbyCities(page, 4) : [];
+const cities = isPlace ? [] : await topCities(6);
+const region = isCity ? await regionPage(me?.region) : undefined;
+const areasHub = await hubOf('areas');
+
+const guides = await guidesFor(page, 3);
+const toc = headings.slice(0, 8);
+const cardTitle = isCity ? `רוצים שנבדוק את הגג ב${cityName}?` : d.type === 'problem' ? 'רוצים שנמצא את המקור?' : `שאלה על ${d.keyword}?`;
 ---
-<aside class="side" aria-label="עוד באתר">
-  <p class="side-h">עוד באתר</p>
-  {sib.length > 0 && (
-    <nav aria-label={`עוד ב${silo?.name}`}>
-      <p class="grp">{isPlace ? 'ערים סמוכות' : silo?.name}</p>
-      <ul>{sib.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
-    </nav>
-  )}
-  {cross.length > 0 && (
-    <nav aria-label="פתרונות קשורים">
-      <p class="grp">{isPlace ? 'שירותים מבוקשים' : 'פתרונות קשורים'}</p>
-      <ul>{cross.map((s) => <li><a href={urlOf(s)}>{s.data.keyword}</a></li>)}</ul>
-    </nav>
-  )}
-  {(region || roofHub) && (
-    <nav aria-label="עוד">
-      <ul>
-        {region && <li><a href={urlOf(region)}>{region.data.keyword}</a></li>}
-        {roofHub && <li><a href={urlOf(roofHub)}>{roofHub.data.keyword}</a></li>}
-      </ul>
-    </nav>
-  )}
-  {hub && page.data.type !== 'hub' && (
-    <a class="hub" href={urlOf(hub)}>כל הנושאים ב{silo?.name} <Icon name="arrow" /></a>
-  )}
-  <div class="card">
-    <p class="ct">מתלבטים מה מתאים לכם?</p>
-    <p class="cx">ספרו לנו מה אתם רואים, ונגיד לכם מה כדאי לבדוק.</p>
-    <a class="btn btn--primary" href={telHref()}><Icon name="phone" />שיחה</a>
-    <a class="btn" href={waHref()}><Icon name="chat" />וואטסאפ</a>
+<aside class="side" id="related" aria-label="קשור לעמוד">
+  <div class="card blk">
+    <p class="k">{d.keyword}</p>
+    <p class="ct">{cardTitle}</p>
+    <a class="btn btn--peach" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : '[מספר טלפון]'}</a>
+    <a class="btn btn--light" href={waHref()}><Icon name="chat" />תמונה בוואטסאפ</a>
   </div>
+
+  {toc.length >= 3 && (
+    <nav class="blk toc" aria-label="בעמוד הזה">
+      <p class="h">בעמוד הזה</p>
+      <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+    </nav>
+  )}
+
+  {services.length > 0 && (
+    <nav class="blk svc" aria-label="שירותים קשורים">
+      <p class="h">{isCity ? `שירותים ב${cityName}` : `הכי קרוב ל${d.keyword}`}</p>
+      <ul>{services.map((s) => (
+        <li><a href={urlOf(s)}><Iso name={iconFor(s)} size={34} /><span><small>{siloById(s.data.silo)?.short}</small>{s.data.keyword}</span></a></li>
+      ))}</ul>
+    </nav>
+  )}
+
+  {near.length > 0 && (
+    <nav class="blk near" aria-label="ערים סמוכות">
+      <p class="h">גם קרוב ל{cityName}</p>
+      <ul>{near.map((c) => { const o = cityBySlug(c.data.city ?? ''); return (
+        <li><a href={urlOf(c)}>{c.data.keyword}</a>{me && o && <span class="km">{Math.round(km(me, o))} ק"מ</span>}</li>
+      ); })}</ul>
+      {region && <a class="more" href={urlOf(region)}>{region.data.keyword} ←</a>}
+    </nav>
+  )}
+
+  {cities.length > 0 && (
+    <nav class="blk chips" aria-label="ערים">
+      <p class="h">{d.type === 'hub' ? 'באזורים' : `${d.keyword} ב...`}</p>
+      <ul>{cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword.replace(/^איטום גגות ב/, '')}</a></li>)}</ul>
+      {areasHub && <a class="more" href={urlOf(areasHub)}>כל הערים ←</a>}
+    </nav>
+  )}
+
+  {guides.length > 0 && (
+    <nav class="blk guides" aria-label="מדריכים">
+      <p class="h c">לפני שמחליטים</p>
+      <ul>{guides.map((g) => <li><a href={urlOf(g)}>{g.data.keyword}</a></li>)}</ul>
+    </nav>
+  )}
 </aside>
+<a class="rel-fab" href="#related">קשור לעמוד</a>
 <style>
-  .side { font-size: 1rem; }
-  .side-h { font: 600 .8rem/1 var(--f-body); letter-spacing: .08em; color: var(--ink-2); margin: 0 0 1rem; padding-bottom: .7rem; border-bottom: 2px solid var(--bitumen); }
-  .grp { font: 700 1.05rem/1.3 var(--f-head); margin: 1.2rem 0 .4rem; }
-  ul { list-style: none; margin: 0; padding: 0; }
-  li a { display: block; padding: .45rem 0; border-bottom: 1px solid var(--line-2); color: var(--bitumen); text-decoration: none; }
-  li a:hover { color: var(--copper-ink); }
-  .hub { display: inline-flex; align-items: center; gap: .4rem; margin-top: 1.1rem; font-weight: 600; }
-  .hub :global(svg) { width: 1rem; height: 1rem; }
-  .card { margin-top: 1.6rem; padding: 1.2rem; background: #fff; border: 1px solid var(--line); display: grid; gap: .55rem; }
-  .ct { font: 700 1.1rem/1.3 var(--f-head); margin: 0; }
-  .cx { margin: 0 0 .3rem; color: var(--ink-2); font-size: .95rem; }
+  .side { font-size: 1rem; display: grid; gap: 1.8rem; align-content: start; }
+  .blk { min-width: 0; }
+  .h { font: 700 .8rem/1 var(--f); color: var(--ink-3); margin: 0 0 .7rem; letter-spacing: .02em; }
+  .h.c { color: var(--copper); }
+  .card { background: var(--ink); color: var(--on-dark); padding: 1.4rem 1.3rem; display: grid; gap: .6rem; position: relative; }
+  .card::before { content: ''; position: absolute; inset-inline-start: 0; top: 0; width: 34px; height: 4px; background: var(--peach); }
+  .k { font: 700 .78rem/1.2 var(--f); color: var(--peach); margin: 0; }
+  .ct { font: 800 1.35rem/1.2 var(--f); margin: 0 0 .5rem; }
+  .card .btn { width: 100%; }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-inline-start: 2px solid var(--line); }
+  .toc a { display: block; padding: .35rem .9rem; color: var(--ink-2); text-decoration: none; font-size: .95rem; line-height: 1.4; margin-inline-start: -2px; border-inline-start: 2px solid transparent; }
+  .toc a:hover { color: var(--ink); border-color: var(--copper); }
+  .svc .h, .near .h, .chips .h { font: 800 1.05rem/1.2 var(--f); color: var(--ink); padding-bottom: .6rem; border-bottom: 2px solid var(--ink); }
+  .svc ul, .near ul, .guides ul { list-style: none; margin: 0; padding: 0; }
+  .svc a { display: flex; align-items: center; gap: .7rem; padding: .55rem 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; line-height: 1.25; }
+  .svc a:hover { color: var(--copper); }
+  .svc small { display: block; font-weight: 500; font-size: .75rem; color: var(--ink-3); }
+  .near li { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; border-bottom: 1px solid var(--line); }
+  .near a { display: block; padding: .55rem 0; color: var(--ink); font-weight: 700; text-decoration: none; }
+  .near a:hover { color: var(--copper); }
+  .km { font-size: .78rem; color: var(--ink-3); white-space: nowrap; }
+  .chips ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem .9rem; }
+  .chips a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: .25em; }
+  .more { display: inline-block; margin-top: .7rem; font-size: .9rem; font-weight: 700; color: var(--copper); text-decoration: none; }
+  .guides { background: var(--sand); padding: 1.2rem 1.3rem; }
+  .guides a { display: block; padding: .4rem 0; color: var(--ink); font-weight: 700; text-decoration: none; line-height: 1.35; }
+  .guides a:hover { color: var(--copper); }
+  .rel-fab { display: none; }
+  @media (max-width: 1100px) {
+    .side { grid-template-columns: 1fr 1fr; gap: 1.8rem 2.2rem; border-top: 2px solid var(--ink); padding-top: 2rem; }
+    .card { grid-column: 1 / -1; }
+    .toc { display: none; }
+  }
+  @media (max-width: 768px) {
+    .side { grid-template-columns: 1fr; }
+    .rel-fab { display: inline-flex; position: fixed; inset-inline-start: 12px; bottom: 76px; z-index: 55; background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); padding: .5rem .9rem; font-weight: 700; font-size: .9rem; text-decoration: none; box-shadow: 0 6px 16px rgba(21,24,29,.15); }
+  }
 </style>

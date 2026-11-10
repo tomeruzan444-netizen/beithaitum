@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import RoofSection from '../components/RoofSection.astro';
+import HeroArt from '../components/HeroArt.astro';
+import Iso from '../components/Iso.astro';
+import type { IsoName } from '../components/Iso.astro';
 import Icon from '../components/Icon.astro';
 import { business, isFilled, telHref, waHref } from '../config/business';
-import { publishedSet } from '../lib/pages';
-import { cities as cityList } from '../data/cities';
+import { publishedSet, allPages, urlOf, regionPage, citiesInRegion, type Page } from '../lib/pages';
+import { regions, cityBySlug } from '../data/cities';
 const pub = await publishedSet();
+const allP = await allPages();
 const L = (h: string) => (pub.has(h) ? h : null);
 
 const title = 'בית האיטום | חברת איטום לגגות, קירות ומרפסות';
@@ -51,38 +54,12 @@ const problems = [
   },
 ];
 
-const roofs = [
-  ['גג בטון שטוח', '/roof-waterproofing/flat-roof/', 'מים שעומדים על הגג כשהשיפועים לא מדויקים, וסדקים שנפתחים עם תזוזות התקרה בין קיץ לחורף.', 'יריעות ביטומניות, איטום במריחה (פוליאוריטן או אקרילי), או שילוב של שתי השיטות.'],
-  ['גג רעפים', '/roof-waterproofing/tiled-roof/', 'הרעפים מסיטים את רוב המים, אבל את האיטום עצמו עושה השכבה שמתחתם.', 'החלפת רעפים שבורים, יריעה תת-רעפית, איטום חיבורים, ארובות וחלונות גג.'],
-  ['גג איסכורית או פנל מבודד', '/roof-waterproofing/corrugated-roof/', 'החולשה נמצאת בברגים, בחפיפות בין הלוחות ובחלודה שמתפתחת בפח.', 'איטום ברגים וחפיפות, ציפוי במריחה שמתאים לפח, החלפת לוחות פגומים.'],
-  ['גג מרוצף', '/roof-waterproofing/paved-roof/', 'שכבת האיטום מוסתרת מתחת לריצוף, כך שקשה לראות איפה היא נכשלה.', 'בדיקת הצפה לאיתור הכשל, איטום פוגות ורובה, ובמקרים קשים פירוק ואיטום מחדש.'],
-];
-
 const methods = [
   ['יריעות ביטומניות', '/methods/bitumen-membranes/', 'יריעות מביטומן משופר שמולחמות לגג בלהבה, בחפיפה בין יריעה ליריעה.', 'גגות בטון שטוחים ושטחים גדולים.', 'צריכות הגנה מקרינת השמש ותשתית יבשה ונקייה בזמן ההלחמה.'],
   ['איטום במריחה (פוליאוריטן)', '/methods/liquid-applied/', 'חומר נוזלי שנמרח בכמה שכבות ומתקשה לממברנה רציפה בלי תפרים.', 'גגות עם הרבה מעברים, מתקנים וחיבורים מורכבים.', 'עובי השכבה וזמני הייבוש לפי הוראות היצרן הם מה שקובע את התוצאה.'],
   ['איטום אקרילי', '/methods/acrylic/', 'ציפוי על בסיס מים, לרוב בגוון לבן שמחזיר קרינה.', 'חידוש ותחזוקה של גג קיים, הפחתת חום בקומה העליונה.', 'פחות מתאים לגג שמים עומדים עליו לאורך זמן.'],
   ['איטום צמנטי וקריסטלי', '/methods/crystalline/', 'חומר על בסיס צמנט, שחלקו חודר לנקבוביות של הבטון.', 'מרתפים, בריכות, מאגרי מים ואיטום מהצד הפנימי של קיר.', 'גמיש פחות, ולכן לא מתאים למשטח עם סדקים שממשיכים לזוז.'],
   ['איטום בהזרקה', '/methods/injection/', 'הזרקת חומר לתוך סדק או מישק כדי לחסום את מעבר המים.', 'סדקים בבטון, מרתפים ונזילות נקודתיות.', 'מטפל בנקודה מסוימת, ולא מחליף מערכת איטום שלמה.'],
-];
-
-const steps = [
-  ['שיחה ראשונה', 'מספרים לנו מה רואים, איפה ומתי זה מופיע. לפעמים כבר בשלב הזה אפשר להבין אם הכיוון הוא הגג, הצנרת או הקיר.'],
-  ['בדיקה ואבחון', 'מגיעים לנכס, מחפשים את מקור המים, בודקים את מצב האיטום הקיים ומתעדים את מה שמצאנו.'],
-  ['הצעת מחיר מפורטת', 'שיטה, חומרים, שטח ושלבי עבודה כתובים בהצעה, כך שאפשר להבין על מה משלמים ולהשוות.'],
-  ['הכנת התשתית', 'ניקוי, תיקון סדקים, תיקון שיפועים ופריימר. תשתית שלא הוכנה כמו שצריך היא אחת הסיבות הנפוצות לכשל של איטום.'],
-  ['ביצוע השכבות', 'יישום מערכת האיטום לפי הוראות היצרן, כולל הגבהות על מעקות, רולקות ואיטום סביב צנרת שחודרת לגג.'],
-  ['בדיקה ומסירה', 'בגגות שטוחים ובמרפסות מבצעים בדיקת הצפה לפני המסירה, כשהמבנה מאפשר זאת.'],
-];
-
-const regions = [
-  ['מרכז וגוש דן', '/areas/center/', 'תל אביב, רמת גן, גבעתיים, חולון, בת ים, פתח תקווה, ראשון לציון'],
-  ['השרון', '/areas/sharon/', 'נתניה, הרצליה, רעננה, כפר סבא, הוד השרון, רמת השרון'],
-  ['השפלה', '/areas/shfela/', 'רחובות, נס ציונה, יבנה, גדרה, מזכרת בתיה, מודיעין'],
-  ['ירושלים והסביבה', '/areas/jerusalem/', 'ירושלים, בית שמש, מעלה אדומים, גבעת זאב, גוש עציון'],
-  ['חיפה והקריות', '/areas/krayot/', 'חיפה, קרית אתא, קרית ביאליק, קרית מוצקין, קרית ים, נשר'],
-  ['הצפון', '/areas/north/', 'עפולה, יקנעם, כרמיאל, נהריה, טבריה, נוף הגליל'],
-  ['הדרום', '/areas/south/', 'באר שבע, אשדוד, אשקלון, קרית גת, נתיבות, דימונה'],
 ];
 
 const faq = [
@@ -112,37 +89,107 @@ const schema = [
     mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
   },
 ];
+const steps = [
+  ['שיחה ותמונות', 'מספרים לנו מה רואים, איפה ומתי. תמונה של הכתם או של הגג מקצרת את הדרך.'],
+  ['אבחון בשטח', 'עולים לגג ובודקים שכבות, סדקים, ניקוז ומקורות נזילה.'],
+  ['הצעה שקופה', 'שיטה, חומרים, שטח ושלבי עבודה כתובים בהצעה, כל סעיף בנפרד.'],
+  ['ביצוע ובדיקה', 'עבודה לפי הוראות היצרן, ובגג שטוח בדיקת הצפה לפני המסירה כשאפשר.'],
+];
+const roofPick = [
+  ['בטון שטוח', '/roof-waterproofing/flat-roof/'],
+  ['רעפים', '/roof-waterproofing/tiled-roof/'],
+  ['איסכורית או פנל', '/roof-waterproofing/corrugated-roof/'],
+  ['מרפסת או גג מרוצף', '/roof-waterproofing/paved-roof/'],
+].filter(([, h]) => pub.has(h));
+const layerCards: [string, string, string, IsoName][] = [
+  ['/roof-waterproofing/concrete-roof/', 'איטום גג בטון', 'גגות שטוחים בבתים ובבניינים: יריעות, פוליאוריטן או ממברנה.', 'concrete'],
+  ['/methods/bitumen-membranes/', 'יריעות ביטומניות', 'יריעות מולחמות שיוצרות שכבה עבה ועמידה לגג ותיק.', 'membrane'],
+  ['/methods/polyurethane/', 'איטום בפוליאוריטן', 'ציפוי נוזלי רציף בלי תפרים, לגגות עמוסים בדודים ומתקנים.', 'liquid'],
+  ['/roof-waterproofing/tiled-roof/', 'גגות רעפים', 'החלפת רעפים שבורים, איטום רכסים ויריעה תת-רעפית.', 'tiles'],
+  ['/roof-waterproofing/corrugated-roof/', 'איסכורית ופנלים', 'ברגים, חפיפות וחלודה בגגות פח, מחסנים ומבנים קלים.', 'metal'],
+  ['/balconies/', 'מרפסות וגגות מרוצפים', 'איטום מתחת לריצוף, או ציפוי שקוף מעל הריצוף הקיים.', 'terrace'],
+].filter(([h]) => pub.has(h)) as [string, string, string, IsoName][];
+const guides = ['/moisture/ceiling-damp/', '/methods/liquid-applied/', '/roof-waterproofing/renewal/', '/prices/']
+  .map((u) => allP.find((p) => urlOf(p) === u)).filter(Boolean) as Page[];
+const areaCols = await Promise.all(regions.map(async (r) => ({ r, page: await regionPage(r.slug), cities: await citiesInRegion(r.slug) })));
+const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city ?? '')?.region);
 ---
-<BaseLayout title={title} description={description} schema={schema}>
+<BaseLayout title={title} description={description} schema={schema} cta={['התחיל לטפטף?', 'דברו איתנו.']}>
 
-  <!-- פתיחה -->
-  <section class="hero grid-bg">
+  <section class="hero">
     <div class="wrap hero-in">
-      <div class="hero-text">
-        <p class="tag"><b>בית האיטום</b> חברת איטום</p>
-        <h1>חברת איטום שעובדת בשכבות, מהתשתית ועד הציפוי</h1>
-        <p class="lead">נזילה מהתקרה או כתם רטיבות בקיר הם רק הסימן. אנחנו בבית האיטום מתחילים באבחון של מקור המים, ורק אחריו בוחרים שיטה וחומר שמתאימים לגג, לקיר או למרפסת שלכם. כך האיטום עובד כמערכת אחת, ולא כטלאי שמחזיק עד החורף הבא.</p>
+      <div class="ht">
+        <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> בית האיטום · חברת איטום</p>
+        <h1>בין הגשם לבין הסלון שלכם יש <span class="c">ארבע שכבות.</span></h1>
+        <p class="lead">כשאחת מהן נסדקת, מתנתקת או נשחקת, המים מוצאים דרך. אנחנו בודקים את כולן, מאתרים את המקור ומתקנים רק את מה שצריך, כדי שהגג יעבוד שוב כמערכת אחת.</p>
         <div class="cta-row">
-          <a class="btn btn--primary" href="#contact"><Icon name="doc" />לקבלת הצעת מחיר</a>
-          <a class="btn" href={telHref()}><Icon name="phone" />שיחה עם איש איטום</a>
-          <a class="btn" href={waHref()}><Icon name="chat" />וואטסאפ</a>
+          <a class="btn btn--primary" href="#roof-check">בדקו את הגג שלכם ↓</a>
+          <a class="call" href={telHref()}>או התקשרו: {isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : '[מספר טלפון]'}</a>
         </div>
-        <p class="team">{business.teamLine}, באיטום גגות ובפרויקטי איטום מורכבים.</p>
       </div>
-      <div class="hero-fig">
-        <RoofSection />
-      </div>
+      <div class="ha"><HeroArt variant="layers" title="ארבע השכבות שבין הגשם לבין הבית" /></div>
     </div>
   </section>
 
-  <!-- לפי בעיה -->
+  <section id="roof-check" class="sec check">
+    <div class="wrap check-in">
+      <div>
+        <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> שכבה 1 · שכבת הגמר</p>
+        <h2>מה מצב הגג שלכם?</h2>
+        <p class="sub">בחרו את סוג הגג, ותגיעו ישר למדריך שמסביר מה בודקים, אילו שיטות מתאימות וכמה זה עולה.</p>
+        <ol class="points">
+          <li><b>01</b>אבחון בשטח לפני כל הצעת מחיר</li>
+          <li><b>02</b>הצעה מפורטת לפי שכבות וחומרים</li>
+          <li><b>03</b>עבודה לפי הוראות היצרן ובדיקה בסוף</li>
+        </ol>
+      </div>
+      {roofPick.length > 0 && (
+        <div class="pick">
+          <p class="pk">בדיקת גג ב-30 שניות</p>
+          <p class="pq">איזה גג יש לכם?</p>
+          <ul>{roofPick.map(([t, h]) => <li><a href={h}><span>{t}</span><i aria-hidden="true">←</i></a></li>)}</ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {layerCards.length > 0 && (
+    <section class="sec dark">
+      <div class="wrap">
+        <div class="dh">
+          <div>
+            <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> שכבה 2 · יריעת האיטום</p>
+            <h2>לכל גג, שכבה משלו</h2>
+          </div>
+          <p>כל סוג גג נכשל בדרך אחרת, ולכן גם מטופל אחרת. כך אנחנו בוחרים שיטת עבודה, חומרים ובדיקה.</p>
+        </div>
+        <ul class="lcards">
+          {layerCards.map(([h, t, s, ic]) => (
+            <li><a href={h}><Iso name={ic} size={64} /><span class="lk">{t}</span><span class="ls">{s}</span></a></li>
+          ))}
+        </ul>
+        {L('/moisture/leak-detection/') && <a class="more" href="/moisture/leak-detection/">גם איתור נזילות וקירות חיצוניים ←</a>}
+      </div>
+    </section>
+  )}
+
+  <section id="process" class="sec copper">
+    <div class="wrap">
+      <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> שכבה 3 · הפריימר, מה שמחבר הכול</p>
+      <h2>ארבעה צעדים, בלי הפתעות</h2>
+      <ol class="steps">
+        {steps.map(([t, d], i) => <li><span class="sn">{i + 1}</span><h3>{t}</h3><p>{d}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
   <section id="problems" class="sec">
     <div class="wrap">
-      <header class="sec-head">
-        <p class="tag"><b>01</b> אבחון</p>
+      <div class="sh">
+        <p class="kicker"><span class="bars"><i></i><i></i><i></i></span> שכבה 4 · הבטון והשיפועים</p>
         <h2>מה הבעיה שלכם?</h2>
-        <p>רוב הפניות מתחילות בסימן אחד שרואים בבית. כך נראים הסימנים הנפוצים, מה עומד מאחוריהם בדרך כלל, ומה אנחנו בודקים כדי להגיע למקור.</p>
-      </header>
+        <p class="sub">רוב הפניות מתחילות בסימן אחד שרואים בבית. כך נראים הסימנים הנפוצים, מה עומד מאחוריהם בדרך כלל, ומה אנחנו בודקים כדי להגיע למקור.</p>
+      </div>
       <ol class="problems">
         {problems.map((p, i) => (
           <li>
@@ -159,37 +206,14 @@ const schema = [
     </div>
   </section>
 
-  <!-- לפי סוג גג -->
-  <section id="roofs" class="sec sec--alt">
+  <section id="methods" class="sec mist">
     <div class="wrap">
-      <header class="sec-head">
-        <p class="tag"><b>02</b> סוגי גגות</p>
-        <h2>איזה גג יש לכם?</h2>
-        <p>סוג הגג קובע את שיטת האיטום יותר מכל גורם אחר{L('/roof-waterproofing/') && <>, ובמדריך <a href="/roof-waterproofing/">איטום גגות</a> פירטנו איך בוחרים</>}. גג בטון, גג רעפים וגג פח נכשלים בדרכים שונות, ולכן גם מטופלים אחרת.</p>
-      </header>
-      <div class="spec-scroll">
-        <table class="spec">
-          <caption>סוג גג, נקודת התורפה והפתרונות המקובלים</caption>
-          <thead><tr><th scope="col">סוג הגג</th><th scope="col">מה מאפיין אותו</th><th scope="col">פתרונות שמתאימים בדרך כלל</th></tr></thead>
-          <tbody>
-            {roofs.map(([a, h, b, c]) => <tr><th scope="row">{L(h) ? <a href={h}>{a}</a> : a}</th><td>{b}</td><td>{c}</td></tr>)}
-          </tbody>
-        </table>
+      <div class="sh">
+        <h2>שיטות האיטום, זו מול זו</h2>
+        <p class="sub">אין שיטת איטום אחת שמתאימה לכל מקום. זו ההשוואה שכדאי להכיר לפני שבוחרים פתרון{L('/methods/') && <>, והפירוט המלא נמצא במדריך <a href="/methods/">שיטות איטום</a></>}.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- שיטות -->
-  <section id="methods" class="sec">
-    <div class="wrap">
-      <header class="sec-head">
-        <p class="tag"><b>03</b> שיטות וחומרים</p>
-        <h2>שיטות האיטום שלנו</h2>
-        <p>אין שיטת איטום אחת שמתאימה לכל מקום. זו ההשוואה שאנחנו עוברים עליה עם לקוחות לפני שבוחרים פתרון.</p>
-      </header>
       <div class="spec-scroll">
         <table class="spec">
-          <caption>השוואת שיטות איטום</caption>
           <thead><tr><th scope="col">שיטה</th><th scope="col">איך זה עובד</th><th scope="col">מתאים במיוחד ל</th><th scope="col">שימו לב</th></tr></thead>
           <tbody>
             {methods.map(([a, h, b, c, d]) => <tr><th scope="row">{L(h) ? <a href={h}>{a}</a> : a}</th><td>{b}</td><td>{c}</td><td>{d}</td></tr>)}
@@ -199,143 +223,152 @@ const schema = [
     </div>
   </section>
 
-  <!-- תהליך -->
-  <section id="process" class="sec sec--dark">
+  <section id="areas" class="sec areas">
     <div class="wrap">
-      <header class="sec-head">
-        <p class="tag"><b>04</b> תהליך העבודה</p>
-        <h2>איך אנחנו עובדים</h2>
-        <p>שישה שלבים, מהשיחה הראשונה ועד המסירה. השלב שהכי משפיע על התוצאה הוא דווקא זה שלא רואים בסוף: הכנת התשתית.</p>
-      </header>
-      <ol class="steps">
-        {steps.map(([t, d], i) => (
-          <li>
-            <span class="sn">{String(i + 1).padStart(2, '0')}</span>
-            <h3>{t}</h3>
-            <p>{d}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- אזורים -->
-  <section id="areas" class="sec">
-    <div class="wrap areas">
-      <header class="sec-head">
-        <p class="tag"><b>05</b> אזורי שירות</p>
+      <div class="ah">
         <h2>איפה אנחנו עובדים</h2>
-        <p>לכל אזור בארץ אתגרי איטום משלו{L('/areas/') && <> (הרשימה המלאה בעמוד <a href="/areas/">אזורי שירות</a>)</>}: מלח ולחות בערי החוף, קרה ולעיתים שלג בירושלים ובגליל העליון, חום וקרינה חזקה בנגב. החומר והשיטה נבחרים גם לפי התנאים האלה.</p>
-      </header>
-      <ul class="regions">
-        {regions.map(([r, h, c]) => (
-          <li>
-            <h3>{L(h) ? <a href={h}>{r}</a> : r}</h3>
-            <p>{c.split(', ').map((name, i) => {
-              const slug = cityList.find((x) => x.name === name)?.slug;
-              const href = slug ? `/areas/${slug}/` : '';
-              return <>{i > 0 && ', '}{href && L(href) ? <a href={href}>{name}</a> : name}</>;
-            })}</p>
-          </li>
+        {L('/areas/') && <a class="more" href="/areas/">לכל אזורי השירות ←</a>}
+      </div>
+      <div class="acols">
+        {areaCols.filter((a) => a.cities.length).map((a) => (
+          <div>
+            <p class="ar">{a.page ? <a href={urlOf(a.page)}>{a.r.name}</a> : a.r.name}</p>
+            <ul>{a.cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword.replace(/^איטום גגות ב/, '')}</a></li>)}</ul>
+          </div>
         ))}
-      </ul>
+        {jlm.length > 0 && <div><p class="ar">ירושלים</p><ul>{jlm.map((c) => <li><a href={urlOf(c)}>{c.data.keyword.replace(/^איטום גגות ב/, '')}</a></li>)}</ul></div>}
+      </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq" class="sec sec--alt">
+  <section id="faq" class="sec sand">
     <div class="wrap faq-wrap">
-      <header class="sec-head">
-        <p class="tag"><b>06</b> שאלות נפוצות</p>
-        <h2>שאלות שאנחנו שומעים לפני כל עבודת איטום</h2>
-      </header>
+      <div>
+        <h2>שאלות ששואלים אותנו</h2>
+        {guides.length > 0 && (
+          <div class="gbox">
+            <p class="gk">לפני שמחליטים</p>
+            <ul>{guides.map((g) => <li><a href={urlOf(g)}>{g.data.keyword}</a></li>)}</ul>
+          </div>
+        )}
+      </div>
       <div class="faq">
         {faq.map(([q, a]) => <details><summary>{q}</summary><div><p>{a}</p></div></details>)}
       </div>
     </div>
   </section>
 
-  <!-- יצירת קשר -->
   <section id="contact" class="sec contact">
     <div class="wrap contact-in">
       <div>
-        <p class="tag"><b>07</b> יצירת קשר</p>
         <h2>בואו נבדוק מה קורה אצלכם</h2>
-        <p>ספרו לנו מה אתם רואים, איפה ומתי זה מופיע. תמונה של הכתם או של הגג בוואטסאפ עוזרת לנו להבין מה לבדוק עוד לפני שמגיעים.</p>
+        <p class="sub">ספרו לנו מה אתם רואים, איפה ומתי זה מופיע. תמונה של הכתם או של הגג בוואטסאפ עוזרת לנו להבין מה לבדוק עוד לפני שמגיעים.</p>
       </div>
-      <div class="contact-card">
-        <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : 'חיוג'}</a>
-        <a class="btn" href={waHref()}><Icon name="chat" />שליחת הודעה בוואטסאפ</a>
-        <dl>
-          <div><dt>טלפון</dt><dd>{isFilled(business.phone) ? business.phone : <span class="ph">{business.phone}</span>}</dd></div>
-          <div><dt>שעות פעילות</dt><dd>{isFilled(business.hours) ? business.hours : <span class="ph">{business.hours}</span>}</dd></div>
-          <div><dt>אזור שירות</dt><dd>{isFilled(business.area) ? business.area : <span class="ph">{business.area}</span>}</dd></div>
-        </dl>
+      <div class="cbtns">
+        <a class="btn btn--primary" href={telHref()}><Icon name="phone" />{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : '[מספר טלפון]'}</a>
+        <a class="btn" href={waHref()}><Icon name="chat" />שליחת תמונה בוואטסאפ</a>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .hero { border-block-end: 1px solid var(--line); }
-  .hero-in { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; padding-block: clamp(2.5rem, 7vw, 6rem); }
-  .lead { font-size: clamp(1.1rem, 1.6vw, 1.25rem); max-width: 54ch; color: var(--ink-2); }
-  .cta-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-block: 1.8rem 1.4rem; }
-  .team { font-size: .95rem; color: var(--ink-2); border-inline-start: 3px solid var(--copper); padding-inline-start: .9rem; margin: 0; }
-  .hero-fig { background: var(--stone); border: 1px solid var(--line); padding: clamp(1rem, 2.5vw, 1.8rem); }
+  .hero { background: var(--mist); clip-path: polygon(0 0, 100% 0, 100% 100%, 12% calc(100% - 50px), 0 calc(100% - 26px)); padding-bottom: clamp(3.5rem, 8vw, 6rem); }
+  .hero-in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding-top: clamp(1.5rem, 4vw, 3rem); }
+  .ht h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); margin: .4rem 0 1.2rem; max-width: 11ch; }
+  .lead { font-size: clamp(1.08rem, 1.5vw, 1.22rem); color: var(--ink-2); max-width: 46ch; line-height: 1.6; }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.8rem; }
+  .call { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: .3em; }
+  .ha { max-width: 560px; width: 100%; justify-self: center; }
 
   .sec { padding-block: var(--space); }
-  .sec--alt { background: var(--stone-2); }
-  .sec--dark { background: var(--concrete); color: var(--on-dark); }
-  .sec--dark .tag { color: var(--on-dark-2); }
-  .sec--dark .tag b { color: #E9A27F; }
-  .sec-head { max-width: 62ch; margin-block-end: clamp(2rem, 4vw, 3rem); }
-  .sec-head p:last-child { color: var(--ink-2); font-size: 1.08rem; margin: 0; }
-  .sec--dark .sec-head p:last-child { color: var(--on-dark-2); }
+  .sub { color: var(--ink-2); font-size: 1.08rem; max-width: 60ch; }
+  .sh { max-width: 64ch; margin-bottom: 2.4rem; }
+  .more { display: inline-block; margin-top: 1.6rem; font-weight: 700; color: var(--copper); }
 
-  .problems { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-block-start: 2px solid var(--bitumen); }
-  .problems li { position: relative; padding: 1.6rem 0 1.8rem; padding-inline-end: 1.6rem; border-block-end: 1px solid var(--line); }
+  .check-in { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  .points { list-style: none; margin: 1.6rem 0 0; padding: 0; border-top: 1px solid var(--line); }
+  .points li { display: flex; gap: 1.2rem; padding: .9rem 0; border-bottom: 1px solid var(--line); font-weight: 600; }
+  .points b { color: var(--copper); font-size: .85rem; padding-top: .2rem; }
+  .pick { background: #fff; border: 1.5px solid var(--ink); border-top: 6px solid var(--ink); padding: 1.5rem; box-shadow: 8px 8px 0 var(--mist); }
+  .pk { font-size: .82rem; color: var(--ink-3); margin: 0; }
+  .pq { font: 800 1.5rem/1.2 var(--f); margin: .3rem 0 1rem; }
+  .pick ul { list-style: none; margin: 0; padding: 0; }
+  .pick a { display: flex; justify-content: space-between; align-items: center; padding: .9rem .2rem; border-top: 1px solid var(--line); color: var(--ink); font-weight: 700; text-decoration: none; }
+  .pick a i { font-style: normal; width: 30px; height: 30px; border: 1.5px solid var(--ink); border-radius: 50%; display: grid; place-items: center; transition: background .15s, color .15s; }
+  .pick a:hover { color: var(--copper); }
+  .pick a:hover i { background: var(--ink); color: #fff; }
+
+  .dark { background: var(--ink); color: var(--on-dark); }
+  .dark .kicker { color: var(--on-dark-2); }
+  .dark .kicker .bars i:first-child { background: var(--on-dark); }
+  .dh { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2.4rem; }
+  .dh p { color: var(--on-dark-2); max-width: 44ch; margin: 0; }
+  .lcards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(242,240,234,.14); border-inline-start: 1px solid rgba(242,240,234,.14); }
+  .lcards li { border-bottom: 1px solid rgba(242,240,234,.14); border-inline-end: 1px solid rgba(242,240,234,.14); }
+  .lcards a { display: flex; flex-direction: column; gap: .4rem; padding: 1.6rem 1.4rem 1.8rem; height: 100%; color: var(--on-dark); text-decoration: none; transition: background .15s; }
+  .lcards a:hover { background: #20242B; }
+  .lcards :global(.iso) { margin-bottom: .6rem; }
+  .lk { font: 800 1.25rem/1.25 var(--f); }
+  .lcards a:hover .lk { color: var(--peach); }
+  .ls { color: var(--on-dark-2); font-size: .98rem; line-height: 1.55; }
+  .dark .more { color: var(--peach); }
+
+  .copper { background: var(--copper); color: #fff; }
+  .copper .kicker { color: rgba(255,255,255,.75); }
+  .copper .kicker .bars i { background: #fff; }
+  .copper .kicker .bars i:nth-child(2) { background: var(--ink); }
+  .steps { list-style: none; margin: 2.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem; }
+  .steps li { border-top: 2px solid rgba(255,255,255,.55); padding-top: 1rem; }
+  .sn { display: block; font: 800 3rem/1 var(--f); margin-bottom: .6rem; }
+  .steps h3 { margin: 0 0 .4rem; }
+  .steps p { margin: 0; color: rgba(255,255,255,.85); font-size: 1rem; }
+
+  .problems { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--ink); }
+  .problems li { padding: 1.6rem 0 1.8rem; padding-inline-end: 1.6rem; border-bottom: 1px solid var(--line); }
   .problems li:nth-child(even) { padding-inline: 1.6rem 0; border-inline-start: 1px solid var(--line); }
-  .pn { font: 600 .8rem/1 var(--f-body); color: var(--copper-ink); letter-spacing: .08em; }
-  .problems h3 { margin: .5rem 0 .9rem; }
+  .pn { font: 700 .82rem/1 var(--f); color: var(--copper); }
+  .problems h3 { margin: .5rem 0 .9rem; font-size: 1.3rem; font-weight: 800; }
+  .problems h3 a { color: var(--ink); }
+  .problems h3 a:hover { color: var(--copper); }
   .problems dl { margin: 0; display: grid; gap: .55rem; font-size: 1rem; }
   .problems dl div { display: grid; grid-template-columns: 8.5rem 1fr; gap: .8rem; }
-  .problems dt { font-weight: 600; color: var(--ink-2); font-size: .88rem; padding-top: .15rem; }
+  .problems dt { font-weight: 600; color: var(--ink-3); font-size: .88rem; padding-top: .15rem; }
   .problems dd { margin: 0; }
 
-  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-block-start: 1px solid rgba(237,233,224,.18); }
-  .steps li { padding: 1.6rem 1.4rem 1.8rem; border-block-end: 1px solid rgba(237,233,224,.18); border-inline-start: 1px solid rgba(237,233,224,.18); }
-  .steps li:nth-child(3n + 1) { border-inline-start: 0; padding-inline-start: 0; }
-  .sn { display: inline-block; font: 700 2.4rem/1 var(--f-head); color: transparent; -webkit-text-stroke: 1px #E9A27F; margin-bottom: .8rem; }
-  .steps h3 { color: var(--on-dark); }
-  .steps p { color: var(--on-dark-2); font-size: 1rem; margin: 0; }
+  .mist { background: var(--mist); }
+  .areas { background: #D9D3C7; }
+  .ah { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1rem; border-bottom: 2px solid var(--ink); margin-bottom: 1.6rem; }
+  .ah h2 { margin-bottom: .6rem; }
+  .ah .more { margin: 0; }
+  .acols { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.6rem 2rem; }
+  .ar { font: 700 .82rem/1 var(--f); color: var(--ink-3); margin: 0 0 .7rem; }
+  .ar a { color: var(--ink-3); }
+  .acols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+  .acols ul a { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: .25em; }
 
-  .regions { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0 2rem; }
-  .regions li { border-block-start: 1px solid var(--line); padding-block: 1.1rem; }
-  .regions h3 { font-size: 1.15rem; margin-bottom: .3rem; }
-  .regions p { margin: 0; color: var(--ink-2); font-size: .98rem; }
+  .sand { background: var(--sand); }
+  .faq-wrap { display: grid; grid-template-columns: .9fr 1.4fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  .gbox { margin-top: 2rem; border-top: 2px solid var(--ink); padding-top: 1rem; }
+  .gk { font: 700 .82rem/1 var(--f); color: var(--copper); margin: 0 0 .6rem; }
+  .gbox ul { list-style: none; margin: 0; padding: 0; }
+  .gbox a { display: block; padding: .6rem 0; border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 700; text-decoration: none; }
+  .gbox a:hover { color: var(--copper); }
 
-  .faq-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
-
-  .contact { border-block-start: 6px solid var(--copper); }
-  .contact-in { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
-  .contact-card { display: grid; gap: .8rem; border: 1px solid var(--line); background: #fff; padding: 1.6rem; }
-  .contact-card dl { margin: .6rem 0 0; display: grid; gap: .5rem; font-size: 1rem; }
-  .contact-card dl div { display: flex; justify-content: space-between; gap: 1rem; border-block-start: 1px solid var(--line-2); padding-top: .5rem; }
-  .contact-card dt { color: var(--ink-2); }
-  .contact-card dd { margin: 0; font-weight: 600; }
+  .contact { border-top: 1px solid var(--line); }
+  .contact-in { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2rem; }
+  .cbtns { display: flex; flex-wrap: wrap; gap: .7rem; }
 
   @media (max-width: 960px) {
-    .hero-in, .faq-wrap, .contact-in { grid-template-columns: 1fr; }
+    .hero-in, .check-in, .faq-wrap { grid-template-columns: 1fr; }
+    .ha { max-width: 420px; }
+    .lcards { grid-template-columns: 1fr 1fr; }
     .steps { grid-template-columns: 1fr 1fr; }
-    .steps li:nth-child(3n + 1) { border-inline-start: 1px solid rgba(237,233,224,.18); padding-inline-start: 1.4rem; }
-    .steps li:nth-child(odd) { border-inline-start: 0; padding-inline-start: 0; }
   }
-  @media (max-width: 720px) {
-    .problems { grid-template-columns: 1fr; }
+  @media (max-width: 640px) {
+    .ha { max-width: 300px; }
+    .lcards, .steps, .problems { grid-template-columns: 1fr; }
     .problems li, .problems li:nth-child(even) { padding-inline: 0; border-inline-start: 0; }
     .problems dl div { grid-template-columns: 1fr; gap: .1rem; }
-    .steps { grid-template-columns: 1fr; }
-    .steps li, .steps li:nth-child(odd), .steps li:nth-child(3n + 1) { border-inline-start: 0; padding-inline: 0; }
   }
 </style>

@@ -1,9 +1,7 @@
 ---
-import '@fontsource/ibm-plex-sans-hebrew/400.css';
-import '@fontsource/ibm-plex-sans-hebrew/600.css';
-import '@fontsource/frank-ruhl-libre/700.css';
+import '@fontsource-variable/assistant/index.css';
 import '../styles/global.css';
-import plexHe400 from '@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-400-normal.woff2?url';
+import fontHe from '@fontsource-variable/assistant/files/assistant-hebrew-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
@@ -15,8 +13,10 @@ interface Props {
   /** JSON-LD נוסף לעמוד (מערך אובייקטים) */
   schema?: Record<string, unknown>[];
   noindex?: boolean;
+  /** שורת ה-CTA הגדולה בפוטר: [חלק רגיל, חלק מודגש] */
+  cta?: [string, string];
 }
-const { title, description, schema = [], noindex = false } = Astro.props;
+const { title, description, schema = [], noindex = false, cta } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const robots = noindex || isTemporaryDomain() ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 const siteUrl = new URL('/', Astro.site).href;
@@ -53,8 +53,8 @@ const graph = {
   <meta name="robots" content={robots} />
   <link rel="canonical" href={canonical} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" href={plexHe400} as="font" type="font/woff2" crossorigin />
-  <meta name="theme-color" content="#1B2226" />
+  <link rel="preload" href={fontHe} as="font" type="font/woff2" crossorigin />
+  <meta name="theme-color" content="#E4E8EF" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="he_IL" />
   <meta property="og:site_name" content={business.name} />
@@ -71,7 +71,7 @@ const graph = {
   <main id="main">
     <slot />
   </main>
-  <Footer />
+  <Footer cta={cta} />
   <MobileBar />
 </body>
 </html>

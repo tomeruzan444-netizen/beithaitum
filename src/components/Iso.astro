@@ -1,0 +1,64 @@
+---
+// אייקונים איזומטריים קטנים (כרטיסים, סיידבר). כל הגיאומטריה מחושבת כאן מראש.
+import { box, flat, P, C } from '../lib/iso';
+export type IsoName = 'concrete' | 'membrane' | 'liquid' | 'tiles' | 'metal' | 'terrace' | 'leak' | 'wall' | 'gutter' | 'building';
+interface Props { name: IsoName; size?: number }
+const { name, size = 44 } = Astro.props;
+type Pt = [number, number];
+const xy = (p: Pt) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+const showBase = !['tiles', 'building', 'wall'].includes(name);
+const base = box(0, 0, 0, 40, 28, 10);
+const c = P(20, 14, 10);
+const mem = box(2, 2, 10, 36, 24, 3);
+const liquidTop = flat(10.2, [[4, 4], [36, 4], [36, 24], [4, 24]]);
+const concTop = flat(10.2, [[6, 6], [34, 6], [34, 22], [6, 22]]);
+const ribs = [0, 1, 2, 3, 4].map((i) => flat(10.4, [[4 + i * 8, 2], [4 + i * 8, 26]]));
+const deck = [0, 1, 2, 3].map((i) => flat(10.3, [[i * 10, 0], [i * 10, 28]]));
+const rail = box(0, 26, 10, 40, 2, 9);
+const gutter = flat(10, [[0, 28], [40, 28]]);
+const gEnd = P(40, 28, 10);
+// tiles
+const tb = box(4, 4, 0, 30, 22, 14);
+const rA = P(4, 15, 30), rB = P(34, 15, 30), eA = P(4, 26, 14), eB = P(34, 26, 14), fA = P(4, 4, 14), fB = P(34, 4, 14);
+const roofBack = [fA, fB, rB, rA].map(xy).join(' ');
+const roofFront = [eA, eB, rB, rA].map(xy).join(' ');
+const roofSide = [fB, eB, rB].map(xy).join(' ');
+// wall
+const wb = box(6, 8, 0, 30, 10, 26);
+const ws = P(20, 18, 8);
+// building
+const ba = box(2, 6, 0, 18, 16, 30), bb = box(22, 6, 0, 16, 16, 20);
+---
+<svg viewBox="-34 -34 72 52" width={size} height={Math.round(size * 0.72)} aria-hidden="true" class="iso">
+  {showBase && <polygon points={base.left} fill={C.left} />}
+  {showBase && <polygon points={base.right} fill={C.right} />}
+  {showBase && <polygon points={base.top} fill={C.top} />}
+  {name === 'membrane' && <polygon points={mem.left} fill={C.dark2} />}
+  {name === 'membrane' && <polygon points={mem.right} fill={C.dark2} />}
+  {name === 'membrane' && <polygon points={mem.top} fill={C.dark} />}
+  {name === 'liquid' && <polygon points={liquidTop} fill={C.water} />}
+  {name === 'liquid' && <rect x={c[0] - 3} y={c[1] - 22} width="6" height="12" fill={C.right} />}
+  {name === 'concrete' && <polygon points={concTop} fill="#F6F3EC" />}
+  {name === 'metal' && ribs.map((r) => <polyline points={r} stroke={C.right} stroke-width="1.6" fill="none" />)}
+  {name === 'terrace' && deck.map((r) => <polyline points={r} stroke={C.right} stroke-width=".8" fill="none" />)}
+  {name === 'terrace' && <polygon points={rail.left} fill="none" stroke={C.line} stroke-width="1" />}
+  {name === 'leak' && <ellipse cx={c[0]} cy={c[1]} rx="9" ry="4.5" fill="none" stroke={C.copper} stroke-width="2" />}
+  {name === 'leak' && <path d={`M${c[0]} ${c[1] + 10} q-2 3 0 5 q2 -2 0 -5z`} fill={C.water} />}
+  {name === 'gutter' && <polyline points={gutter} stroke={C.copper} stroke-width="3" fill="none" />}
+  {name === 'gutter' && <path d={`M${gEnd[0]} ${gEnd[1]} v12`} stroke={C.copper} stroke-width="3" />}
+  {name === 'tiles' && <polygon points={tb.left} fill={C.white} />}
+  {name === 'tiles' && <polygon points={tb.right} fill="#E2DCCF" />}
+  {name === 'tiles' && <polygon points={roofBack} fill={C.copperL} />}
+  {name === 'tiles' && <polygon points={roofFront} fill={C.copper} />}
+  {name === 'tiles' && <polygon points={roofSide} fill="#8F4B24" />}
+  {name === 'wall' && <polygon points={wb.left} fill="#E2DCCF" />}
+  {name === 'wall' && <polygon points={wb.right} fill={C.left} />}
+  {name === 'wall' && <polygon points={wb.top} fill={C.top} />}
+  {name === 'wall' && <ellipse cx={ws[0]} cy={ws[1]} rx="6" ry="4" fill={C.water} opacity=".7" />}
+  {name === 'building' && <polygon points={ba.left} fill="#E2DCCF" />}
+  {name === 'building' && <polygon points={ba.right} fill={C.left} />}
+  {name === 'building' && <polygon points={ba.top} fill={C.copper} />}
+  {name === 'building' && <polygon points={bb.left} fill="#E2DCCF" />}
+  {name === 'building' && <polygon points={bb.right} fill={C.left} />}
+  {name === 'building' && <polygon points={bb.top} fill={C.dark} />}
+</svg>

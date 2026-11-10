@@ -3,22 +3,17 @@ import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { business, isFilled, telHref } from '../config/business';
 import { menu, urlOf, publishedSet } from '../lib/pages';
-// מגה-מניו נבנה מה-Hubs המפורסמים. כל עוד אין Hubs - ניווט לאזורי דף הבית.
-const groups = await menu();
+const groups = (await menu()).filter((g) => g.silo.id !== 'areas');
 const pub = await publishedSet();
-const extra = [
-  { href: '/moisture/', label: 'רטיבות ונזילות' },
-  { href: '/prices/', label: 'מחירון' },
-  { href: '/areas/', label: 'אזורי שירות' },
-].filter((x) => pub.has(x.href));
-const fallback = [
-  { href: '/#problems', label: 'לפי בעיה' },
-  { href: '/#roofs', label: 'סוגי גגות' },
-  { href: '/#methods', label: 'שיטות איטום' },
-  { href: '/#process', label: 'איך אנחנו עובדים' },
-  { href: '/#faq', label: 'שאלות נפוצות' },
-];
-const flat = groups.length ? extra : fallback;
+const path = Astro.url.pathname;
+const seg = path.split('/')[1] ?? '';
+const nav = [
+  { href: '/areas/', label: 'אזורים', on: seg === 'areas' },
+  { href: '/#process', label: 'תהליך', on: false },
+  { href: '/moisture/', label: 'רטיבות ונזילות', on: seg === 'moisture' },
+  { href: '/prices/', label: 'מחירון', on: seg === 'prices' },
+].filter((n) => n.href.startsWith('/#') || pub.has(n.href));
+const servicesOn = groups.some((g) => g.silo.id === seg && seg !== 'moisture');
 ---
 <header class="site-header">
   <div class="wrap bar">
@@ -27,30 +22,27 @@ const flat = groups.length ? extra : fallback;
       <ul class="top">
         {groups.length > 0 && (
           <li class="mega">
-            <a href={urlOf(groups[0].hub)} aria-haspopup="true">שירותי איטום <span class="car" aria-hidden="true"></span></a>
+            <a href={urlOf(groups[0].hub)} class:list={[{ on: servicesOn }]} aria-haspopup="true">שירותים <span class="car" aria-hidden="true"></span></a>
             <div class="panel">
               <div class="wrap cols">
                 {groups.map((g) => (
                   <div class="col">
                     <a class="ch" href={urlOf(g.hub)}>{g.silo.name}</a>
                     <ul>{g.items.slice(0, 6).map((i) => <li><a href={urlOf(i)}>{i.data.keyword}</a></li>)}</ul>
-                    {g.total > 6 && <a class="all" href={urlOf(g.hub)}>לכל {g.total} הנושאים</a>}
+                    {g.total > 6 && <a class="all" href={urlOf(g.hub)}>לכל {g.total} הנושאים ←</a>}
                   </div>
                 ))}
               </div>
             </div>
           </li>
         )}
-        {flat.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        {nav.map((n) => <li><a href={n.href} class:list={[{ on: n.on }]}>{n.label}</a></li>)}
       </ul>
     </nav>
     <div class="actions">
       <a class="srch-btn" href="/search/" aria-label="חיפוש באתר"><Icon name="search" /></a>
-      <a class="call" href={telHref()}>
-        <Icon name="phone" />
-        {isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : <span>חיוג</span>}
-      </a>
-      <a class="btn btn--primary quote" href="/#contact">לקבלת הצעת מחיר</a>
+      <a class="call" href={telHref()}>{isFilled(business.phone) ? <span dir="ltr">{business.phone}</span> : <span class="ph">[מספר טלפון]</span>}</a>
+      <a class="btn btn--dark quote" href="/contact/">בדיקת גג</a>
       <details class="mob">
         <summary aria-label="תפריט"><Icon name="menu" /></summary>
         <nav class="drawer" aria-label="ניווט ראשי בנייד">
@@ -63,47 +55,46 @@ const flat = groups.length ? extra : fallback;
               </ul>
             </details>
           ))}
-          <ul class="flat">{flat.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+          <ul class="flat">{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/contact/">צור קשר</a></li></ul>
         </nav>
       </details>
     </div>
   </div>
-  <div class="layers-sep" aria-hidden="true"><span></span><span></span><span></span></div>
 </header>
 <style>
-  .site-header { background: var(--stone); position: sticky; top: 0; z-index: 50; }
-  .bar { display: flex; align-items: center; gap: 1.5rem; min-height: 72px; }
-  .desk { margin-inline-start: auto; }
-  .top { display: flex; gap: 1.4rem; list-style: none; margin: 0; padding: 0; }
-  .top > li > a { color: var(--bitumen); text-decoration: none; font-size: .98rem; font-weight: 600; padding-block: 1.5rem; border-block-end: 1.5px solid transparent; display: inline-flex; align-items: center; gap: .35rem; }
-  .top > li > a:hover { color: var(--copper-ink); }
-  .car { width: 7px; height: 7px; border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); }
-  .panel { position: absolute; inset-inline: 0; top: 100%; background: var(--stone); border-block: 1px solid var(--line); box-shadow: 0 14px 30px rgba(27,34,38,.1); visibility: hidden; opacity: 0; transition: opacity .12s; }
+  .site-header { background: var(--mist); position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line-2); }
+  .bar { display: flex; align-items: center; gap: 2rem; min-height: 76px; }
+  .desk { margin-inline-start: 1rem; }
+  .top { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+  .top > li > a { position: relative; color: var(--ink); text-decoration: none; font-size: 1rem; font-weight: 600; padding-block: 1.7rem; display: inline-flex; align-items: center; gap: .35rem; }
+  .top > li > a:hover, .top > li > a.on { color: var(--copper); }
+  .top > li > a.on::after { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: 2px; background: var(--copper); }
+  .car { width: 6px; height: 6px; border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); }
+  .panel { position: absolute; inset-inline: 0; top: 100%; background: var(--paper); border-block: 1px solid var(--line); box-shadow: 0 18px 36px rgba(21,24,29,.1); visibility: hidden; opacity: 0; transition: opacity .12s; }
   .mega:hover .panel, .mega:focus-within .panel { visibility: visible; opacity: 1; }
-  .cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.6rem 2rem; padding-block: 1.8rem 2rem; }
-  .ch { display: block; font: 700 1.05rem/1.3 var(--f-head); color: var(--bitumen); text-decoration: none; padding-bottom: .5rem; margin-bottom: .4rem; border-bottom: 2px solid var(--copper); }
+  .cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.8rem 2.2rem; padding-block: 2rem 2.2rem; }
+  .ch { display: block; font: 800 1.05rem/1.3 var(--f); color: var(--ink); text-decoration: none; padding-bottom: .55rem; margin-bottom: .4rem; border-bottom: 2px solid var(--ink); }
   .col ul { list-style: none; margin: 0; padding: 0; }
-  .col li a { display: block; padding: .28rem 0; font-size: .93rem; color: var(--ink-2); text-decoration: none; }
-  .col li a:hover, .ch:hover { color: var(--copper-ink); }
-  .all { display: inline-block; margin-top: .4rem; font-size: .88rem; font-weight: 600; }
-  .actions { display: flex; align-items: center; gap: .8rem; }
-  .srch-btn { display: grid; place-items: center; width: 40px; height: 40px; color: var(--bitumen); }
-  .srch-btn :global(svg) { width: 22px; height: 22px; }
-  .srch-btn:hover { color: var(--copper-ink); }
-  .call { display: inline-flex; align-items: center; gap: .4rem; color: var(--bitumen); text-decoration: none; font-weight: 600; font-size: 1rem; }
-  .call :global(svg) { width: 1.2rem; height: 1.2rem; color: var(--copper); }
-  .quote { min-height: 42px; padding-block: .5em; font-size: .95rem; }
+  .col li a { display: block; padding: .28rem 0; font-size: .95rem; color: var(--ink-2); text-decoration: none; }
+  .col li a:hover, .ch:hover { color: var(--copper); }
+  .all { display: inline-block; margin-top: .4rem; font-size: .88rem; font-weight: 700; color: var(--copper); text-decoration: none; }
+  .actions { display: flex; align-items: center; gap: .9rem; margin-inline-start: auto; }
+  .srch-btn { display: grid; place-items: center; width: 38px; height: 38px; color: var(--ink); }
+  .srch-btn :global(svg) { width: 21px; height: 21px; }
+  .call { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+  .call .ph { border: 0; padding: 0; }
+  .quote { min-height: 42px; padding-block: .5em; padding-inline: 1.3em; }
   .mob { display: none; }
-  .mob > summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border: 1.5px solid var(--bitumen); border-radius: var(--r); }
+  .mob > summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: var(--r); }
   .mob summary::-webkit-details-marker { display: none; }
   .mob > summary :global(svg) { width: 22px; }
-  .drawer { position: absolute; inset-inline: 0; top: 100%; max-height: calc(100vh - 70px); overflow-y: auto; background: var(--stone); border-top: 1px solid var(--line); box-shadow: 0 14px 30px rgba(27,34,38,.14); padding: .5rem var(--gutter) 1.5rem; }
+  .drawer { position: absolute; inset-inline: 0; top: 100%; max-height: calc(100vh - 76px); overflow-y: auto; background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 14px 30px rgba(21,24,29,.14); padding: .5rem var(--gutter) 1.5rem; }
   .drawer details { border-bottom: 1px solid var(--line); }
-  .drawer details summary { cursor: pointer; list-style: none; padding: .9rem 0; font: 700 1.08rem/1.3 var(--f-head); }
+  .drawer details summary { cursor: pointer; list-style: none; padding: .9rem 0; font: 800 1.08rem/1.3 var(--f); }
   .drawer ul { list-style: none; margin: 0; padding: 0 0 .8rem; }
-  .drawer li a { display: block; padding: .5rem .2rem; color: var(--bitumen); text-decoration: none; }
+  .drawer li a { display: block; padding: .5rem .2rem; color: var(--ink); text-decoration: none; }
   .drawer .flat { padding-top: .6rem; }
-  .drawer .flat a { font-weight: 600; }
-  @media (max-width: 1080px) { .desk { display: none; } .actions { margin-inline-start: auto; } .mob { display: block; } }
-  @media (max-width: 640px) { .call, .quote { display: none; } .bar { min-height: 62px; } }
+  .drawer .flat a { font-weight: 700; }
+  @media (max-width: 1100px) { .desk { display: none; } .mob { display: block; } }
+  @media (max-width: 640px) { .call, .quote, .srch-btn { display: none; } .bar { min-height: 64px; } }
 </style>

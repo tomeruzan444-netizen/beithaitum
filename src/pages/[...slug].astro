@@ -10,7 +10,10 @@ import Cta from '../components/Cta.astro';
 import Sidebar from '../components/Sidebar.astro';
 import RoofSection from '../components/RoofSection.astro';
 import ContactCard from '../components/ContactCard.astro';
-import { allPages, urlOf, hubOf, childrenOf, regionPage, citiesInRegion, type Page } from '../lib/pages';
+import HeroArt from '../components/HeroArt.astro';
+import Iso from '../components/Iso.astro';
+import { allPages, urlOf, hubOf, childrenOf, regionPage, citiesInRegion, iconFor, type Page } from '../lib/pages';
+import { wordCount } from '../lib/validate';
 import { cityBySlug, regions } from '../data/cities';
 import { validateAll } from '../lib/validate';
 import { siloById } from '../data/silos';
@@ -51,6 +54,7 @@ const html = page.rendered?.html ?? '';
 const h2s = [...html.matchAll(/<h2[\s>]/g)].map((m) => m.index!);
 const headings = (page.rendered?.metadata?.headings as { depth: number; slug: string; text: string }[] | undefined ?? []).filter((h) => h.depth === 2);
 const isArticle = d.type === 'service' || d.type === 'problem' || d.type === 'city' || d.type === 'region';
+const hasSide = isArticle || d.type === 'hub';
 // מחלקים לפי H2: פתיחה (תשובה ישירה) קודם, אחריה תוכן עניינים; חתך לפני ה-H2 השני; CTA באמצע
 const cuts = [0, ...h2s, html.length];
 const segs = cuts.slice(0, -1).map((c, i) => html.slice(c, cuts[i + 1])).filter((x, i) => i === 0 || x);
@@ -82,36 +86,60 @@ if (d.type === 'problem' || d.type === 'hub' || d.type === 'region') {
   });
 }
 const hasAbout = allP.some((p) => p.id === 'about');
+
+// --- הירו: המילה האחרונה של הביטוי בנחושת
+const ci = d.title.indexOf(':');
+const mainT = ci > 0 ? d.title.slice(0, ci) : d.title;
+const subT = ci > 0 ? d.title.slice(ci + 1).trim() : '';
+const ki = mainT.indexOf(d.keyword);
+const kwWords = d.keyword.split(' ');
+const lastW = kwWords.pop()!;
+const h1 = ki >= 0
+  ? { a: mainT.slice(0, ki) + kwWords.join(' ') + (kwWords.length ? ' ' : ''), b: lastW, c: mainT.slice(ki + d.keyword.length) }
+  : { a: mainT, b: '', c: '' };
+// עובדות בהירו
+const p0 = d.prices.find((r) => r.verified);
+const fmt = (n: number) => n.toLocaleString('he-IL');
+const readMin = Math.max(3, Math.round(wordCount(page.body ?? '') / 200));
+const facts = [
+  p0 && { k: 'טווח מחיר', v: `${fmt(p0.min)}-${fmt(p0.max)} ₪`, s: p0.unit },
+  { k: 'זמן קריאה', v: `${readMin} דקות`, s: d.faq.length ? `${d.faq.length} שאלות ותשובות` : '' },
+  { k: 'עודכן', v: updatedHe, s: 'נכתב ונבדק על ידי הצוות' },
+].filter(Boolean) as { k: string; v: string; s: string }[];
+const art = d.type === 'reference' ? null
+  : d.silo === 'areas' ? 'city'
+  : ['walls', 'moisture', 'interior', 'structures'].includes(d.silo) ? 'wall'
+  : d.type === 'hub' && ['roof-waterproofing', 'methods'].includes(d.silo) ? 'layers'
+  : 'roof';
+const placeName = d.keyword.replace(/^איטום גגות ב/, '');
+const ctaFooter: [string, string] = d.type === 'city' ? [`גג דולף ב${placeName}?`, 'דברו איתנו.'] : d.type === 'problem' ? ['רוצים לדעת מאיפה המים?', 'דברו איתנו.'] : [`צריכים ${d.keyword}?`, 'דברו איתנו.'];
 ---
-<BaseLayout title={d.metaTitle} description={d.metaDescription} schema={schema}>
+<BaseLayout title={d.metaTitle} description={d.metaDescription} schema={schema} cta={ctaFooter}>
   <div class={`page page--${d.type}`}>
-    <header class="page-head grid-bg">
-      <div class="wrap">
-        <Breadcrumbs items={crumbs} />
-        <h1>{d.title}</h1>
-        <p class="byline">
-          נכתב ונבדק על ידי {hasAbout ? <a href="/about/">צוות {business.name}</a> : `צוות ${business.name}`}
-          <span aria-hidden="true"> · </span>
-          עודכן <time datetime={d.updated}>{updatedHe}</time>
-        </p>
+    <header class:list={['phero', { 'phero--plain': !art }]}>
+      <div class="wrap phero-in">
+        <div class="pt">
+          <Breadcrumbs items={crumbs} />
+          <h1>{h1.a}{h1.b && <span class="c">{h1.b}</span>}{h1.c}{subT && <span class="sub"><span class="sr-only">: </span>{subT}</span>}</h1>
+          <p class="lead">{d.summary}</p>
+          {art && (
+            <dl class="facts">{facts.map((f) => <div><dt>{f.k}</dt><dd>{f.v}</dd>{f.s && <dd class="s">{f.s}</dd>}</div>)}</dl>
+          )}
+          {!art && <p class="byline">עודכן <time datetime={d.updated}>{updatedHe}</time></p>}
+        </div>
+        {art && <div class="pa"><HeroArt variant={art as any} title={`איור: ${d.keyword}`} /></div>}
       </div>
     </header>
 
-    <div class={`wrap body ${isArticle ? 'body--side' : ''}`}>
+    <div class:list={['wrap', 'body', { 'body--side': hasSide }]}>
       <article class="prose" data-pagefind-body>
         <Fragment set:html={segs[0]} />
         {page.id === 'contact' && <ContactCard />}
         <PriceTable page={page} />
-        {headings.length >= 4 && (
-          <details class="toc">
-            <summary>תוכן העניינים</summary>
-            <ol>{headings.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
-          </details>
-        )}
         {segs.slice(1).map((seg, i) => (
           <>
             {i === 1 && d.diagram === 'flat-roof' && <div class="fig"><RoofSection /></div>}
-            {i + 1 === midSeg && <Cta title="רוצים שנבדוק את זה אצלכם?" text="ספרו לנו בקצרה מה המצב, ונכוון אתכם לפתרון שמתאים לכם." />}
+            {i + 1 === midSeg && <Cta title="רוצים שנבדוק את זה אצלכם?" text="שלחו תמונה של מה שאתם רואים, ונגיד לכם מה כדאי לבדוק." />}
             <Fragment set:html={seg} />
           </>
         ))}
@@ -119,21 +147,23 @@ const hasAbout = allP.some((p) => p.id === 'about');
         {areaGroups.some((g) => g.page || g.cities.length) && (
           <section class="areas-idx" aria-labelledby="ar-h">
             <h2 id="ar-h">אזורים וערים</h2>
-            {areaGroups.filter((g) => g.page || g.cities.length).map((g) => (
-              <div class="ar">
-                <h3>{g.page ? <a href={urlOf(g.page)}>{g.page.data.keyword}</a> : g.r.name}</h3>
-                <ul>{g.cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul>
-              </div>
-            ))}
-            {areaLoose.length > 0 && <div class="ar"><h3>ערים נוספות</h3><ul>{areaLoose.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul></div>}
+            <div class="ar-grid">
+              {areaGroups.filter((g) => g.page || g.cities.length).map((g) => (
+                <div class="ar">
+                  <p class="arh">{g.page ? <a href={urlOf(g.page)}>{g.r.name}</a> : g.r.name}</p>
+                  <ul>{g.cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword.replace(/^איטום גגות ב/, '')}</a></li>)}</ul>
+                </div>
+              ))}
+              {areaLoose.length > 0 && <div class="ar"><p class="arh">ירושלים והסביבה</p><ul>{areaLoose.map((c) => <li><a href={urlOf(c)}>{c.data.keyword.replace(/^איטום גגות ב/, '')}</a></li>)}</ul></div>}
+            </div>
           </section>
         )}
         {(d.type === 'hub' || d.type === 'region') && kids.length > 0 && (
           <section class="cards" aria-labelledby="kids-h">
-            <h2 id="kids-h">{d.type === 'region' ? `ערים ב${d.keyword.replace(/^איטום גגות ב/, '')}` : `כל הנושאים ב${silo?.name}`}</h2>
+            <h2 id="kids-h">{d.type === 'region' ? `ערים ב${placeName}` : `כל הנושאים ב${silo?.name}`}</h2>
             <ul>
               {kids.map((k) => (
-                <li><a href={urlOf(k)}><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
+                <li><a href={urlOf(k)}><Iso name={iconFor(k)} size={46} /><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
               ))}
             </ul>
           </section>
@@ -155,8 +185,7 @@ const hasAbout = allP.some((p) => p.id === 'about');
           </section>
         )}
 
-        {isArticle && <Cta title={`צריכים ${d.keyword}?`} text="נשמח לשמוע מה קורה אצלכם ולתאם בדיקה." />}
-        <Faq items={d.faq} heading={`שאלות נפוצות על ${d.keyword}`} />
+        <Faq items={d.faq} heading={`שאלות על ${d.keyword}`} />
 
         {cities.length > 0 && (
           <section class="cities" aria-labelledby="cities-h">
@@ -164,43 +193,64 @@ const hasAbout = allP.some((p) => p.id === 'about');
             <ul>{cities.map((c) => <li><a href={urlOf(c)}>{c.data.keyword}</a></li>)}</ul>
           </section>
         )}
+        <p class="byline end">נכתב ונבדק על ידי {hasAbout ? <a href="/about/">צוות {business.name}</a> : `צוות ${business.name}`} · עודכן <time datetime={d.updated}>{updatedHe}</time></p>
       </article>
-      {isArticle && <Sidebar page={page} />}
+      {hasSide && <Sidebar page={page} headings={headings} />}
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .page-head { border-bottom: 1px solid var(--line); padding-block: 1.6rem 2.2rem; }
-  .page-head h1 { margin-top: 1.2rem; max-width: 22ch; font-size: clamp(2rem, 4.6vw, 3.2rem); }
-  .byline { margin: 0; font-size: .92rem; color: var(--ink-2); }
-  .body { display: grid; gap: clamp(2rem, 5vw, 4.5rem); padding-block: 2.5rem var(--space); }
-  .body--side { grid-template-columns: minmax(0, 1fr) 290px; align-items: start; }
-  .body--side :global(.side) { position: sticky; top: 100px; }
-  .toc { border: 1px solid var(--line); background: #fff; padding: .2rem 1.2rem; margin-bottom: 2rem; }
-  .toc summary { cursor: pointer; font-weight: 600; padding: .8rem 0; }
-  .toc ol { margin: 0 0 1rem; padding-inline-start: 1.3rem; font-size: 1rem; }
-  .toc li { margin-block: .25rem; }
-  .fig { margin-block: 1rem 2.5rem; padding: 1.2rem; border: 1px solid var(--line); background: var(--stone); }
-  .cards ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--bitumen); display: grid; grid-template-columns: 1fr 1fr; }
+  .phero { background: var(--mist); position: relative; padding-bottom: clamp(3rem, 7vw, 5.5rem); clip-path: polygon(0 0, 100% 0, 100% 100%, 12% calc(100% - 46px), 0 calc(100% - 22px)); }
+  .phero--plain { clip-path: none; padding-bottom: 2.4rem; border-bottom: 1px solid var(--line); }
+  .phero-in { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding-top: 1.4rem; }
+  .phero--plain .phero-in { grid-template-columns: 1fr; }
+  .pt h1 { margin: 1.4rem 0 1rem; max-width: 16ch; }
+  .page--city .pt h1, .page--region .pt h1 { max-width: 12ch; }
+  .pt h1 .sub { display: block; font-size: clamp(1.15rem, 2vw, 1.5rem); font-weight: 700; color: var(--ink-2); letter-spacing: -.005em; line-height: 1.3; margin-top: .9rem; max-width: 34ch; }
+  .lead { font-size: clamp(1.08rem, 1.5vw, 1.22rem); color: var(--ink-2); max-width: 52ch; margin: 0 0 1.6rem; line-height: 1.6; }
+  .facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; margin: 0; border-top: 1px solid var(--line); }
+  .facts div { padding-block: .9rem .4rem; padding-inline: 0 1.6rem; border-inline-end: 1px solid var(--line); margin-inline-end: 1.4rem; }
+  .facts div:last-child { border: 0; margin: 0; }
+  .facts dt { font-size: .78rem; color: var(--ink-3); margin-bottom: .25rem; }
+  .facts dd { margin: 0; font-weight: 800; font-size: 1.12rem; }
+  .facts dd.s { font-weight: 400; font-size: .8rem; color: var(--ink-3); margin-top: .1rem; }
+  .pa { max-width: 520px; justify-self: center; width: 100%; }
+  .byline { margin: 0; font-size: .9rem; color: var(--ink-3); }
+  .byline.end { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .body { display: grid; gap: clamp(2rem, 5vw, 4.5rem); padding-block: 1.5rem var(--space); }
+  .body--side { grid-template-columns: minmax(0, 1fr) 350px; align-items: start; }
+  .body--side :global(.side) { position: sticky; top: 96px; max-height: calc(100vh - 110px); overflow-y: auto; scrollbar-width: thin; padding-inline-end: 4px; }
+  .fig { margin-block: 1rem 2.5rem; padding: 1.2rem; border: 1px solid var(--line); background: var(--paper); }
+  .cards ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); display: grid; grid-template-columns: repeat(2, 1fr); }
   .cards li { border-bottom: 1px solid var(--line); }
   .cards li:nth-child(even) { border-inline-start: 1px solid var(--line); }
-  .cards a { display: block; padding: 1.1rem 1.2rem; text-decoration: none; color: var(--bitumen); height: 100%; }
-  .cards a:hover { background: var(--stone-2); }
-  .cards .k { display: block; font: 700 1.15rem/1.3 var(--f-head); margin-bottom: .3rem; }
-  .cards a:hover .k { color: var(--copper-ink); }
-  .cards .s { display: block; font-size: .98rem; color: var(--ink-2); line-height: 1.55; }
-  .areas-idx .ar { border-top: 1px solid var(--line); padding-block: 1rem; }
-  .areas-idx h3 { margin: 0 0 .5rem; }
-  .areas-idx ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: 1rem; }
+  .cards a { display: grid; grid-template-columns: auto 1fr; column-gap: .9rem; padding: 1.2rem; text-decoration: none; color: var(--ink); height: 100%; }
+  .cards a :global(.iso) { grid-row: span 2; }
+  .cards a:hover { background: var(--mist); }
+  .cards .k { display: block; font: 800 1.12rem/1.3 var(--f); margin-bottom: .25rem; }
+  .cards a:hover .k { color: var(--copper); }
+  .cards .s { display: block; font-size: .95rem; color: var(--ink-2); line-height: 1.5; }
+  .ar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem 2rem; border-top: 2px solid var(--ink); padding-top: 1.2rem; }
+  .arh { font: 800 1.05rem/1.2 var(--f); margin: 0 0 .5rem; }
+  .arh a { color: var(--ink); text-decoration: none; }
+  .ar ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .25rem .9rem; font-size: 1rem; }
+  .ar a { color: var(--ink); text-decoration: underline; text-underline-offset: .25em; }
   .cities ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
-  .cities a { display: inline-block; border: 1px solid var(--line); padding: .35rem .8rem; text-decoration: none; font-size: .95rem; }
+  .cities a { display: inline-block; border: 1px solid var(--line); padding: .35rem .8rem; text-decoration: none; font-size: .95rem; color: var(--ink); }
   .cont { border-bottom-color: transparent; }
   .num { white-space: nowrap; }
-  @media (max-width: 960px) {
+  @media (max-width: 1100px) {
     .body--side { grid-template-columns: 1fr; }
-    .body--side :global(.side) { position: static; border-top: 6px solid var(--copper); padding-top: 1.5rem; }
+    .body--side :global(.side) { position: static; max-height: none; overflow: visible; }
+  }
+  @media (max-width: 560px) { .pa { display: none; } }
+  @media (max-width: 860px) {
+    .phero-in { grid-template-columns: 1fr; }
+    .pa { max-width: 340px; }
     .cards ul { grid-template-columns: 1fr; }
     .cards li:nth-child(even) { border-inline-start: 0; }
+    .facts { grid-template-columns: 1fr 1fr; }
+    .facts div:nth-child(2) { border: 0; }
   }
 </style>
