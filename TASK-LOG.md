@@ -133,3 +133,6 @@
 - פאביקון ייעודי (faviconSvgInner ב-scripts/brand/mark.mjs): רקע נחושת מלא, בית מלא בגוון נייר וקו האיטום כחריץ. הצורה באזור בטוח עגול (גוגל חותך לעיגול). הלוגו והסימן הראשי לא השתנו.
 - נוצרו: public/favicon.ico (16/32/48), favicon.svg, brand/favicon-32/96, icon-192/512, apple-touch-icon (כולם מהפאביקון), site.webmanifest. BaseLayout מקשר ל-ico, svg, 96, 192 ו-manifest.
 - יצירה מחדש: node scripts/brand/build.mjs <playwright-core>.
+
+## 2026-11-11 (13:20) - אייקונים איזומטריים נחתכו
+- Iso.astro: ה-viewBox היה קבוע (-34 -34 72 52) וחתך את תחתית הבסיס ואת המרזב. עכשיו מחושב מאיחוד הגיאומטריה של כל האייקונים + ריווח, כך שכולם מוצגים במלואם ובאותו קנה מידה (חל על דף הבית, Hubs והסיידבר).
