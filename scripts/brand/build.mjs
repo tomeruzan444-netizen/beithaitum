@@ -3,12 +3,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { markSvg, markSvgInner, MARK_VIEWBOX, COLORS } from './mark.mjs';
+import { markSvg, markSvgInner, faviconSvg, faviconSvgInner, MARK_VIEWBOX, COLORS } from './mark.mjs';
 
 const OUT = 'public/brand';
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'logo-mark.svg'), markSvg({}, 256));
 fs.writeFileSync(path.join(OUT, 'logo-mark-dark.svg'), markSvg({ onDark: true }, 256));
+fs.writeFileSync('public/favicon.svg', faviconSvg({ rounded: true }));
 
 // פונט מוטמע (base64) כדי שהצילום ישתמש ב-Assistant בדיוק כמו האתר
 const fontFile = 'node_modules/@fontsource-variable/assistant/files/assistant-hebrew-wght-normal.woff2';
@@ -32,6 +33,8 @@ const lockup = (dark) => `<div class="lockup" id="x">
   <span class="s" style="color:${dark ? '#B9BDC3' : COLORS.grey}">שכבה אחרי שכבה</span></div></div>`;
 
 const icon = (size) => `<div id="x" style="width:${size}px;height:${size}px"><svg viewBox="${MARK_VIEWBOX}" style="width:${size}px;height:${size}px;display:block">${markSvgInner({})}</svg></div>`;
+
+const fav = (size) => `<div id="x" style="width:${size}px;height:${size}px"><svg viewBox="${MARK_VIEWBOX}" style="width:${size}px;height:${size}px;display:block">${faviconSvgInner({})}</svg></div>`;
 
 const og = `<div id="x" style="width:1200px;height:630px;background:${COLORS.paper};position:relative;font-family:A;overflow:hidden">
   <div style="position:absolute;top:0;right:0;width:14px;height:630px;background:${COLORS.copper}"></div>
@@ -57,9 +60,30 @@ await shot(lockup(false), 'logo.png', { scale: 2 });
 await shot(lockup(true), 'logo-white.png', { scale: 2 });
 await shot(lockup(false), 'logo-on-light.png', { scale: 2, bg: COLORS.paper });
 await shot(icon(512), 'logo-mark.png');
-await shot(icon(180), 'apple-touch-icon.png');
-await shot(icon(512), 'icon-512.png');
-await shot(icon(192), 'icon-192.png');
-await shot(icon(32), 'favicon-32.png');
+// אייקונים לדפדפן, לגוגל (כפולות של 48) ולמסך הבית - כולם מהפאביקון המודגש
+await shot(fav(180), 'apple-touch-icon.png');
+await shot(fav(512), 'icon-512.png');
+await shot(fav(192), 'icon-192.png');
+await shot(fav(96), 'favicon-96.png');
+await shot(fav(48), 'favicon-48.png');
+await shot(fav(32), 'favicon-32.png');
+await shot(fav(16), 'favicon-16.png');
 await shot(og, 'og-default.png');
 await b.close();
+
+// favicon.ico בשורש (גוגל ודפדפנים ישנים בודקים אותו) - ICO עם PNG מוטמעים 16/32/48
+const icoSizes = [16, 32, 48];
+const pngs = icoSizes.map((s) => fs.readFileSync(path.join(OUT, `favicon-${s}.png`)));
+const head = Buffer.alloc(6 + 16 * pngs.length);
+head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(pngs.length, 4);
+let off = head.length;
+pngs.forEach((png, i) => {
+  const e = 6 + 16 * i, s = icoSizes[i];
+  head.writeUInt8(s, e); head.writeUInt8(s, e + 1); head.writeUInt8(0, e + 2); head.writeUInt8(0, e + 3);
+  head.writeUInt16LE(1, e + 4); head.writeUInt16LE(32, e + 6);
+  head.writeUInt32LE(png.length, e + 8); head.writeUInt32LE(off, e + 12);
+  off += png.length;
+});
+fs.writeFileSync('public/favicon.ico', Buffer.concat([head, ...pngs]));
+for (const s of [16, 48]) fs.unlinkSync(path.join(OUT, `favicon-${s}.png`));
+console.log('wrote favicon.ico');

@@ -24,3 +24,19 @@ export function markSvgInner(o = {}) {
 
 export const markSvg = (o = {}, size = 512) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MARK_VIEWBOX}" width="${size}" height="${size}">${markSvgInner(o)}</svg>`;
+
+// פאביקון: גרסה מודגשת של הסימן, לגדלים קטנים (לשונית דפדפן, תוצאות החיפוש בגוגל).
+// רקע נחושת מלא (בולט מול רוב הפאביקונים הכחולים/לבנים), בית מלא בגוון נייר וקו האיטום כחריץ בנחושת.
+// הצורה כולה בתוך אזור בטוח עגול - גוגל חותך את הפאביקון לעיגול.
+/** @param {{ rounded?: boolean }} o */
+export function faviconSvgInner(o = {}) {
+  const r = o.rounded ? 12 : 0;
+  return (
+    `<rect x="0" y="0" width="64" height="64" rx="${r}" fill="${COLORS.copper}"/>` +
+    `<polygon points="14,51 14,30 32,14 50,30 50,51" fill="${COLORS.paper}"/>` +
+    `<polyline points="21.5,41.5 32,32 42.5,41.5" fill="none" stroke="${COLORS.copper}" stroke-width="6.2" stroke-linejoin="miter" stroke-miterlimit="10" stroke-linecap="butt"/>`
+  );
+}
+
+export const faviconSvg = (o = {}, size = 64) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MARK_VIEWBOX}" width="${size}" height="${size}">${faviconSvgInner(o)}</svg>`;

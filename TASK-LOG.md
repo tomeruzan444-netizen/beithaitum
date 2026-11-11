@@ -128,3 +128,8 @@
 
 ## 2026-11-11 (01:20) - חסימת הדומיין הזמני
 - .htaccess: בדומיין hostingersite מוגש robots-temp.txt (Disallow: /) במקום robots.txt, בנוסף ל-X-Robots-Tag noindex. בדומיין הראשי robots-temp.txt מחזיר 404.
+
+## 2026-11-11 (13:10) - פאביקון בולט
+- פאביקון ייעודי (faviconSvgInner ב-scripts/brand/mark.mjs): רקע נחושת מלא, בית מלא בגוון נייר וקו האיטום כחריץ. הצורה באזור בטוח עגול (גוגל חותך לעיגול). הלוגו והסימן הראשי לא השתנו.
+- נוצרו: public/favicon.ico (16/32/48), favicon.svg, brand/favicon-32/96, icon-192/512, apple-touch-icon (כולם מהפאביקון), site.webmanifest. BaseLayout מקשר ל-ico, svg, 96, 192 ו-manifest.
+- יצירה מחדש: node scripts/brand/build.mjs <playwright-core>.
