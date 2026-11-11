@@ -169,7 +169,7 @@ const jlm = allP.filter((p) => p.data.type === 'city' && !cityBySlug(p.data.city
         </div>
         <ul class="lcards">
           {layerCards.map(([h, t, s, ic]) => (
-            <li><a href={h}><Iso name={ic} size={64} /><span class="lk">{t}</span><span class="ls">{s}</span></a></li>
+            <li><a href={h}><Iso name={ic} size={96} /><span class="lk">{t}</span><span class="ls">{s}</span></a></li>
           ))}
         </ul>
         {L('/moisture/leak-detection/') && <a class="more" href="/moisture/leak-detection/">גם איתור נזילות וקירות חיצוניים ←</a>}

@@ -165,7 +165,7 @@ const ctaFooter: [string, string] = d.type === 'city' ? [`גג דולף ב${plac
             <h2 id="kids-h">{d.type === 'region' ? `ערים ב${placeName}` : `כל הנושאים ב${silo?.name}`}</h2>
             <ul>
               {kids.map((k) => (
-                <li><a href={urlOf(k)}><Iso name={iconFor(k)} size={46} /><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
+                <li><a href={urlOf(k)}><Iso name={iconFor(k)} size={64} /><span class="k">{k.data.keyword}</span><span class="s">{k.data.summary}</span></a></li>
               ))}
             </ul>
           </section>

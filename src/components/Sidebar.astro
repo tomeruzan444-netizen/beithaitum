@@ -55,7 +55,7 @@ const cardTitle = isCity ? `רוצים שנבדוק את הגג ב${cityName}?` 
     <nav class="blk svc" aria-label="שירותים קשורים">
       <p class="h">{isCity ? `שירותים ב${cityName}` : `הכי קרוב ל${d.keyword}`}</p>
       <ul>{services.map((s) => (
-        <li><a href={urlOf(s)}><Iso name={iconFor(s)} size={34} /><span><small>{siloById(s.data.silo)?.short}</small>{s.data.keyword}</span></a></li>
+        <li><a href={urlOf(s)}><Iso name={iconFor(s)} size={42} /><span><small>{siloById(s.data.silo)?.short}</small>{s.data.keyword}</span></a></li>
       ))}</ul>
     </nav>
   )}
