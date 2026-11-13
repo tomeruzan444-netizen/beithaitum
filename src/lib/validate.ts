@@ -6,6 +6,7 @@ import { allPages, urlOf, bodyLinks, type Page } from './pages';
 export async function validateAll() {
   const pages = await allPages();
   const urls = new Set(pages.map(urlOf));
+  const byUrl = new Map(pages.map((p) => [urlOf(p), p]));
   urls.add('/'); urls.add('/sitemap/');
   const errors: string[] = [];
   const seenTitle = new Map<string, string>();
@@ -39,9 +40,20 @@ export async function validateAll() {
     const links = bodyLinks(body);
     for (const l of links) if (!urls.has(l)) e(`קישור פנימי לעמוד שלא קיים: ${l}`);
 
+    // קישוריות פנימית (החלטת המשתמש 2026-11-13): עד 5 קישורים ייחודיים בגוף, בלי כפילויות,
+    // העוגן = הביטוי של עמוד היעד (או צורה קרובה), וקישור לדף הבית רק בעוגן "בית האיטום"
+    const uniq = new Set(links);
+    if (uniq.size > 5) e(`יותר מ-5 קישורים פנימיים בגוף (${uniq.size})`);
+    if (uniq.size < links.length) e('קישור כפול לאותו עמוד בגוף');
+    for (const m of body.matchAll(/\[([^\]]+)\]\((\/[^)\s#]*)(#[^)]*)?\)/g)) {
+      const [, anchor, to] = m;
+      if (to === '/') { if (anchor.trim() !== 'בית האיטום') e(`קישור לדף הבית חייב להיות בעוגן "בית האיטום", נמצא "${anchor}"`); continue; }
+      const t = byUrl.get(to);
+      if (t && !anchorFits(anchor, t.data.keyword)) e(`עוגן "${anchor}" לא תואם לביטוי של ${to} ("${t.data.keyword}")`);
+    }
+
     if (d.type === 'service' || d.type === 'problem' || d.type === 'city') {
-      const uniq = new Set(links);
-      if (uniq.size < 2 || uniq.size > 3) e(`נדרשים 2 עד 3 קישורים פנימיים בגוף, נמצאו ${uniq.size}`);
+      if (uniq.size < 3) e(`נדרשים 3 עד 5 קישורים פנימיים בגוף, נמצאו ${uniq.size}`);
       if (d.faq.length < 10 || d.faq.length > 15) e(`FAQ: נדרשות 10 עד 15 שאלות, יש ${d.faq.length}`);
       if (!d.prices.some((r) => r.verified)) e('אין טבלת מחירים (שורה מאומתת אחת לפחות)');
     }
@@ -66,6 +78,24 @@ export async function validateAll() {
 
 /** שמות מקורות שאסור להזכיר בתוכן (אתרים, ארגונים, יצרנים שצוטטו כמקור) */
 export const SOURCE_NAMES = /מידרג|Midrag|דפי זהב|ויקיפדיה|Wikipedia|ויקיטקסט|Wikisource|השירות המטאורולוגי|הלמ"ס|הלשכה המרכזית לסטטיסטיקה|כל זכות|ynet|nadlancenter|מרכז הנדל"ן|נדל"ן סנטר|נדל\\"ן סנטר|המקצוענים|[Pp]ro\.co\.il|d\.co\.il|כלכליסט|Calcalist|גלובס|דה מרקר|(?<![א-ת])נבו(?![א-ת])|EPA|CDC|WHO|ארגון הבריאות העולמי|בנק ישראל|מבקר המדינה|(?<![א-ת])[בלמהושכ]?טמבור(?![א-ת])|Tambour|(?<![א-ת])סיקה(?![א-ת])|Sika|(?<![א-ת])[בלמהושכ]?נירלט(?![א-ת])|Nirlat|(?<![א-ת])[בלמהושכ]?פזקר(?![א-ת])|Pazkar|IKO|Polyglass|Kingspan|VELUX|(?<![א-ת])ולוקס(?![א-ת])|Palram|(?<![א-ת])[בלמהושכ]?פלרם(?![א-ת])|Xypex|Alchimica|Soudal|Hilti|Dörken|DuPont|Tyvek|Lysaght|FILA|Protimeter|Sewerin|Fluke|Greenmix|(?<![א-ת])גרינמיקס(?![א-ת])|Maris|(?<![א-ת])מריס(?![א-ת])|Dow|Penosil|Shapir|(?<![א-ת])שפיר(?![א-ת])|Prefa|VMZINC|IIBEC|Ravago|בר-אילן|NIOSH|NOAA|TheMarker|קליל|TAMSEAL|Tamseal|Hyperdesmo|מריסל|BRE\b|פוליגג|טופגג|אקרילפז|גומיגג|סיקפלקס|Sikaflex|אלסטוסיל|Keter|(?<![א-ת])כתר(?![א-ת])|Mapei|Dektite|Link-Seal|Hutterer|Lechner|USA Containers|Property Care|gov\.il|www\.|https?:\/\//;
+
+// התאמת עוגן לביטוי: הביטוי המדויק, או כל המילים שלו בצורה קרובה (תחיליות ב/ה/ל/ו/מ/ש/כ, יחיד/רבים).
+// אותה לוגיקה כמו scripts/links.mjs.
+const normA = (s: string) => s.replace(/["'״׳]/g, '').replace(/[,.:;()]/g, ' ').replace(/\s+/g, ' ').trim();
+const SYN: Record<string, string> = { 'איסכורית': 'פח', 'בניה': 'בני', 'בנייה': 'בני', 'פולימרי': 'פולימר', 'קפילארית': 'קפילר' };
+const stemA = (w: string) => {
+  let x = w;
+  if (x.length > 3) x = x.replace(/^(וה|שה|וב|ול|מה|כש|וכ|ומ|[בהלומשכ])(?=[א-ת]{3})/, '');
+  if (x.length > 3) x = x.replace(/(ות|ים|יות|ה|ת)$/, '');
+  return x;
+};
+const stemsA = (s: string) => normA(s).split(' ').filter((w) => w.length > 1).map((w) => SYN[w] ?? stemA(w));
+export function anchorFits(anchor: string, keyword: string) {
+  const a = normA(anchor), k = normA(keyword);
+  if (a.includes(k)) return true;
+  const as = new Set(stemsA(a));
+  return stemsA(k).every((w) => as.has(w));
+}
 
 export function wordCount(md: string) {
   return md
