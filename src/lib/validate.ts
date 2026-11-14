@@ -53,7 +53,8 @@ export async function validateAll() {
     }
 
     if (d.type === 'service' || d.type === 'problem' || d.type === 'city') {
-      if (uniq.size < 3) e(`נדרשים 3 עד 5 קישורים פנימיים בגוף, נמצאו ${uniq.size}`);
+      // כללים לעמודים חדשים (14.11.2026): 2 עד 5 קישורים בגוף
+      if (uniq.size < 2) e(`נדרשים 2 עד 5 קישורים פנימיים בגוף, נמצאו ${uniq.size}`);
       if (d.faq.length < 10 || d.faq.length > 15) e(`FAQ: נדרשות 10 עד 15 שאלות, יש ${d.faq.length}`);
       if (!d.prices.some((r) => r.verified)) e('אין טבלת מחירים (שורה מאומתת אחת לפחות)');
     }
