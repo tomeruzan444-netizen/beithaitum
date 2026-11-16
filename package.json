@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "ai-tells": "node scripts/ai-tells.mjs",
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist --glob \"**/*.html\" --exclude-selectors \"header,footer,nav,aside,.mbar\" --quiet && node scripts/check.mjs",
     "preview": "astro preview",
