@@ -1,0 +1,3 @@
+# Temporary Hostinger domain - not for indexing. Main site: https://itumhouse.co.il/
+User-agent: *
+Disallow: /
